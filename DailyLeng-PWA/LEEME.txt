@@ -1,6 +1,0 @@
-DailyLeng PWA (offline)
-1. Sube esta carpeta tal cual a un alojamiento HTTPS (GitHub Pages, Netlify, Cloudflare Pages...) o pruébala en local con: python3 -m http.server 8000 (http://localhost:8000).
-2. Abre la direccion una vez con conexion: el Service Worker guarda la app y despues funciona sin internet.
-3. PC (Chrome/Edge): icono de instalar en la barra de direcciones. iPhone: Safari > Compartir > Anadir a pantalla de inicio.
-4. Al publicar una version nueva, cambia V en sw.js (p. ej. dailyleng-v16) para renovar la cache.
-El progreso se guarda por origen (direccion): usa el boton de copia de seguridad de la app para moverlo desde la version del artefacto.
