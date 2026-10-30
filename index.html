@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DailyLeng</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" href="icon-192.png">
+<style>
+:root{
+  --bg:#f5f5f7;--surface:#ffffff;--text:#1d1d1f;--text2:#6e6e73;
+  --accent:#0071e3;--border:#d2d2d7;--good:#34c759;--bad:#ff3b30;
+  color-scheme:light dark;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#000000;--surface:#1c1c1e;--text:#f5f5f7;--text2:#98989d;
+    --accent:#0a84ff;--border:#38383a;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#000000;--surface:#1c1c1e;--text:#f5f5f7;--text2:#98989d;
+  --accent:#0a84ff;--border:#38383a;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px);}
+*{box-sizing:border-box;}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:"";position:fixed;inset:0 0 auto;
+  height:env(safe-area-inset-top,0px);background:var(--surface);z-index:20;
+}
+header{
+  position:sticky;top:env(safe-area-inset-top,0px);background:var(--surface);
+  border-bottom:1px solid var(--border);z-index:10;padding:14px 20px;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+}
+h1{font-size:19px;font-weight:600;margin:0;letter-spacing:-.01em;}
+.langs{display:flex;background:var(--bg);border-radius:9px;padding:3px;gap:2px;}
+.langs button{border:none;background:transparent;padding:6px 13px;border-radius:7px;
+  font-size:14px;font-weight:500;color:var(--text2);cursor:pointer;transition:.15s;font-family:inherit;}
+.langs button.active{background:var(--surface);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.15);}
+nav{max-width:680px;margin:0 auto;display:flex;gap:6px;padding:16px 20px 0;overflow-x:auto;}
+nav button{background:var(--surface);padding:9px 15px;border-radius:18px;
+  font-size:14px;font-weight:500;color:var(--text2);cursor:pointer;white-space:nowrap;
+  transition:.15s;border:1px solid var(--border);font-family:inherit;}
+nav button.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+main{max-width:680px;margin:0 auto;padding:16px 20px 40px;}
+.list{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;}
+.row{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
+  padding:12px 16px;border-bottom:1px solid var(--border);}
+.row:last-child{border-bottom:none;}
+.row-main{min-width:0;flex:1;}
+.word{font-size:16px;font-weight:600;}
+.pron{color:var(--accent);font-size:12px;font-weight:500;}
+.tr{color:var(--text2);font-size:14px;margin-top:2px;}
+.tag{font-size:12px;color:var(--text2);flex-shrink:0;padding-top:2px;}
+.count{font-size:13px;color:var(--text2);margin-bottom:10px;}
+input[type=search]{
+  width:100%;padding:11px 15px;border-radius:12px;border:1px solid var(--border);
+  background:var(--surface);color:var(--text);font-size:15px;margin-bottom:10px;font-family:inherit;
+}
+.quiz-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;
+  padding:26px 22px;text-align:center;}
+.quiz-q{font-size:19px;font-weight:600;margin-bottom:20px;line-height:1.4;}
+.opt{display:block;width:100%;padding:13px;margin-bottom:9px;border-radius:11px;
+  border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:15px;
+  cursor:pointer;text-align:left;transition:.15s;font-family:inherit;}
+.opt:hover{border-color:var(--accent);}
+.opt.correct{background:var(--good);color:#fff;border-color:var(--good);}
+.opt.wrong{background:var(--bad);color:#fff;border-color:var(--bad);}
+.score{font-size:13px;color:var(--text2);margin-bottom:12px;text-align:center;}
+.btn{background:var(--accent);color:#fff;border:none;padding:12px 26px;
+  border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;margin-top:14px;font-family:inherit;}
+.empty{text-align:center;color:var(--text2);padding:40px 20px;font-size:14px;}
+:root{--glass:rgba(255,255,255,.72);--accent2:#5e5ce6;--shadow:0 1px 2px rgba(0,0,0,.04),0 10px 30px rgba(0,0,0,.06);--ease:cubic-bezier(.22,1,.36,1);}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--glass:rgba(28,28,30,.72);--accent2:#bf5af2;--shadow:0 10px 30px rgba(0,0,0,.55);}}
+:root[data-theme="dark"]{--glass:rgba(28,28,30,.72);--accent2:#bf5af2;--shadow:0 10px 30px rgba(0,0,0,.55);}
+body{background-image:radial-gradient(60% 40% at 8% -8%,color-mix(in srgb,var(--accent) 16%,transparent),transparent),radial-gradient(50% 35% at 100% 0%,color-mix(in srgb,var(--accent2) 13%,transparent),transparent);background-attachment:fixed;}
+body::before,header{background:var(--glass);-webkit-backdrop-filter:saturate(180%) blur(22px);backdrop-filter:saturate(180%) blur(22px);}
+header{border-bottom:1px solid color-mix(in srgb,var(--border) 55%,transparent);}
+h1{font-size:23px;font-weight:700;letter-spacing:-.025em;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.langs{position:relative;border-radius:11px;}
+.langs .thumb{position:absolute;top:3px;bottom:3px;left:3px;width:0;border-radius:8px;background:var(--surface);box-shadow:0 1px 3px rgba(0,0,0,.18),0 4px 10px rgba(0,0,0,.08);}
+.langs.ready .thumb{transition:transform .5s cubic-bezier(.34,1.3,.5,1),width .5s var(--ease);}
+.langs button{position:relative;z-index:1;border-radius:8px;}
+.langs button.active{background:transparent;box-shadow:none;color:var(--text);}
+nav button{transition:background .3s var(--ease),color .3s var(--ease),transform .2s var(--ease),box-shadow .3s;border-color:color-mix(in srgb,var(--border) 70%,transparent);}
+nav button.active{box-shadow:0 4px 14px color-mix(in srgb,var(--accent) 38%,transparent);}
+nav button:active,.btn:active,.opt:active{transform:scale(.96);}
+.list,.quiz-card{border-color:color-mix(in srgb,var(--border) 60%,transparent);box-shadow:var(--shadow);}
+.list{border-radius:18px;}
+.quiz-card{border-radius:24px;padding:30px 22px;}
+.row{transition:background .25s;}
+@media (hover:hover){.row:hover{background:color-mix(in srgb,var(--accent) 6%,transparent);}.opt:hover{transform:translateY(-1px);}}
+.row.in{animation:rise .55s var(--ease) both;}
+@keyframes rise{from{opacity:0;transform:translateY(10px);}}
+input[type=search]{border-radius:14px;transition:box-shadow .3s var(--ease),border-color .3s;}
+input[type=search]:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 22%,transparent);}
+.opt{border-radius:14px;padding:15px;transition:transform .25s var(--ease),background .3s,border-color .3s,color .3s;}
+.opt:nth-of-type(1),.opt:nth-of-type(2),.opt:nth-of-type(3),.opt:nth-of-type(4){animation:rise .5s var(--ease) both;}
+.opt:nth-of-type(2){animation-delay:.06s;}.opt:nth-of-type(3){animation-delay:.12s;}.opt:nth-of-type(4){animation-delay:.18s;}
+.btn{background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:14px;box-shadow:0 8px 20px color-mix(in srgb,var(--accent) 35%,transparent);transition:transform .25s var(--ease);}
+.prog{height:6px;border-radius:3px;background:var(--border);overflow:hidden;margin-bottom:12px;}
+.prog i{display:block;height:100%;border-radius:3px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .7s var(--ease);}
+.ring{position:relative;width:140px;height:140px;margin:6px auto 16px;}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg);}
+.ring circle{fill:none;stroke-width:10;stroke-linecap:round;}
+.ring .trk{stroke:var(--border);}
+.ring .bar{stroke:var(--accent);transition:stroke-dashoffset 1.3s var(--ease);}
+.ring b{position:absolute;inset:0;display:grid;place-items:center;font-size:38px;font-weight:700;letter-spacing:-.02em;}
+.langs{max-width:100%;overflow-x:auto;scrollbar-width:none;}.langs::-webkit-scrollbar{display:none;}.langs button{white-space:nowrap;}
+.spk{flex-shrink:0;align-self:center;border:none;background:color-mix(in srgb,var(--accent) 12%,transparent);width:34px;height:34px;border-radius:50%;font-size:14px;cursor:pointer;margin-left:8px;transition:transform .25s var(--ease),background .3s;}
+.spk:active{transform:scale(.86);}
+.spk.on{background:var(--accent);animation:pulse .9s ease-in-out infinite;}
+@keyframes pulse{50%{transform:scale(1.14);}}
+.ex{margin-top:7px;padding:8px 11px;border-radius:10px;background:color-mix(in srgb,var(--accent) 8%,transparent);font-size:13px;line-height:1.45;}
+.ex span{opacity:.65;}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important;}}
+</style>
+</head>
+<body>
+<header>
+  <h1>DailyLeng</h1>
+  <div class="langs" id="langs"></div>
+</header>
+<nav id="tabs"></nav>
+<main id="main"></main>
+<script>
+const DATA = {
+ fr:{name:"Francés",flag:"🇫🇷",
+  dic:[
+   {w:"bonjour",p:"bon-ZHUR",t:"hola, buenos días",c:"saludos"},
+   {w:"bonsoir",p:"bon-SWAR",t:"buenas tardes, buenas noches",c:"saludos"},
+   {w:"salut",p:"sa-LU",t:"hola, chao (informal)",c:"saludos"},
+   {w:"au revoir",p:"o-rə-VWAR",t:"adiós",c:"saludos"},
+   {w:"merci",p:"mer-SI",t:"gracias",c:"saludos"},
+   {w:"s'il vous plaît",p:"sil-vu-PLE",t:"por favor",c:"saludos"},
+   {w:"pardon",p:"par-DÕ",t:"perdón",c:"saludos"},
+   {w:"de rien",p:"də-RYÃ",t:"de nada",c:"saludos"},
+   {w:"oui",p:"WI",t:"sí",c:"básico"},
+   {w:"non",p:"NÕ",t:"no",c:"básico"},
+   {w:"peut-être",p:"pø-TETR",t:"tal vez",c:"básico"},
+   {w:"et",p:"E",t:"y",c:"básico"},
+   {w:"ou",p:"U",t:"o",c:"básico"},
+   {w:"mais",p:"ME",t:"pero",c:"básico"},
+   {w:"avec",p:"a-VEK",t:"con",c:"básico"},
+   {w:"sans",p:"SÃ",t:"sin",c:"básico"},
+   {w:"je",p:"ZHə",t:"yo",c:"pronombres"},
+   {w:"tu",p:"TU",t:"tú",c:"pronombres"},
+   {w:"il",p:"IL",t:"él",c:"pronombres"},
+   {w:"elle",p:"EL",t:"ella",c:"pronombres"},
+   {w:"nous",p:"NU",t:"nosotros",c:"pronombres"},
+   {w:"vous",p:"VU",t:"usted, vosotros",c:"pronombres"},
+   {w:"ils",p:"IL",t:"ellos",c:"pronombres"},
+   {w:"un",p:"Ã",t:"uno",c:"números"},
+   {w:"deux",p:"DØ",t:"dos",c:"números"},
+   {w:"trois",p:"TRWA",t:"tres",c:"números"},
+   {w:"quatre",p:"KATR",t:"cuatro",c:"números"},
+   {w:"cinq",p:"SÃK",t:"cinco",c:"números"},
+   {w:"six",p:"SIS",t:"seis",c:"números"},
+   {w:"sept",p:"SET",t:"siete",c:"números"},
+   {w:"huit",p:"UIT",t:"ocho",c:"números"},
+   {w:"neuf",p:"NØF",t:"nueve",c:"números"},
+   {w:"dix",p:"DIS",t:"diez",c:"números"},
+   {w:"onze",p:"ÕZ",t:"once",c:"números"},
+   {w:"douze",p:"DUZ",t:"doce",c:"números"},
+   {w:"treize",p:"TREZ",t:"trece",c:"números"},
+   {w:"quatorze",p:"ka-TORZ",t:"catorce",c:"números"},
+   {w:"quinze",p:"KÃZ",t:"quince",c:"números"},
+   {w:"seize",p:"SEZ",t:"dieciséis",c:"números"},
+   {w:"dix-sept",p:"dis-SET",t:"diecisiete",c:"números"},
+   {w:"dix-huit",p:"di-ZUIT",t:"dieciocho",c:"números"},
+   {w:"dix-neuf",p:"diz-NØF",t:"diecinueve",c:"números"},
+   {w:"vingt",p:"VÃ",t:"veinte",c:"números"},
+   {w:"trente",p:"TRÃT",t:"treinta",c:"números"},
+   {w:"quarante",p:"ka-RÃT",t:"cuarenta",c:"números"},
+   {w:"cinquante",p:"sÃ-KÃT",t:"cincuenta",c:"números"},
+   {w:"soixante",p:"swa-SÃT",t:"sesenta",c:"números"},
+   {w:"soixante-dix",p:"swa-sãt-DIS",t:"setenta",c:"números"},
+   {w:"quatre-vingts",p:"ka-trə-VÃ",t:"ochenta",c:"números"},
+   {w:"quatre-vingt-dix",p:"ka-trə-vÃ-DIS",t:"noventa",c:"números"},
+   {w:"cent",p:"SÃ",t:"cien",c:"números"},
+   {w:"mille",p:"MIL",t:"mil",c:"números"},
+   {w:"famille",p:"fa-MIY",t:"familia",c:"familia"},
+   {w:"mère",p:"MER",t:"madre",c:"familia"},
+   {w:"père",p:"PER",t:"padre",c:"familia"},
+   {w:"frère",p:"FRER",t:"hermano",c:"familia"},
+   {w:"sœur",p:"SØR",t:"hermana",c:"familia"},
+   {w:"fils",p:"FIS",t:"hijo",c:"familia"},
+   {w:"fille",p:"FIY",t:"hija, chica",c:"familia"},
+   {w:"enfant",p:"ã-FÃ",t:"niño",c:"familia"},
+   {w:"maison",p:"me-ZÕ",t:"casa",c:"casa"},
+   {w:"chambre",p:"SHÃBR",t:"habitación",c:"casa"},
+   {w:"cuisine",p:"kui-ZIN",t:"cocina",c:"casa"},
+   {w:"porte",p:"PORT",t:"puerta",c:"casa"},
+   {w:"fenêtre",p:"fə-NETR",t:"ventana",c:"casa"},
+   {w:"table",p:"TABL",t:"mesa",c:"casa"},
+   {w:"salon",p:"sa-LÕ",t:"salón",c:"casa"},
+   {w:"jardin",p:"zhar-DÃ",t:"jardín",c:"casa"},
+   {w:"escalier",p:"es-ka-LYE",t:"escalera",c:"casa"},
+   {w:"lit",p:"LI",t:"cama",c:"casa"},
+   {w:"canapé",p:"ka-na-PE",t:"sofá",c:"casa"},
+   {w:"pain",p:"PÃ",t:"pan",c:"comida"},
+   {w:"fromage",p:"fro-MAZH",t:"queso",c:"comida"},
+   {w:"eau",p:"O",t:"agua",c:"comida"},
+   {w:"vin",p:"VÃ",t:"vino",c:"comida"},
+   {w:"lait",p:"LE",t:"leche",c:"comida"},
+   {w:"viande",p:"VYÃD",t:"carne",c:"comida"},
+   {w:"poisson",p:"pwa-SÕ",t:"pescado",c:"comida"},
+   {w:"fruit",p:"FRUI",t:"fruta",c:"comida"},
+   {w:"légume",p:"le-GUM",t:"verdura",c:"comida"},
+   {w:"œuf",p:"ØF",t:"huevo",c:"comida"},
+   {w:"café",p:"ka-FE",t:"café",c:"comida"},
+   {w:"thé",p:"TE",t:"té",c:"comida"},
+   {w:"gâteau",p:"ga-TO",t:"pastel",c:"comida"},
+   {w:"soupe",p:"SUP",t:"sopa",c:"comida"},
+   {w:"salade",p:"sa-LAD",t:"ensalada",c:"comida"},
+   {w:"riz",p:"RI",t:"arroz",c:"comida"},
+   {w:"poulet",p:"pu-LE",t:"pollo",c:"comida"},
+   {w:"bœuf",p:"BØF",t:"ternera",c:"comida"},
+   {w:"chocolat",p:"sho-ko-LA",t:"chocolate",c:"comida"},
+   {w:"miel",p:"MYEL",t:"miel",c:"comida"},
+   {w:"pâtes",p:"PAT",t:"pasta",c:"comida"},
+   {w:"être",p:"ETR",t:"ser, estar",c:"verbos"},
+   {w:"avoir",p:"a-VWAR",t:"tener",c:"verbos"},
+   {w:"faire",p:"FER",t:"hacer",c:"verbos"},
+   {w:"aller",p:"a-LE",t:"ir",c:"verbos"},
+   {w:"venir",p:"və-NIR",t:"venir",c:"verbos"},
+   {w:"manger",p:"mã-ZHE",t:"comer",c:"verbos"},
+   {w:"boire",p:"BWAR",t:"beber",c:"verbos"},
+   {w:"parler",p:"par-LE",t:"hablar",c:"verbos"},
+   {w:"voir",p:"VWAR",t:"ver",c:"verbos"},
+   {w:"savoir",p:"sa-VWAR",t:"saber",c:"verbos"},
+   {w:"pouvoir",p:"pu-VWAR",t:"poder",c:"verbos"},
+   {w:"vouloir",p:"vu-LWAR",t:"querer",c:"verbos"},
+   {w:"dire",p:"DIR",t:"decir",c:"verbos"},
+   {w:"prendre",p:"PRÃDR",t:"tomar, coger",c:"verbos"},
+   {w:"écrire",p:"e-KRIR",t:"escribir",c:"verbos"},
+   {w:"lire",p:"LIR",t:"leer",c:"verbos"},
+   {w:"écouter",p:"e-ku-TE",t:"escuchar",c:"verbos"},
+   {w:"regarder",p:"rə-gar-DE",t:"mirar",c:"verbos"},
+   {w:"travailler",p:"tra-va-YE",t:"trabajar",c:"verbos"},
+   {w:"étudier",p:"e-tu-DYE",t:"estudiar",c:"verbos"},
+   {w:"apprendre",p:"a-PRÃDR",t:"aprender",c:"verbos"},
+   {w:"acheter",p:"ash-TE",t:"comprar",c:"verbos"},
+   {w:"vendre",p:"VÃDR",t:"vender",c:"verbos"},
+   {w:"payer",p:"pe-YE",t:"pagar",c:"verbos"},
+   {w:"jouer",p:"zhu-E",t:"jugar",c:"verbos"},
+   {w:"chanter",p:"shã-TE",t:"cantar",c:"verbos"},
+   {w:"danser",p:"dã-SE",t:"bailar",c:"verbos"},
+   {w:"dormir",p:"dor-MIR",t:"dormir",c:"verbos"},
+   {w:"ouvrir",p:"u-VRIR",t:"abrir",c:"verbos"},
+   {w:"fermer",p:"fer-ME",t:"cerrar",c:"verbos"},
+   {w:"commencer",p:"ko-mã-SE",t:"empezar",c:"verbos"},
+   {w:"aider",p:"e-DE",t:"ayudar",c:"verbos"},
+   {w:"grand",p:"GRÃ",t:"grande",c:"adjetivos"},
+   {w:"petit",p:"pə-TI",t:"pequeño",c:"adjetivos"},
+   {w:"beau",p:"BO",t:"bonito",c:"adjetivos"},
+   {w:"bon",p:"BÕ",t:"bueno",c:"adjetivos"},
+   {w:"mauvais",p:"mo-VE",t:"malo",c:"adjetivos"},
+   {w:"nouveau",p:"nu-VO",t:"nuevo",c:"adjetivos"},
+   {w:"vieux",p:"VYØ",t:"viejo",c:"adjetivos"},
+   {w:"facile",p:"fa-SIL",t:"fácil",c:"adjetivos"},
+   {w:"difficile",p:"di-fi-SIL",t:"difícil",c:"adjetivos"},
+   {w:"heureux",p:"ø-RØ",t:"feliz",c:"adjetivos"},
+   {w:"rapide",p:"ra-PID",t:"rápido",c:"adjetivos"},
+   {w:"lent",p:"LÃ",t:"lento",c:"adjetivos"},
+   {w:"fort",p:"FOR",t:"fuerte",c:"adjetivos"},
+   {w:"faible",p:"FEBL",t:"débil",c:"adjetivos"},
+   {w:"propre",p:"PROPR",t:"limpio",c:"adjetivos"},
+   {w:"sale",p:"SAL",t:"sucio",c:"adjetivos"},
+   {w:"riche",p:"RISH",t:"rico",c:"adjetivos"},
+   {w:"gentil",p:"zhã-TI",t:"amable",c:"adjetivos"},
+   {w:"aujourd'hui",p:"o-zhur-DUI",t:"hoy",c:"tiempo"},
+   {w:"demain",p:"də-MÃ",t:"mañana",c:"tiempo"},
+   {w:"hier",p:"YER",t:"ayer",c:"tiempo"},
+   {w:"maintenant",p:"mã-tə-NÃ",t:"ahora",c:"tiempo"},
+   {w:"jour",p:"ZHUR",t:"día",c:"tiempo"},
+   {w:"nuit",p:"NUI",t:"noche",c:"tiempo"},
+   {w:"semaine",p:"sə-MEN",t:"semana",c:"tiempo"},
+   {w:"mois",p:"MWA",t:"mes",c:"tiempo"},
+   {w:"année",p:"a-NE",t:"año",c:"tiempo"},
+   {w:"matin",p:"ma-TÃ",t:"mañana (parte del día)",c:"tiempo"},
+   {w:"après-midi",p:"a-pre-mi-DI",t:"tarde",c:"tiempo"},
+   {w:"soir",p:"SWAR",t:"noche (atardecer)",c:"tiempo"},
+   {w:"printemps",p:"prÃ-TÃ",t:"primavera",c:"tiempo"},
+   {w:"été",p:"e-TE",t:"verano",c:"tiempo"},
+   {w:"automne",p:"o-TON",t:"otoño",c:"tiempo"},
+   {w:"hiver",p:"i-VER",t:"invierno",c:"tiempo"},
+   {w:"blanc",p:"BLÃ",t:"blanco",c:"colores"},
+   {w:"noir",p:"NWAR",t:"negro",c:"colores"},
+   {w:"rouge",p:"RUZH",t:"rojo",c:"colores"},
+   {w:"bleu",p:"BLØ",t:"azul",c:"colores"},
+   {w:"vert",p:"VER",t:"verde",c:"colores"},
+   {w:"jaune",p:"ZHON",t:"amarillo",c:"colores"},
+   {w:"ville",p:"VIL",t:"ciudad",c:"lugares"},
+   {w:"rue",p:"RU",t:"calle",c:"lugares"},
+   {w:"gare",p:"GAR",t:"estación",c:"lugares"},
+   {w:"aéroport",p:"a-e-ro-POR",t:"aeropuerto",c:"lugares"},
+   {w:"hôtel",p:"o-TEL",t:"hotel",c:"lugares"},
+   {w:"restaurant",p:"res-to-RÃ",t:"restaurante",c:"lugares"},
+   {w:"magasin",p:"ma-ga-ZÃ",t:"tienda",c:"lugares"},
+   {w:"école",p:"e-KOL",t:"escuela",c:"lugares"},
+   {w:"hôpital",p:"o-pi-TAL",t:"hospital",c:"lugares"},
+   {w:"pharmacie",p:"far-ma-SI",t:"farmacia",c:"lugares"},
+   {w:"banque",p:"BÃK",t:"banco",c:"lugares"},
+   {w:"église",p:"e-GLIZ",t:"iglesia",c:"lugares"},
+   {w:"parc",p:"PARK",t:"parque",c:"lugares"},
+   {w:"plage",p:"PLAZH",t:"playa",c:"lugares"},
+   {w:"marché",p:"mar-SHE",t:"mercado",c:"lugares"},
+   {w:"travail",p:"tra-VAI",t:"trabajo",c:"trabajo"},
+   {w:"bureau",p:"by-RO",t:"oficina",c:"trabajo"},
+   {w:"argent",p:"ar-ZHÃ",t:"dinero",c:"trabajo"},
+   {w:"livre",p:"LIVR",t:"libro",c:"trabajo"},
+   {w:"ami",p:"a-MI",t:"amigo",c:"trabajo"},
+   {w:"ordinateur",p:"or-di-na-TØR",t:"ordenador",c:"trabajo"},
+   {w:"tête",p:"TET",t:"cabeza",c:"cuerpo"},
+   {w:"main",p:"MÃ",t:"mano",c:"cuerpo"},
+   {w:"œil",p:"ØY",t:"ojo",c:"cuerpo"},
+   {w:"bouche",p:"BUSH",t:"boca",c:"cuerpo"},
+   {w:"pied",p:"PYE",t:"pie",c:"cuerpo"},
+   {w:"cœur",p:"KØR",t:"corazón",c:"cuerpo"},
+   {w:"bras",p:"BRA",t:"brazo",c:"cuerpo"},
+   {w:"jambe",p:"ZHÃB",t:"pierna",c:"cuerpo"},
+   {w:"dos",p:"DO",t:"espalda",c:"cuerpo"},
+   {w:"nez",p:"NE",t:"nariz",c:"cuerpo"},
+   {w:"vêtement",p:"vet-MÃ",t:"ropa",c:"ropa"},
+   {w:"chemise",p:"shə-MIZ",t:"camisa",c:"ropa"},
+   {w:"pantalon",p:"pã-ta-LÕ",t:"pantalón",c:"ropa"},
+   {w:"chaussure",p:"sho-SUR",t:"zapato",c:"ropa"},
+   {w:"robe",p:"ROB",t:"vestido",c:"ropa"},
+   {w:"chapeau",p:"sha-PO",t:"sombrero",c:"ropa"},
+   {w:"veste",p:"VEST",t:"chaqueta",c:"ropa"},
+   {w:"jupe",p:"ZHUP",t:"falda",c:"ropa"},
+   {w:"arbre",p:"ARBR",t:"árbol",c:"naturaleza"},
+   {w:"fleur",p:"FLØR",t:"flor",c:"naturaleza"},
+   {w:"soleil",p:"so-LEY",t:"sol",c:"naturaleza"},
+   {w:"lune",p:"LUN",t:"luna",c:"naturaleza"},
+   {w:"montagne",p:"mõ-TANY",t:"montaña",c:"naturaleza"},
+   {w:"mer",p:"MER",t:"mar",c:"naturaleza"},
+   {w:"ciel",p:"SYEL",t:"cielo",c:"naturaleza"},
+   {w:"pluie",p:"PLUI",t:"lluvia",c:"naturaleza"},
+   {w:"chien",p:"SHYÃ",t:"perro",c:"animales"},
+   {w:"chat",p:"SHA",t:"gato",c:"animales"},
+   {w:"oiseau",p:"wa-ZO",t:"pájaro",c:"animales"},
+   {w:"cheval",p:"shə-VAL",t:"caballo",c:"animales"},
+   {w:"vache",p:"VASH",t:"vaca",c:"animales"},
+   {w:"lion",p:"LYÕ",t:"león",c:"animales"},
+   {w:"ours",p:"URS",t:"oso",c:"animales"},
+   {w:"souris",p:"su-RI",t:"ratón",c:"animales"},
+   {w:"voiture",p:"vwa-TUR",t:"coche",c:"transporte"},
+   {w:"train",p:"TRÃ",t:"tren",c:"transporte"},
+   {w:"avion",p:"a-VYÕ",t:"avión",c:"transporte"},
+   {w:"bus",p:"BUS",t:"autobús",c:"transporte"},
+   {w:"bateau",p:"ba-TO",t:"barco",c:"transporte"},
+   {w:"vélo",p:"ve-LO",t:"bicicleta",c:"transporte"},
+   {w:"taxi",p:"tak-SI",t:"taxi",c:"transporte"},
+   {w:"métro",p:"me-TRO",t:"metro",c:"transporte"},
+   {w:"téléphone",p:"te-le-FON",t:"teléfono",c:"tecnología"},
+   {w:"internet",p:"Ã-ter-net",t:"internet",c:"tecnología"},
+   {w:"télévision",p:"te-le-vi-ZYÕ",t:"televisión",c:"tecnología"},
+   {w:"email",p:"i-MEL",t:"correo electrónico",c:"tecnología"},
+   {w:"message",p:"me-SAZH",t:"mensaje",c:"tecnología"},
+   {w:"écran",p:"e-KRÃ",t:"pantalla",c:"tecnología"},
+   {w:"content",p:"kõ-TÃ",t:"contento",c:"emociones"},
+   {w:"en colère",p:"ã-ko-LER",t:"enfadado",c:"emociones"},
+   {w:"fatigué",p:"fa-ti-GE",t:"cansado",c:"emociones"},
+   {w:"surpris",p:"sur-PRI",t:"sorprendido",c:"emociones"},
+   {w:"inquiet",p:"Ã-kye",t:"preocupado",c:"emociones"},
+   {w:"calme",p:"KALM",t:"tranquilo",c:"emociones"},
+   {w:"chaud",p:"SHO",t:"caluroso",c:"clima"},
+   {w:"froid",p:"FRWA",t:"frío",c:"clima"},
+   {w:"nuageux",p:"nua-ZHØ",t:"nublado",c:"clima"},
+   {w:"ensoleillé",p:"ã-so-le-YE",t:"soleado",c:"clima"},
+   {w:"orage",p:"o-RAZH",t:"tormenta",c:"clima"},
+   {w:"lundi",p:"lÃ-DI",t:"lunes",c:"días"},
+   {w:"mardi",p:"mar-DI",t:"martes",c:"días"},
+   {w:"mercredi",p:"mer-krə-DI",t:"miércoles",c:"días"},
+   {w:"jeudi",p:"zhø-DI",t:"jueves",c:"días"},
+   {w:"vendredi",p:"vã-drə-DI",t:"viernes",c:"días"},
+   {w:"samedi",p:"sam-DI",t:"sábado",c:"días"},
+   {w:"dimanche",p:"di-MÃSH",t:"domingo",c:"días"},
+   {w:"janvier",p:"zhã-VYE",t:"enero",c:"meses"},
+   {w:"février",p:"fe-vri-YE",t:"febrero",c:"meses"},
+   {w:"mars",p:"MARS",t:"marzo",c:"meses"},
+   {w:"avril",p:"a-VRIL",t:"abril",c:"meses"},
+   {w:"mai",p:"ME",t:"mayo",c:"meses"},
+   {w:"juin",p:"ZHUÃ",t:"junio",c:"meses"},
+   {w:"juillet",p:"zhui-YE",t:"julio",c:"meses"},
+   {w:"août",p:"U",t:"agosto",c:"meses"},
+   {w:"septembre",p:"sep-TÃBR",t:"septiembre",c:"meses"},
+   {w:"octobre",p:"ok-TOBR",t:"octubre",c:"meses"},
+   {w:"novembre",p:"no-VÃBR",t:"noviembre",c:"meses"},
+   {w:"décembre",p:"de-SÃBR",t:"diciembre",c:"meses"},
+   {w:"qui",p:"KI",t:"quién",c:"conectores"},
+   {w:"quoi",p:"KWA",t:"qué",c:"conectores"},
+   {w:"où",p:"U",t:"dónde",c:"conectores"},
+   {w:"quand",p:"KÃ",t:"cuándo",c:"conectores"},
+   {w:"pourquoi",p:"pur-KWA",t:"por qué",c:"conectores"},
+   {w:"comment",p:"ko-MÃ",t:"cómo",c:"conectores"},
+   {w:"combien",p:"kõ-BYÃ",t:"cuánto",c:"conectores"},
+   {w:"donc",p:"DÕK",t:"por eso",c:"conectores"},
+   {w:"aussi",p:"o-SI",t:"también",c:"conectores"}
+  ],
+  phr:[
+   {f:"Comment ça va ?",t:"¿Cómo estás?"},
+   {f:"Je m'appelle...",t:"Me llamo..."},
+   {f:"Comment vous appelez-vous ?",t:"¿Cómo se llama usted?"},
+   {f:"Je ne comprends pas",t:"No entiendo"},
+   {f:"Je ne parle pas bien français",t:"No hablo bien francés"},
+   {f:"Pouvez-vous répéter, s'il vous plaît ?",t:"¿Puede repetir, por favor?"},
+   {f:"Parlez-vous anglais ?",t:"¿Habla usted inglés?"},
+   {f:"Où sont les toilettes ?",t:"¿Dónde está el baño?"},
+   {f:"Où est la gare ?",t:"¿Dónde está la estación?"},
+   {f:"Combien ça coûte ?",t:"¿Cuánto cuesta?"},
+   {f:"Je voudrais...",t:"Me gustaría..."},
+   {f:"L'addition, s'il vous plaît",t:"La cuenta, por favor"},
+   {f:"Quelle heure est-il ?",t:"¿Qué hora es?"},
+   {f:"Pouvez-vous m'aider ?",t:"¿Puede ayudarme?"},
+   {f:"Je ne sais pas",t:"No sé"},
+   {f:"À bientôt",t:"Hasta pronto"},
+   {f:"Bon appétit",t:"Buen provecho"},
+   {f:"Qu'est-ce que c'est ?",t:"¿Qué es esto?"},
+   {f:"C'est combien ?",t:"¿Cuánto es?"},
+   {f:"Je suis perdu(e)",t:"Estoy perdido/a"},
+   {f:"Au secours !",t:"¡Socorro!"},
+   {f:"Appelez une ambulance !",t:"¡Llame a una ambulancia!"},
+   {f:"Quel est votre nom ?",t:"¿Cuál es su nombre?"},
+   {f:"D'où venez-vous ?",t:"¿De dónde es usted?"},
+   {f:"Je viens d'Espagne",t:"Vengo de España"},
+   {f:"Quel âge avez-vous ?",t:"¿Cuántos años tiene?"},
+   {f:"Enchanté(e)",t:"Encantado/a"},
+   {f:"À demain",t:"Hasta mañana"},
+   {f:"Bonne journée",t:"Que tenga un buen día"},
+   {f:"Bonne nuit",t:"Buenas noches"},
+   {f:"Avez-vous une chambre libre ?",t:"¿Tiene una habitación libre?"},
+   {f:"Je voudrais réserver une table",t:"Me gustaría reservar una mesa"},
+   {f:"C'est trop cher",t:"Es demasiado caro"},
+   {f:"Pouvez-vous me faire une réduction ?",t:"¿Puede hacerme un descuento?"},
+   {f:"Où puis-je acheter des billets ?",t:"¿Dónde puedo comprar billetes?"},
+   {f:"À quelle heure part le train ?",t:"¿A qué hora sale el tren?"},
+   {f:"Je suis allergique à...",t:"Soy alérgico/a a..."},
+   {f:"J'ai besoin d'un médecin",t:"Necesito un médico"},
+   {f:"Je ne me sens pas bien",t:"No me siento bien"},
+   {f:"Félicitations !",t:"¡Felicidades!"},
+   {f:"Bon anniversaire !",t:"¡Feliz cumpleaños!"},
+   {f:"Bonne chance !",t:"¡Buena suerte!"},
+   {f:"C'est délicieux",t:"Está delicioso"},
+   {f:"J'adore ça",t:"Me encanta"},
+   {f:"Je suis d'accord",t:"Estoy de acuerdo"},
+   {f:"Je ne suis pas d'accord",t:"No estoy de acuerdo"},
+   {f:"Il n'y a pas de quoi",t:"No hay de qué"},
+   {f:"Avec plaisir",t:"Con mucho gusto"},
+   {f:"Quel dommage",t:"Qué pena"},
+   {f:"On y va !",t:"¡Vamos!"}
+  ],
+  key:["bonjour","au revoir","merci","s'il vous plaît","oui","non","pardon","de rien","eau","aujourd'hui","aller","manger","un","deux","trois","où","quand","comment","combien","aider","chien","chat","maison","ami","travail"]
+ },
+ ru:{name:"Ruso",flag:"🇷🇺",
+  dic:[
+   {w:"привет",p:"privét",t:"hola",c:"saludos"},
+   {w:"здравствуйте",p:"zdrástvuyte",t:"hola (formal)",c:"saludos"},
+   {w:"до свидания",p:"da svidánia",t:"adiós",c:"saludos"},
+   {w:"спасибо",p:"spasíba",t:"gracias",c:"saludos"},
+   {w:"пожалуйста",p:"pazhálusta",t:"por favor, de nada",c:"saludos"},
+   {w:"извините",p:"izviníte",t:"perdón",c:"saludos"},
+   {w:"пока",p:"paká",t:"chao (informal)",c:"saludos"},
+   {w:"добрый день",p:"dóbryy dyen'",t:"buenos días, buenas tardes",c:"saludos"},
+   {w:"да",p:"da",t:"sí",c:"básico"},
+   {w:"нет",p:"nyet",t:"no",c:"básico"},
+   {w:"может быть",p:"mózhet byt'",t:"tal vez",c:"básico"},
+   {w:"и",p:"i",t:"y",c:"básico"},
+   {w:"или",p:"íli",t:"o",c:"básico"},
+   {w:"но",p:"no",t:"pero",c:"básico"},
+   {w:"с",p:"s",t:"con",c:"básico"},
+   {w:"без",p:"byez",t:"sin",c:"básico"},
+   {w:"я",p:"ya",t:"yo",c:"pronombres"},
+   {w:"ты",p:"ty",t:"tú",c:"pronombres"},
+   {w:"он",p:"on",t:"él",c:"pronombres"},
+   {w:"она",p:"aná",t:"ella",c:"pronombres"},
+   {w:"мы",p:"my",t:"nosotros",c:"pronombres"},
+   {w:"вы",p:"vy",t:"usted, vosotros",c:"pronombres"},
+   {w:"они",p:"aní",t:"ellos",c:"pronombres"},
+   {w:"один",p:"adín",t:"uno",c:"números"},
+   {w:"два",p:"dva",t:"dos",c:"números"},
+   {w:"три",p:"tri",t:"tres",c:"números"},
+   {w:"четыре",p:"chetýre",t:"cuatro",c:"números"},
+   {w:"пять",p:"pyat'",t:"cinco",c:"números"},
+   {w:"шесть",p:"shest'",t:"seis",c:"números"},
+   {w:"семь",p:"syem'",t:"siete",c:"números"},
+   {w:"восемь",p:"vósem'",t:"ocho",c:"números"},
+   {w:"девять",p:"dévyat'",t:"nueve",c:"números"},
+   {w:"десять",p:"désyat'",t:"diez",c:"números"},
+   {w:"одиннадцать",p:"adínnadtsat'",t:"once",c:"números"},
+   {w:"двенадцать",p:"dvenádtsat'",t:"doce",c:"números"},
+   {w:"тринадцать",p:"trinádtsat'",t:"trece",c:"números"},
+   {w:"четырнадцать",p:"chetýrnadtsat'",t:"catorce",c:"números"},
+   {w:"пятнадцать",p:"pyatnádtsat'",t:"quince",c:"números"},
+   {w:"шестнадцать",p:"shestnádtsat'",t:"dieciséis",c:"números"},
+   {w:"семнадцать",p:"semnádtsat'",t:"diecisiete",c:"números"},
+   {w:"восемнадцать",p:"vosemnádtsat'",t:"dieciocho",c:"números"},
+   {w:"девятнадцать",p:"devyatnádtsat'",t:"diecinueve",c:"números"},
+   {w:"двадцать",p:"dvádtsat'",t:"veinte",c:"números"},
+   {w:"тридцать",p:"trídtsat'",t:"treinta",c:"números"},
+   {w:"сорок",p:"sórak",t:"cuarenta",c:"números"},
+   {w:"пятьдесят",p:"pyat'desyát",t:"cincuenta",c:"números"},
+   {w:"шестьдесят",p:"shest'desyát",t:"sesenta",c:"números"},
+   {w:"семьдесят",p:"syém'desyat",t:"setenta",c:"números"},
+   {w:"восемьдесят",p:"vósem'desyat",t:"ochenta",c:"números"},
+   {w:"девяносто",p:"devyanósta",t:"noventa",c:"números"},
+   {w:"сто",p:"sto",t:"cien",c:"números"},
+   {w:"тысяча",p:"týsyacha",t:"mil",c:"números"},
+   {w:"семья",p:"sem'yá",t:"familia",c:"familia"},
+   {w:"мать",p:"mat'",t:"madre",c:"familia"},
+   {w:"отец",p:"atéts",t:"padre",c:"familia"},
+   {w:"брат",p:"brat",t:"hermano",c:"familia"},
+   {w:"сестра",p:"sestrá",t:"hermana",c:"familia"},
+   {w:"сын",p:"syn",t:"hijo",c:"familia"},
+   {w:"дочь",p:"doch'",t:"hija",c:"familia"},
+   {w:"ребёнок",p:"rebyónak",t:"niño",c:"familia"},
+   {w:"дом",p:"dom",t:"casa",c:"casa"},
+   {w:"комната",p:"kómnata",t:"habitación",c:"casa"},
+   {w:"кухня",p:"kúkhnya",t:"cocina",c:"casa"},
+   {w:"дверь",p:"dvyer'",t:"puerta",c:"casa"},
+   {w:"окно",p:"aknó",t:"ventana",c:"casa"},
+   {w:"стол",p:"stol",t:"mesa",c:"casa"},
+   {w:"гостиная",p:"gastínaya",t:"salón",c:"casa"},
+   {w:"сад",p:"sad",t:"jardín",c:"casa"},
+   {w:"лестница",p:"lyéstnitsa",t:"escalera",c:"casa"},
+   {w:"кровать",p:"kravát'",t:"cama",c:"casa"},
+   {w:"диван",p:"diván",t:"sofá",c:"casa"},
+   {w:"хлеб",p:"khlyeb",t:"pan",c:"comida"},
+   {w:"сыр",p:"syr",t:"queso",c:"comida"},
+   {w:"вода",p:"vadá",t:"agua",c:"comida"},
+   {w:"вино",p:"vinó",t:"vino",c:"comida"},
+   {w:"молоко",p:"malakó",t:"leche",c:"comida"},
+   {w:"мясо",p:"myása",t:"carne",c:"comida"},
+   {w:"рыба",p:"rýba",t:"pescado",c:"comida"},
+   {w:"фрукт",p:"frukt",t:"fruta",c:"comida"},
+   {w:"овощ",p:"óvashch",t:"verdura",c:"comida"},
+   {w:"яйцо",p:"yaytsó",t:"huevo",c:"comida"},
+   {w:"кофе",p:"kófye",t:"café",c:"comida"},
+   {w:"чай",p:"chay",t:"té",c:"comida"},
+   {w:"торт",p:"tort",t:"pastel",c:"comida"},
+   {w:"суп",p:"sup",t:"sopa",c:"comida"},
+   {w:"салат",p:"salát",t:"ensalada",c:"comida"},
+   {w:"рис",p:"ris",t:"arroz",c:"comida"},
+   {w:"курица",p:"kúritsa",t:"pollo",c:"comida"},
+   {w:"говядина",p:"gavyádina",t:"ternera",c:"comida"},
+   {w:"шоколад",p:"shakalát",t:"chocolate",c:"comida"},
+   {w:"мёд",p:"myod",t:"miel",c:"comida"},
+   {w:"макароны",p:"makaróny",t:"pasta",c:"comida"},
+   {w:"быть",p:"byt'",t:"ser, estar",c:"verbos"},
+   {w:"иметь",p:"imét'",t:"tener",c:"verbos"},
+   {w:"делать",p:"délat'",t:"hacer",c:"verbos"},
+   {w:"идти",p:"idtí",t:"ir",c:"verbos"},
+   {w:"приходить",p:"prikhadít'",t:"venir",c:"verbos"},
+   {w:"есть",p:"yest'",t:"comer",c:"verbos"},
+   {w:"пить",p:"pit'",t:"beber",c:"verbos"},
+   {w:"говорить",p:"gavarít'",t:"hablar",c:"verbos"},
+   {w:"видеть",p:"vídet'",t:"ver",c:"verbos"},
+   {w:"знать",p:"znat'",t:"saber",c:"verbos"},
+   {w:"мочь",p:"moch'",t:"poder",c:"verbos"},
+   {w:"хотеть",p:"khatét'",t:"querer",c:"verbos"},
+   {w:"сказать",p:"skazát'",t:"decir",c:"verbos"},
+   {w:"брать",p:"brat'",t:"tomar, coger",c:"verbos"},
+   {w:"писать",p:"pisát'",t:"escribir",c:"verbos"},
+   {w:"читать",p:"chitát'",t:"leer",c:"verbos"},
+   {w:"слушать",p:"slúshat'",t:"escuchar",c:"verbos"},
+   {w:"смотреть",p:"smatryét'",t:"mirar",c:"verbos"},
+   {w:"работать",p:"rabótat'",t:"trabajar",c:"verbos"},
+   {w:"учиться",p:"uchítsa",t:"estudiar",c:"verbos"},
+   {w:"учить",p:"uchít'",t:"aprender, enseñar",c:"verbos"},
+   {w:"покупать",p:"pakupát'",t:"comprar",c:"verbos"},
+   {w:"продавать",p:"pradavát'",t:"vender",c:"verbos"},
+   {w:"платить",p:"platít'",t:"pagar",c:"verbos"},
+   {w:"играть",p:"igrát'",t:"jugar",c:"verbos"},
+   {w:"петь",p:"pyet'",t:"cantar",c:"verbos"},
+   {w:"танцевать",p:"tantsevát'",t:"bailar",c:"verbos"},
+   {w:"спать",p:"spat'",t:"dormir",c:"verbos"},
+   {w:"открывать",p:"atkryvát'",t:"abrir",c:"verbos"},
+   {w:"закрывать",p:"zakryvát'",t:"cerrar",c:"verbos"},
+   {w:"начинать",p:"nachinát'",t:"empezar",c:"verbos"},
+   {w:"помогать",p:"pamagát'",t:"ayudar",c:"verbos"},
+   {w:"большой",p:"bal'shói",t:"grande",c:"adjetivos"},
+   {w:"маленький",p:"málen'kiy",t:"pequeño",c:"adjetivos"},
+   {w:"красивый",p:"krasívyy",t:"bonito",c:"adjetivos"},
+   {w:"хороший",p:"kharóshiy",t:"bueno",c:"adjetivos"},
+   {w:"плохой",p:"plakhói",t:"malo",c:"adjetivos"},
+   {w:"новый",p:"nóvyy",t:"nuevo",c:"adjetivos"},
+   {w:"старый",p:"stáryy",t:"viejo",c:"adjetivos"},
+   {w:"лёгкий",p:"lyókhkiy",t:"fácil",c:"adjetivos"},
+   {w:"трудный",p:"trúdnyy",t:"difícil",c:"adjetivos"},
+   {w:"счастливый",p:"schastlívyy",t:"feliz",c:"adjetivos"},
+   {w:"быстрый",p:"býstryy",t:"rápido",c:"adjetivos"},
+   {w:"медленный",p:"myédlennyy",t:"lento",c:"adjetivos"},
+   {w:"сильный",p:"síl'nyy",t:"fuerte",c:"adjetivos"},
+   {w:"слабый",p:"slábyy",t:"débil",c:"adjetivos"},
+   {w:"чистый",p:"chístyy",t:"limpio",c:"adjetivos"},
+   {w:"грязный",p:"gryáznyy",t:"sucio",c:"adjetivos"},
+   {w:"богатый",p:"bagátyy",t:"rico",c:"adjetivos"},
+   {w:"добрый",p:"dóbryy",t:"amable",c:"adjetivos"},
+   {w:"сегодня",p:"sevódnya",t:"hoy",c:"tiempo"},
+   {w:"завтра",p:"závtra",t:"mañana",c:"tiempo"},
+   {w:"вчера",p:"vcherá",t:"ayer",c:"tiempo"},
+   {w:"сейчас",p:"seychás",t:"ahora",c:"tiempo"},
+   {w:"день",p:"dyen'",t:"día",c:"tiempo"},
+   {w:"ночь",p:"noch'",t:"noche",c:"tiempo"},
+   {w:"неделя",p:"nedélya",t:"semana",c:"tiempo"},
+   {w:"месяц",p:"mésyats",t:"mes",c:"tiempo"},
+   {w:"год",p:"god",t:"año",c:"tiempo"},
+   {w:"весна",p:"vesná",t:"primavera",c:"tiempo"},
+   {w:"лето",p:"lyéta",t:"verano",c:"tiempo"},
+   {w:"осень",p:"ósen'",t:"otoño",c:"tiempo"},
+   {w:"зима",p:"zimá",t:"invierno",c:"tiempo"},
+   {w:"утро",p:"útra",t:"mañana (parte del día)",c:"tiempo"},
+   {w:"вечер",p:"vyécher",t:"tarde, noche",c:"tiempo"},
+   {w:"полночь",p:"pólnach'",t:"medianoche",c:"tiempo"},
+   {w:"белый",p:"byélyy",t:"blanco",c:"colores"},
+   {w:"чёрный",p:"chyórnyy",t:"negro",c:"colores"},
+   {w:"красный",p:"krásnyy",t:"rojo",c:"colores"},
+   {w:"синий",p:"síniy",t:"azul",c:"colores"},
+   {w:"зелёный",p:"zelyónyy",t:"verde",c:"colores"},
+   {w:"жёлтый",p:"zhyóltyy",t:"amarillo",c:"colores"},
+   {w:"город",p:"górad",t:"ciudad",c:"lugares"},
+   {w:"улица",p:"úlitsa",t:"calle",c:"lugares"},
+   {w:"вокзал",p:"vakzál",t:"estación",c:"lugares"},
+   {w:"аэропорт",p:"aeropórt",t:"aeropuerto",c:"lugares"},
+   {w:"гостиница",p:"gastínitsa",t:"hotel",c:"lugares"},
+   {w:"ресторан",p:"restarán",t:"restaurante",c:"lugares"},
+   {w:"магазин",p:"magazín",t:"tienda",c:"lugares"},
+   {w:"школа",p:"shkóla",t:"escuela",c:"lugares"},
+   {w:"больница",p:"bal'nítsa",t:"hospital",c:"lugares"},
+   {w:"аптека",p:"aptyéka",t:"farmacia",c:"lugares"},
+   {w:"банк",p:"bank",t:"banco",c:"lugares"},
+   {w:"церковь",p:"tsérkav'",t:"iglesia",c:"lugares"},
+   {w:"парк",p:"park",t:"parque",c:"lugares"},
+   {w:"пляж",p:"plyazh",t:"playa",c:"lugares"},
+   {w:"рынок",p:"rýnak",t:"mercado",c:"lugares"},
+   {w:"работа",p:"rabóta",t:"trabajo",c:"trabajo"},
+   {w:"офис",p:"ófis",t:"oficina",c:"trabajo"},
+   {w:"деньги",p:"dyen'gi",t:"dinero",c:"trabajo"},
+   {w:"книга",p:"kníga",t:"libro",c:"trabajo"},
+   {w:"друг",p:"drug",t:"amigo",c:"trabajo"},
+   {w:"компьютер",p:"kamp'yúter",t:"ordenador",c:"trabajo"},
+   {w:"голова",p:"galavá",t:"cabeza",c:"cuerpo"},
+   {w:"рука",p:"ruká",t:"mano",c:"cuerpo"},
+   {w:"глаз",p:"glaz",t:"ojo",c:"cuerpo"},
+   {w:"рот",p:"rot",t:"boca",c:"cuerpo"},
+   {w:"нога",p:"nagá",t:"pierna",c:"cuerpo"},
+   {w:"сердце",p:"syértse",t:"corazón",c:"cuerpo"},
+   {w:"плечо",p:"plechó",t:"hombro",c:"cuerpo"},
+   {w:"спина",p:"spiná",t:"espalda",c:"cuerpo"},
+   {w:"нос",p:"nos",t:"nariz",c:"cuerpo"},
+   {w:"ухо",p:"úkha",t:"oreja",c:"cuerpo"},
+   {w:"одежда",p:"adyézhda",t:"ropa",c:"ropa"},
+   {w:"рубашка",p:"rubáshka",t:"camisa",c:"ropa"},
+   {w:"брюки",p:"bryúki",t:"pantalón",c:"ropa"},
+   {w:"обувь",p:"óbuv'",t:"calzado",c:"ropa"},
+   {w:"платье",p:"plát'ye",t:"vestido",c:"ropa"},
+   {w:"шапка",p:"shápka",t:"gorro",c:"ropa"},
+   {w:"куртка",p:"kúrtka",t:"chaqueta",c:"ropa"},
+   {w:"юбка",p:"yúpka",t:"falda",c:"ropa"},
+   {w:"дерево",p:"dyérevo",t:"árbol",c:"naturaleza"},
+   {w:"цветок",p:"tsvetók",t:"flor",c:"naturaleza"},
+   {w:"солнце",p:"sóntse",t:"sol",c:"naturaleza"},
+   {w:"луна",p:"luná",t:"luna",c:"naturaleza"},
+   {w:"гора",p:"gorá",t:"montaña",c:"naturaleza"},
+   {w:"море",p:"mórye",t:"mar",c:"naturaleza"},
+   {w:"небо",p:"nyébo",t:"cielo",c:"naturaleza"},
+   {w:"дождь",p:"dozhd'",t:"lluvia",c:"naturaleza"},
+   {w:"собака",p:"sabáka",t:"perro",c:"animales"},
+   {w:"кошка",p:"kóshka",t:"gato",c:"animales"},
+   {w:"птица",p:"ptítsa",t:"pájaro",c:"animales"},
+   {w:"лошадь",p:"lóshad'",t:"caballo",c:"animales"},
+   {w:"корова",p:"karóva",t:"vaca",c:"animales"},
+   {w:"лев",p:"lyev",t:"león",c:"animales"},
+   {w:"медведь",p:"medvéd'",t:"oso",c:"animales"},
+   {w:"мышь",p:"mysh'",t:"ratón",c:"animales"},
+   {w:"поезд",p:"póyezd",t:"tren",c:"transporte"},
+   {w:"самолёт",p:"samalyót",t:"avión",c:"transporte"},
+   {w:"автобус",p:"avtóbus",t:"autobús",c:"transporte"},
+   {w:"корабль",p:"karábl'",t:"barco",c:"transporte"},
+   {w:"велосипед",p:"velasipéd",t:"bicicleta",c:"transporte"},
+   {w:"такси",p:"taksí",t:"taxi",c:"transporte"},
+   {w:"метро",p:"metró",t:"metro",c:"transporte"},
+   {w:"грузовик",p:"gruzavík",t:"camión",c:"transporte"},
+   {w:"телефон",p:"telefón",t:"teléfono",c:"tecnología"},
+   {w:"интернет",p:"internét",t:"internet",c:"tecnología"},
+   {w:"телевизор",p:"televízar",t:"televisión",c:"tecnología"},
+   {w:"имейл",p:"iméyl",t:"correo electrónico",c:"tecnología"},
+   {w:"сообщение",p:"saabshchyénie",t:"mensaje",c:"tecnología"},
+   {w:"экран",p:"ekrán",t:"pantalla",c:"tecnología"},
+   {w:"довольный",p:"davól'nyy",t:"contento",c:"emociones"},
+   {w:"сердитый",p:"serdítyy",t:"enfadado",c:"emociones"},
+   {w:"усталый",p:"ustályy",t:"cansado",c:"emociones"},
+   {w:"удивлённый",p:"udivlyónnyy",t:"sorprendido",c:"emociones"},
+   {w:"взволнованный",p:"vzvalnóvannyy",t:"preocupado",c:"emociones"},
+   {w:"спокойный",p:"spakóynyy",t:"tranquilo",c:"emociones"},
+   {w:"жаркий",p:"zhárkiy",t:"caluroso",c:"clima"},
+   {w:"холодный",p:"khalódnyy",t:"frío",c:"clima"},
+   {w:"облачный",p:"óblachnyy",t:"nublado",c:"clima"},
+   {w:"солнечный",p:"sólnechnyy",t:"soleado",c:"clima"},
+   {w:"гроза",p:"grazá",t:"tormenta",c:"clima"},
+   {w:"понедельник",p:"panedyél'nik",t:"lunes",c:"días"},
+   {w:"вторник",p:"vtórnik",t:"martes",c:"días"},
+   {w:"среда",p:"sredá",t:"miércoles",c:"días"},
+   {w:"четверг",p:"chetvyérk",t:"jueves",c:"días"},
+   {w:"пятница",p:"pyátnitsa",t:"viernes",c:"días"},
+   {w:"суббота",p:"subbóta",t:"sábado",c:"días"},
+   {w:"воскресенье",p:"vaskresén'ye",t:"domingo",c:"días"},
+   {w:"январь",p:"yanvár'",t:"enero",c:"meses"},
+   {w:"февраль",p:"fevrál'",t:"febrero",c:"meses"},
+   {w:"март",p:"mart",t:"marzo",c:"meses"},
+   {w:"апрель",p:"aprél'",t:"abril",c:"meses"},
+   {w:"май",p:"may",t:"mayo",c:"meses"},
+   {w:"июнь",p:"iyún'",t:"junio",c:"meses"},
+   {w:"июль",p:"iyúl'",t:"julio",c:"meses"},
+   {w:"август",p:"ávgust",t:"agosto",c:"meses"},
+   {w:"сентябрь",p:"sentyábr'",t:"septiembre",c:"meses"},
+   {w:"октябрь",p:"aktyábr'",t:"octubre",c:"meses"},
+   {w:"ноябрь",p:"noyábr'",t:"noviembre",c:"meses"},
+   {w:"декабрь",p:"dekábr'",t:"diciembre",c:"meses"},
+   {w:"кто",p:"kto",t:"quién",c:"conectores"},
+   {w:"что",p:"shto",t:"qué",c:"conectores"},
+   {w:"где",p:"gdye",t:"dónde",c:"conectores"},
+   {w:"когда",p:"kagdá",t:"cuándo",c:"conectores"},
+   {w:"почему",p:"pachemú",t:"por qué",c:"conectores"},
+   {w:"как",p:"kak",t:"cómo",c:"conectores"},
+   {w:"сколько",p:"skól'ka",t:"cuánto",c:"conectores"},
+   {w:"поэтому",p:"paétamu",t:"por eso",c:"conectores"},
+   {w:"тоже",p:"tózhe",t:"también",c:"conectores"}
+  ],
+  phr:[
+   {f:"Как дела?",t:"¿Cómo estás?"},
+   {f:"Меня зовут...",t:"Me llamo..."},
+   {f:"Как вас зовут?",t:"¿Cómo se llama usted?"},
+   {f:"Я не понимаю",t:"No entiendo"},
+   {f:"Я плохо говорю по-русски",t:"No hablo bien ruso"},
+   {f:"Повторите, пожалуйста",t:"Repita, por favor"},
+   {f:"Вы говорите по-английски?",t:"¿Habla usted inglés?"},
+   {f:"Где туалет?",t:"¿Dónde está el baño?"},
+   {f:"Где вокзал?",t:"¿Dónde está la estación?"},
+   {f:"Сколько это стоит?",t:"¿Cuánto cuesta?"},
+   {f:"Я хотел бы...",t:"Me gustaría..."},
+   {f:"Счёт, пожалуйста",t:"La cuenta, por favor"},
+   {f:"Который час?",t:"¿Qué hora es?"},
+   {f:"Вы можете мне помочь?",t:"¿Puede ayudarme?"},
+   {f:"Я не знаю",t:"No sé"},
+   {f:"До скорого",t:"Hasta pronto"},
+   {f:"Приятного аппетита",t:"Buen provecho"},
+   {f:"Что это?",t:"¿Qué es esto?"},
+   {f:"Сколько это?",t:"¿Cuánto es?"},
+   {f:"Я заблудился",t:"Estoy perdido"},
+   {f:"Помогите!",t:"¡Socorro!"},
+   {f:"Вызовите скорую помощь!",t:"¡Llame a una ambulancia!"},
+   {f:"Откуда вы?",t:"¿De dónde es usted?"},
+   {f:"Я из Испании",t:"Vengo de España"},
+   {f:"Сколько вам лет?",t:"¿Cuántos años tiene?"},
+   {f:"Очень приятно",t:"Encantado/a"},
+   {f:"До завтра",t:"Hasta mañana"},
+   {f:"Хорошего дня",t:"Que tenga un buen día"},
+   {f:"Спокойной ночи",t:"Buenas noches"},
+   {f:"У вас есть свободный номер?",t:"¿Tiene una habitación libre?"},
+   {f:"Я хочу заказать столик",t:"Me gustaría reservar una mesa"},
+   {f:"Это слишком дорого",t:"Es demasiado caro"},
+   {f:"Можете сделать скидку?",t:"¿Puede hacerme un descuento?"},
+   {f:"Где можно купить билеты?",t:"¿Dónde puedo comprar billetes?"},
+   {f:"Во сколько отправляется поезд?",t:"¿A qué hora sale el tren?"},
+   {f:"У меня аллергия на...",t:"Soy alérgico/a a..."},
+   {f:"Мне нужен врач",t:"Necesito un médico"},
+   {f:"Я плохо себя чувствую",t:"No me siento bien"},
+   {f:"Поздравляю!",t:"¡Felicidades!"},
+   {f:"С днём рождения!",t:"¡Feliz cumpleaños!"},
+   {f:"Удачи!",t:"¡Buena suerte!"},
+   {f:"Это очень вкусно",t:"Está delicioso"},
+   {f:"Мне это очень нравится",t:"Me encanta"},
+   {f:"Я согласен",t:"Estoy de acuerdo"},
+   {f:"Я не согласен",t:"No estoy de acuerdo"},
+   {f:"Не за что",t:"No hay de qué"},
+   {f:"С удовольствием",t:"Con mucho gusto"},
+   {f:"Как жаль",t:"Qué pena"},
+   {f:"Пошли!",t:"¡Vamos!"},
+   {f:"Добро пожаловать",t:"Bienvenido"}
+  ],
+  key:["привет","до свидания","спасибо","пожалуйста","да","нет","извините","пока","вода","сегодня","идти","есть","один","два","три","где","когда","как","сколько","помогать","собака","кошка","дом","друг","работа"]
+ },
+ en:{name:"Inglés",flag:"🇬🇧",
+  dic:Object.entries({
+   saludos:"hello|je-LOU|hola;good morning|gud MOR-ning|buenos días;good evening|gud IV-ning|buenas tardes;good night|gud NAIT|buenas noches;goodbye|gud-BAI|adiós;see you|si IU|hasta luego;please|PLIIS|por favor;thank you|ZANK-iu|gracias;sorry|SO-ri|lo siento;excuse me|ek-SKIUS mi|disculpe;you're welcome|ior UEL-kam|de nada;welcome|UEL-kam|bienvenido",
+   básico:"yes|IES|sí;no|NOU|no;maybe|MEI-bi|quizás;and|AND|y;or|OR|o;but|BAT|pero;with|UIZ|con;without|uiz-AUT|sin",
+   pronombres:"I|AI|yo;you|IU|tú, usted;he|JI|él;she|SHI|ella;we|UI|nosotros;they|DEI|ellos",
+   números:"one|UAN|uno;two|TU|dos;three|ZRI|tres;four|FOR|cuatro;five|FAIV|cinco;six|SIKS|seis;seven|SE-ven|siete;eight|EIT|ocho;nine|NAIN|nueve;ten|TEN|diez;twenty|TUEN-ti|veinte;hundred|JAN-dred|cien;thousand|ZAU-sand|mil",
+   familia:"family|FA-mi-li|familia;mother|MA-der|madre;father|FA-der|padre;brother|BRA-der|hermano;sister|SIS-ter|hermana;son|SAN|hijo;daughter|DO-ter|hija;friend|FREND|amigo",
+   casa:"house|JAUS|casa;room|RUM|habitación;kitchen|KI-chen|cocina;door|DOR|puerta;window|UIN-dou|ventana;table|TEI-bol|mesa;bed|BED|cama",
+   comida:"bread|BRED|pan;water|UO-ter|agua;milk|MILK|leche;cheese|CHIIS|queso;meat|MIIT|carne;fish|FISH|pescado;apple|A-pol|manzana;coffee|KO-fi|café",
+   verbos:"to be|tu BI|ser, estar;to have|tu JAV|tener;to go|tu GOU|ir;to eat|tu IIT|comer;to drink|tu DRINK|beber;to want|tu UONT|querer;to speak|tu SPIIK|hablar;to understand|tu an-der-STAND|entender;to help|tu JELP|ayudar;to know|tu NOU|saber;to see|tu SI|ver;to work|tu UERK|trabajar;to learn|tu LERN|aprender",
+   adjetivos:"good|GUD|bueno;bad|BAD|malo;big|BIG|grande;small|SMOL|pequeño;new|NIU|nuevo;old|OULD|viejo;beautiful|BIU-ti-ful|hermoso;easy|I-si|fácil;difficult|DI-fi-calt|difícil",
+   tiempo:"today|tu-DEI|hoy;tomorrow|tu-MO-rou|mañana;yesterday|IES-ter-dei|ayer;now|NAU|ahora;always|OL-ueis|siempre;never|NE-ver|nunca",
+   colores:"red|RED|rojo;blue|BLU|azul;green|GRIIN|verde;black|BLAK|negro;white|JUAIT|blanco",
+   lugares:"city|SI-ti|ciudad;street|STRIIT|calle;school|SKUL|escuela;airport|ER-port|aeropuerto;hospital|JOS-pi-tal|hospital",
+   animales:"dog|DOG|perro;cat|KAT|gato",
+   conectores:"where|JUER|dónde;when|JUEN|cuándo;why|JUAI|por qué;how|JAU|cómo;how much|jau MACH|cuánto;also|OL-sou|también;because|bi-KOS|porque"
+  }).flatMap(([c,s])=>s.split(";").map(x=>{const[w,p,t]=x.split("|");return{w,p,t,c};})),
+  phr:"How are you?|¿Cómo estás?;My name is...|Me llamo...;What's your name?|¿Cómo te llamas?;Nice to meet you|Encantado de conocerte;I don't understand|No entiendo;I don't speak English well|No hablo bien inglés;Can you repeat, please?|¿Puede repetir, por favor?;Do you speak Spanish?|¿Habla español?;Where is the bathroom?|¿Dónde está el baño?;Where is the station?|¿Dónde está la estación?;How much is it?|¿Cuánto cuesta?;I would like...|Me gustaría...;The bill, please|La cuenta, por favor;What time is it?|¿Qué hora es?;Can you help me?|¿Puede ayudarme?;I don't know|No sé;See you soon|Hasta pronto;Enjoy your meal|Buen provecho;What is this?|¿Qué es esto?;I'm lost|Estoy perdido;Help!|¡Socorro!;Call an ambulance!|¡Llame a una ambulancia!;Where are you from?|¿De dónde eres?;I'm from Spain|Soy de España;How old are you?|¿Cuántos años tienes?;See you tomorrow|Hasta mañana;Have a nice day|Que tengas un buen día;Good luck!|¡Buena suerte!;Happy birthday!|¡Feliz cumpleaños!;It's delicious|Está delicioso;I agree|Estoy de acuerdo;I don't feel well|No me siento bien;I need a doctor|Necesito un médico;That's too expensive|Es demasiado caro;I'm allergic to...|Soy alérgico a...;Let's go!|¡Vamos!".split(";").map(x=>{const[f,t]=x.split("|");return{f,t};}),
+  key:["hello","goodbye","thank you","please","sorry","yes","no","water","today","to go","to eat","to help","to work","one","two","three","where","when","how","how much","dog","cat","house","friend"]
+ }
+};
+
+let state={lang:"fr",tab:"dic",qi:0,score:0,questions:[]};
+let answered=false;
+
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+function renderLangs(){
+  document.getElementById("langs").innerHTML=Object.keys(DATA).map(k=>
+    `<button class="${k===state.lang?"active":""}" onclick="setLang('${k}')">${DATA[k].flag} ${DATA[k].name}</button>`
+  ).join("");
+}
+function setLang(l){
+  state.lang=l;state.qi=0;state.score=0;state.questions=[];
+  renderLangs();render();
+}
+function renderTabs(){
+  const tabs=[["dic","Diccionario"],["phr","Frases"],["key","Palabras clave"],["quiz","Test"]];
+  document.getElementById("tabs").innerHTML=tabs.map(t=>
+    `<button class="${t[0]===state.tab?"active":""}" onclick="setTab('${t[0]}')">${t[1]}</button>`
+  ).join("");
+}
+function setTab(t){
+  state.tab=t;
+  if(t==="quiz"){state.qi=0;state.score=0;state.questions=genQuiz(20);}
+  renderTabs();render();
+}
+function rowWord(e){
+  return `<div class="row"><div class="row-main"><div><span class="word">${e.w}</span> <span class="pron">${e.p}</span></div><div class="tr">${e.t}</div></div><div class="tag">${e.c}</div></div>`;
+}
+function render(){
+  const d=DATA[state.lang];
+  const main=document.getElementById("main");
+  if(state.tab==="dic"){
+    main.innerHTML=`<input type="search" placeholder="Buscar palabra..." oninput="filterDic(this.value)">`+
+      `<div class="count">${d.dic.length} palabras</div>`+
+      `<div class="list" id="diclist">`+d.dic.map(rowWord).join("")+`</div>`;
+  } else if(state.tab==="phr"){
+    main.innerHTML=`<div class="count">${d.phr.length} frases</div><div class="list">`+d.phr.map(p=>
+      `<div class="row"><div class="row-main"><div class="word">${p.f}</div><div class="tr">${p.t}</div></div></div>`
+    ).join("")+`</div>`;
+  } else if(state.tab==="key"){
+    main.innerHTML=`<div class="count">${d.key.length} palabras clave</div><div class="list">`+d.key.map(w=>{
+      const e=d.dic.find(x=>x.w===w);
+      return `<div class="row"><div class="row-main"><div><span class="word">${w}</span>`+(e?` <span class="pron">${e.p}</span>`:"")+`</div>`+(e?`<div class="tr">${e.t}</div>`:"")+`</div></div>`;
+    }).join("")+`</div>`;
+  } else {
+    renderQuiz();
+  }
+}
+function filterDic(v){
+  const d=DATA[state.lang];
+  v=v.toLowerCase();
+  const f=d.dic.filter(e=>e.w.toLowerCase().includes(v)||e.t.toLowerCase().includes(v));
+  document.getElementById("diclist").outerHTML=f.length?
+    `<div class="list" id="diclist">`+f.map(rowWord).join("")+`</div>`:
+    `<div class="empty" id="diclist">Sin resultados</div>`;
+}
+function genQuiz(n){
+  const lang=DATA[state.lang];
+  const d=lang.dic;
+  n=Math.min(n,d.length);
+  const idxPool=shuffle(d.map((_,i)=>i)).slice(0,n);
+  return idxPool.map(idx=>{
+    const entry=d[idx];
+    const reverse=Math.random()<0.5;
+    const correctText=reverse?entry.w:entry.t;
+    const promptText=reverse?`¿Cómo se dice "${entry.t}" en ${lang.name.toLowerCase()}?`:`¿Qué significa "${entry.w}"?`;
+    const candidates=d.filter((e,i)=>i!==idx&&(reverse?e.w:e.t)!==correctText);
+    const distractors=shuffle(candidates).slice(0,3).map(e=>reverse?e.w:e.t);
+    const opts=shuffle([correctText,...distractors]);
+    return {q:promptText,o:opts,a:opts.indexOf(correctText)};
+  });
+}
+function renderQuiz(){
+  const main=document.getElementById("main");
+  if(!state.questions.length) state.questions=genQuiz(20);
+  if(state.qi>=state.questions.length){
+    let best=state.score;
+    try{
+      const raw=localStorage.getItem("best_"+state.lang);
+      const saved=raw===null?-1:parseInt(raw);
+      if(state.score>saved) localStorage.setItem("best_"+state.lang,state.score);
+      best=parseInt(localStorage.getItem("best_"+state.lang));
+    }catch(e){}
+    main.innerHTML=`<div class="quiz-card"><div class="quiz-q">Test completado</div>`+
+      `<div class="score">Has acertado ${state.score} de ${state.questions.length} preguntas<br>Mejor puntuación: ${best}</div>`+
+      `<button class="btn" onclick="setTab('quiz')">Nuevo test</button></div>`;
+    return;
+  }
+  const q=state.questions[state.qi];
+  main.innerHTML=`<div class="score">Pregunta ${state.qi+1} de ${state.questions.length}</div>`+
+    `<div class="quiz-card"><div class="quiz-q">${q.q}</div>`+
+    q.o.map((o,i)=>`<button class="opt" id="opt${i}" onclick="answer(${i},${q.a})">${o}</button>`).join("")+
+    `</div>`;
+  answered=false;
+}
+function answer(i,correct){
+  if(answered) return;
+  answered=true;
+  document.getElementById("opt"+correct).classList.add("correct");
+  if(i!==correct) document.getElementById("opt"+i).classList.add("wrong");
+  else state.score++;
+  setTimeout(()=>{state.qi++;renderQuiz();},900);
+}
+
+const motion=!matchMedia("(prefers-reduced-motion:reduce)").matches;
+const anim=(el,kf,o)=>motion&&el&&el.animate(kf,Object.assign({easing:"cubic-bezier(.22,1,.36,1)"},o));
+function renderLangs(){
+  const el=document.getElementById("langs");
+  if(!el.firstChild){
+    el.innerHTML='<i class="thumb"></i>'+Object.keys(DATA).map(k=>`<button data-k="${k}" onclick="setLang('${k}')">${DATA[k].flag} ${DATA[k].name}</button>`).join("");
+    requestAnimationFrame(()=>requestAnimationFrame(()=>el.classList.add("ready")));
+  }
+  el.querySelectorAll("button").forEach(b=>{
+    const on=b.dataset.k===state.lang;b.classList.toggle("active",on);
+    if(on){const t=el.querySelector(".thumb");t.style.width=b.offsetWidth+"px";t.style.transform=`translateX(${b.offsetLeft-3}px)`;el.scrollTo({left:b.offsetLeft-el.clientWidth/2+b.offsetWidth/2,behavior:motion?"smooth":"auto"});}
+  });
+}
+function renderTabs(){
+  const n=document.getElementById("tabs");
+  if(!n.firstChild){
+    n.innerHTML=[["dic","Diccionario"],["phr","Frases"],["key","Palabras clave"],["num","Números"],["fav","★ Favoritos"],["quiz","Test"]].map(t=>`<button data-t="${t[0]}" onclick="setTab('${t[0]}')">${t[1]}</button>`).join("");
+  }
+  n.querySelectorAll("button").forEach(b=>b.classList.toggle("active",b.dataset.t===state.tab));
+}
+function stagger(){document.querySelectorAll("#main .row").forEach((r,i)=>{if(i<16){r.classList.add("in");r.style.animationDelay=i*26+"ms";}});decorate();}
+function decorate(){
+  const d=DATA[state.lang];
+  const ex=d.exm||(d.exm=Object.fromEntries((d.ex||"").split(";").filter(Boolean).map(x=>{const[w,f,t]=x.split("|");return[w,{f,t}];})));
+  document.querySelectorAll("#main .row").forEach(r=>{
+    const w=r.querySelector(".word");if(!w||r.querySelector(".spk"))return;
+    const e=state.tab==="key"&&ex[w.textContent.trim()];
+    if(e)(w.parentElement||r).insertAdjacentHTML("beforeend",`<div class="ex">${e.f}<br><span>${e.t}</span></div>`);
+    const b=document.createElement("button");b.className="spk";b.setAttribute("aria-label","Escuchar");b.textContent="🔊";
+    b.onclick=()=>speak(w.textContent.trim(),b);r.appendChild(b);
+  });
+}
+function speak(t,b){
+  if(!("speechSynthesis" in window))return;
+  speechSynthesis.cancel();
+  document.querySelectorAll(".spk.on").forEach(x=>x.classList.remove("on"));
+  const u=new SpeechSynthesisUtterance(t);u.lang=DATA[state.lang].tts;u.rate=.85;
+  const v=speechSynthesis.getVoices().find(x=>x.lang.replace("_","-").toLowerCase().startsWith(u.lang.slice(0,2).toLowerCase()));if(v)u.voice=v;
+  b.classList.add("on");u.onend=u.onerror=()=>b.classList.remove("on");speechSynthesis.speak(u);
+}
+function countUp(n){
+  const el=document.getElementById("num");
+  if(!motion||!n){el.textContent=n;return;}
+  const t0=performance.now();
+  (function f(t){const k=Math.min(1,(t-t0)/1100);el.textContent=Math.round(n*(1-Math.pow(1-k,3)));if(k<1)requestAnimationFrame(f);})(t0);
+}
+const _r=render,_f=filterDic;
+render=function(){
+  const m=document.getElementById("main");m.getAnimations().forEach(a=>a.cancel());
+  _r();anim(m,[{opacity:0,transform:"translateY(12px)"},{opacity:1,transform:"none"}],{duration:480});stagger();
+};
+filterDic=function(v){_f(v);stagger();};
+function renderQuiz(){
+  const main=document.getElementById("main");
+  main.getAnimations().forEach(a=>a.cancel());
+  if(!state.questions.length) state.questions=genQuiz(20);
+  const N=state.questions.length;
+  if(state.qi>=N){
+    let best=state.score;
+    try{
+      const raw=localStorage.getItem("best_"+state.lang);
+      const saved=raw===null?-1:parseInt(raw);
+      if(state.score>saved) localStorage.setItem("best_"+state.lang,state.score);
+      best=parseInt(localStorage.getItem("best_"+state.lang));
+    }catch(e){}
+    const C=2*Math.PI*54;
+    main.innerHTML=`<div class="quiz-card"><div class="quiz-q">Test completado</div><div class="ring"><svg viewBox="0 0 120 120"><circle class="trk" cx="60" cy="60" r="54"/><circle class="bar" cx="60" cy="60" r="54" style="stroke-dasharray:${C};stroke-dashoffset:${C}" data-off="${C*(1-state.score/N)}"/></svg><b id="num">0</b></div><div class="score">Has acertado ${state.score} de ${N} preguntas<br>Mejor puntuación: ${best}</div><button class="btn" onclick="setTab('quiz')">Nuevo test</button></div>`;
+    anim(main,[{opacity:0,transform:"scale(.97)"},{opacity:1,transform:"none"}],{duration:480});
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{const b=main.querySelector(".bar");b.style.strokeDashoffset=b.dataset.off;countUp(state.score);}));
+    return;
+  }
+  const q=state.questions[state.qi];
+  main.innerHTML=`<div class="prog"><i style="width:${state.qi/N*100}%"></i></div><div class="score">Pregunta ${state.qi+1} de ${N}</div><div class="quiz-card"><div class="quiz-q">${q.q}</div>`+
+    q.o.map((o,i)=>`<button class="opt" id="opt${i}" onclick="answer(${i},${q.a})">${o}</button>`).join("")+`</div>`;
+  anim(main,[{opacity:0,transform:"translateX(18px)"},{opacity:1,transform:"none"}],{duration:420});
+  answered=false;
+}
+function answer(i,correct){
+  if(answered) return;
+  answered=true;
+  const ok=document.getElementById("opt"+correct),sel=document.getElementById("opt"+i);
+  ok.classList.add("correct");
+  if(i!==correct){
+    sel.classList.add("wrong");
+    anim(sel,[{transform:"translateX(0)"},{transform:"translateX(-9px)"},{transform:"translateX(8px)"},{transform:"translateX(-4px)"},{transform:"none"}],{duration:400});
+  } else {
+    state.score++;
+    anim(ok,[{transform:"scale(1)"},{transform:"scale(1.04)"},{transform:"scale(1)"}],{duration:450,easing:"cubic-bezier(.34,1.56,.64,1)"});
+  }
+  const p=document.querySelector(".prog i");
+  if(p) p.style.width=(state.qi+1)/state.questions.length*100+"%";
+  setTimeout(()=>{
+    anim(document.getElementById("main"),[{opacity:1},{opacity:0,transform:"translateX(-18px)"}],{duration:200,fill:"forwards"});
+    setTimeout(()=>{state.qi++;renderQuiz();},motion?200:0);
+  },850);
+}
+const P=o=>Object.entries(o).flatMap(([c,s])=>s.split(";").map(x=>{const[w,p,t]=x.split("|");return{w,p,t,c};}));
+const F=s=>s.split(";").map(x=>{const[f,t]=x.split("|");return{f,t};});
+DATA.fr.tts="fr-FR";DATA.ru.tts="ru-RU";DATA.en.tts="en-US";
+DATA.en.dic.push(...P({
+ tecnología:"computer|kom-PIU-ter|ordenador;phone|FOUN|teléfono;internet|IN-ter-net|internet;screen|SKRIIN|pantalla;password|PAS-uerd|contraseña;email|I-meil|correo electrónico;message|ME-sich|mensaje;website|UEB-sait|sitio web;battery|BA-te-ri|batería;camera|KA-me-ra|cámara",
+ emociones:"happy|JA-pi|feliz;sad|SAD|triste;angry|AN-gri|enfadado;tired|TAI-erd|cansado;afraid|a-FREID|asustado;surprised|ser-PRAIZD|sorprendido;love|LAV|amor;worried|UE-rid|preocupado;proud|PRAUD|orgulloso;bored|BORD|aburrido",
+ clima:"weather|UE-der|clima;sun|SAN|sol;rain|REIN|lluvia;snow|SNOU|nieve;wind|UIND|viento;cloud|KLAUD|nube;hot|JOT|caliente;cold|KOULD|frío",
+ días:"Monday|MAN-dei|lunes;Tuesday|TIUS-dei|martes;Wednesday|UENS-dei|miércoles;Thursday|ZERS-dei|jueves;Friday|FRAI-dei|viernes;Saturday|SA-ter-dei|sábado;Sunday|SAN-dei|domingo",
+ meses:"January|YAN-iu-e-ri|enero;February|FEB-ru-e-ri|febrero;March|MARCH|marzo;April|EI-pril|abril;May|MEI|mayo;June|YUN|junio;July|yu-LAI|julio;August|O-gast|agosto;September|sep-TEM-ber|septiembre;October|ok-TOU-ber|octubre;November|nou-VEM-ber|noviembre;December|di-SEM-ber|diciembre"
+}));
+DATA.de={name:"Alemán",flag:"🇩🇪",tts:"de-DE",dic:P({
+ saludos:"hallo|JA-lo|hola;guten Morgen|GU-ten MOR-guen|buenos días;gute Nacht|GU-te NAJT|buenas noches;tschüss|CHÜS|adiós;danke|DAN-ke|gracias;bitte|BI-te|por favor, de nada;Entschuldigung|ent-SHUL-di-gung|perdón",
+ básico:"ja|YA|sí;nein|NAIN|no;und|UNT|y;aber|A-ber|pero",
+ números:"eins|AINS|uno;zwei|TSVAI|dos;drei|DRAI|tres;zehn|TSEN|diez",
+ familia:"Mutter|MU-ter|madre;Vater|FA-ter|padre;Freund|FROINT|amigo",
+ comida:"Wasser|VA-ser|agua;Brot|BROT|pan;Kaffee|KA-fe|café",
+ lugares:"Haus|JAUS|casa;Stadt|SHTAT|ciudad",
+ conectores:"wo|VO|dónde;wann|VAN|cuándo;wie|VI|cómo;warum|va-RUM|por qué",
+ animales:"Hund|JUNT|perro;Katze|KAT-se|gato",
+ verbos:"sein|SAIN|ser, estar;haben|JA-ben|tener;gehen|GUE-en|ir"}),
+ phr:F("Wie geht's?|¿Qué tal?;Ich heiße...|Me llamo...;Ich verstehe nicht|No entiendo;Sprechen Sie Englisch?|¿Habla inglés?;Wo ist der Bahnhof?|¿Dónde está la estación?;Wie viel kostet das?|¿Cuánto cuesta?;Die Rechnung, bitte|La cuenta, por favor;Ich habe Hunger|Tengo hambre"),
+ key:["hallo","danke","bitte","ja","nein","Wasser","wo","wie"],
+ ex:"hallo|Hallo, ich heiße Ana.|Hola, me llamo Ana.;danke|Danke für deine Hilfe.|Gracias por tu ayuda.;bitte|Ein Kaffee, bitte.|Un café, por favor.;ja|Ja, ich verstehe.|Sí, entiendo.;nein|Nein, danke.|No, gracias.;Wasser|Ich trinke Wasser.|Bebo agua.;wo|Wo ist das Haus?|¿Dónde está la casa?;wie|Wie heißt du?|¿Cómo te llamas?"};
+DATA.it={name:"Italiano",flag:"🇮🇹",tts:"it-IT",dic:P({
+ saludos:"ciao|CHAO|hola, adiós;buongiorno|buon-YOR-no|buenos días;buonanotte|buo-na-NOT-te|buenas noches;arrivederci|a-ri-ve-DER-chi|adiós;grazie|GRA-tsie|gracias;prego|PRE-go|de nada;per favore|per fa-VO-re|por favor;scusi|SCU-si|perdone",
+ básico:"sì|SI|sí;no|NO|no;e|E|y;ma|MA|pero",
+ números:"uno|U-no|uno;due|DU-e|dos;tre|TRE|tres;dieci|DIE-chi|diez",
+ familia:"madre|MA-dre|madre;padre|PA-dre|padre;amico|a-MI-co|amigo",
+ comida:"acqua|AC-cua|agua;pane|PA-ne|pan;caffè|caf-FE|café",
+ lugares:"casa|CA-sa|casa;città|chit-TA|ciudad",
+ conectores:"dove|DO-ve|dónde;quando|CUAN-do|cuándo;come|CO-me|cómo;perché|per-QUE|por qué",
+ animales:"cane|CA-ne|perro;gatto|GAT-to|gato",
+ verbos:"essere|ES-se-re|ser, estar;avere|a-VE-re|tener;andare|an-DA-re|ir"}),
+ phr:F("Come stai?|¿Qué tal?;Mi chiamo...|Me llamo...;Non capisco|No entiendo;Parla inglese?|¿Habla inglés?;Dov'è la stazione?|¿Dónde está la estación?;Quanto costa?|¿Cuánto cuesta?;Il conto, per favore|La cuenta, por favor;Ho fame|Tengo hambre"),
+ key:["ciao","grazie","prego","sì","no","acqua","dove","come"],
+ ex:"ciao|Ciao, come stai?|Hola, ¿qué tal?;grazie|Grazie mille!|¡Muchas gracias!;prego|Prego, si accomodi.|Adelante, siéntese.;sì|Sì, certo.|Sí, claro.;no|No, grazie.|No, gracias.;acqua|Un bicchiere d'acqua.|Un vaso de agua.;dove|Dove abiti?|¿Dónde vives?;come|Come ti chiami?|¿Cómo te llamas?"};
+DATA.pt={name:"Portugués",flag:"🇵🇹",tts:"pt-PT",dic:P({
+ saludos:"olá|o-LA|hola;bom dia|bom DI-a|buenos días;boa noite|BO-a NOI-te|buenas noches;tchau|CHAU|adiós;obrigado|o-bri-GA-du|gracias;por favor|por fa-VOR|por favor;desculpe|des-CUL-pe|perdón;de nada|di NA-da|de nada",
+ básico:"sim|SIM|sí;não|NÃO|no;e|I|y;mas|MAS|pero",
+ números:"um|UM|uno;dois|DOIS|dos;três|TRES|tres;dez|DES|diez",
+ familia:"mãe|MÃE|madre;pai|PAI|padre;amigo|a-MI-gu|amigo",
+ comida:"água|A-gua|agua;pão|PÃO|pan;café|ca-FE|café",
+ lugares:"casa|CA-za|casa;cidade|si-DA-di|ciudad",
+ conectores:"onde|ON-di|dónde;quando|CUAN-du|cuándo;como|CO-mu|cómo;porquê|por-QUE|por qué",
+ animales:"cão|CÃO|perro;gato|GA-tu|gato",
+ verbos:"ser|SER|ser;ter|TER|tener;ir|IR|ir"}),
+ phr:F("Como está?|¿Cómo está?;Chamo-me...|Me llamo...;Não entendo|No entiendo;Fala inglês?|¿Habla inglés?;Onde fica a estação?|¿Dónde está la estación?;Quanto custa?|¿Cuánto cuesta?;A conta, por favor|La cuenta, por favor;Tenho fome|Tengo hambre"),
+ key:["olá","obrigado","por favor","sim","não","água","onde","como"],
+ ex:"olá|Olá, tudo bem?|Hola, ¿qué tal?;obrigado|Muito obrigado!|¡Muchas gracias!;por favor|Um café, por favor.|Un café, por favor.;sim|Sim, claro.|Sí, claro.;não|Não, obrigado.|No, gracias.;água|Quero uma água.|Quiero un agua.;onde|Onde moras?|¿Dónde vives?;como|Como te chamas?|¿Cómo te llamas?"};
+DATA.en.ex="hello|Hello, how are you?|Hola, ¿cómo estás?;goodbye|Goodbye, see you soon!|¡Adiós, hasta pronto!;thank you|Thank you for your help.|Gracias por tu ayuda.;please|Water, please.|Agua, por favor.;sorry|Sorry, I'm late.|Perdón, llego tarde.;yes|Yes, I understand.|Sí, entiendo.;no|No, thank you.|No, gracias.;water|I drink water every day.|Bebo agua cada día.;today|Today is a good day.|Hoy es un buen día.;to go|I want to go home.|Quiero ir a casa.;to eat|We eat at eight.|Comemos a las ocho.;to help|Can you help me?|¿Puedes ayudarme?;to work|She works in a bank.|Ella trabaja en un banco.;one|I have one brother.|Tengo un hermano.;two|Two coffees, please.|Dos cafés, por favor.;three|There are three books.|Hay tres libros.;where|Where is the station?|¿Dónde está la estación?;when|When does it start?|¿Cuándo empieza?;how|How do you say it?|¿Cómo se dice?;how much|How much is this?|¿Cuánto cuesta esto?;dog|The dog is big.|El perro es grande.;cat|My cat sleeps a lot.|Mi gato duerme mucho.;house|Our house is small.|Nuestra casa es pequeña.;friend|He is my best friend.|Es mi mejor amigo.";
+DATA.ru.ex="привет|Привет, как дела?|Hola, ¿qué tal?;до свидания|До свидания, до завтра!|¡Adiós, hasta mañana!;спасибо|Спасибо за помощь.|Gracias por la ayuda.;пожалуйста|Воду, пожалуйста.|Agua, por favor.;да|Да, я понимаю.|Sí, entiendo.;нет|Нет, спасибо.|No, gracias.;извините|Извините, я опоздал.|Perdone, llego tarde.;пока|Пока, увидимся!|¡Chao, nos vemos!;вода|Я пью воду.|Bebo agua.;сегодня|Сегодня хороший день.|Hoy es un buen día.;идти|Я хочу идти домой.|Quiero ir a casa.;есть|Мы хотим есть.|Queremos comer.;один|У меня один брат.|Tengo un hermano.;два|Два кофе, пожалуйста.|Dos cafés, por favor.;три|Здесь три книги.|Aquí hay tres libros.;где|Где вокзал?|¿Dónde está la estación?;когда|Когда начинается?|¿Cuándo empieza?;как|Как это сказать?|¿Cómo se dice esto?;сколько|Сколько это стоит?|¿Cuánto cuesta esto?;помогать|Я люблю помогать.|Me gusta ayudar.;собака|Собака большая.|El perro es grande.;кошка|Моя кошка спит.|Mi gata duerme.;дом|Наш дом маленький.|Nuestra casa es pequeña.;друг|Он мой лучший друг.|Es mi mejor amigo.;работа|У меня новая работа.|Tengo un trabajo nuevo.";
+DATA.fr.ex="bonjour|Bonjour, comment allez-vous ?|Hola, ¿cómo está usted?;au revoir|Au revoir, à demain !|¡Adiós, hasta mañana!;merci|Merci beaucoup !|¡Muchas gracias!;s'il vous plaît|Un café, s'il vous plaît.|Un café, por favor.;oui|Oui, je comprends.|Sí, entiendo.;non|Non, merci.|No, gracias.;pardon|Pardon, je suis en retard.|Perdón, llego tarde.;salut|Salut, ça va ?|Hola, ¿qué tal?;eau|Je bois de l'eau.|Bebo agua.;aujourd'hui|Aujourd'hui, il fait beau.|Hoy hace buen tiempo.;aller|Je veux aller à la maison.|Quiero ir a casa.;manger|Nous allons manger.|Vamos a comer.;un|J'ai un frère.|Tengo un hermano.;deux|Deux cafés, s'il vous plaît.|Dos cafés, por favor.;trois|Il y a trois livres.|Hay tres libros.;où|Où est la gare ?|¿Dónde está la estación?;quand|Quand ça commence ?|¿Cuándo empieza?;comment|Comment dit-on ça ?|¿Cómo se dice eso?;combien|C'est combien ?|¿Cuánto cuesta?;aider|Je peux vous aider ?|¿Puedo ayudarle?;chien|Le chien est grand.|El perro es grande.;chat|Mon chat dort.|Mi gato duerme.;maison|Notre maison est petite.|Nuestra casa es pequeña.;ami|C'est mon meilleur ami.|Es mi mejor amigo.;travail|J'ai un nouveau travail.|Tengo un trabajo nuevo.";
+DATA.en.dic.push(...P({
+ trabajo:"job|YOB|trabajo, empleo;boss|BOS|jefe;office|O-fis|oficina;money|MA-ni|dinero;meeting|MII-ting|reunión;company|KAM-pa-ni|empresa;salary|SA-la-ri|sueldo;doctor|DOK-ter|médico;teacher|TII-cher|profesor;student|STIU-dent|estudiante",
+ cuerpo:"head|JED|cabeza;eye|AI|ojo;ear|IR|oreja;nose|NOUS|nariz;mouth|MAUZ|boca;hand|JAND|mano;arm|ARM|brazo;leg|LEG|pierna;foot|FUT|pie;heart|JART|corazón;back|BAK|espalda;hair|JER|pelo",
+ ropa:"shirt|SHERT|camisa;pants|PANTS|pantalones;dress|DRES|vestido;shoes|SHUS|zapatos;coat|KOUT|abrigo",
+ naturaleza:"tree|TRII|árbol;flower|FLAU-er|flor;river|RI-ver|río;sea|SII|mar;mountain|MAUN-ten|montaña;forest|FO-rest|bosque;sky|SKAI|cielo;moon|MUUN|luna",
+ animales:"bird|BERD|pájaro;horse|JORS|caballo;cow|KAU|vaca;pig|PIG|cerdo",
+ transporte:"car|KAR|coche;bus|BAS|autobús;train|TREIN|tren;plane|PLEIN|avión;bicycle|BAI-si-kol|bicicleta;ticket|TI-ket|billete;taxi|TAK-si|taxi;boat|BOUT|barco",
+ comida:"rice|RAIS|arroz;egg|EG|huevo;chicken|CHI-ken|pollo;soup|SUP|sopa;salad|SA-lad|ensalada;sugar|SHU-gar|azúcar;salt|SOLT|sal;tea|TII|té;breakfast|BREK-fast|desayuno;dinner|DI-ner|cena",
+ casa:"chair|CHER|silla;bathroom|BAZ-rum|baño;garden|GAR-den|jardín;key|KII|llave;wall|UOL|pared",
+ verbos:"to come|tu KAM|venir;to give|tu GIV|dar;to take|tu TEIK|tomar;to do|tu DU|hacer;to say|tu SEI|decir;to think|tu ZINK|pensar;to like|tu LAIK|gustar;to love|tu LAV|amar;to live|tu LIV|vivir;to buy|tu BAI|comprar;to sleep|tu SLIIP|dormir;to read|tu RIID|leer;to write|tu RAIT|escribir;to open|tu OU-pen|abrir;to close|tu KLOUS|cerrar;to wait|tu UEIT|esperar;to ask|tu ASK|preguntar;to find|tu FAIND|encontrar",
+ adjetivos:"cheap|CHIIP|barato;expensive|ik-SPEN-siv|caro;fast|FAST|rápido;slow|SLOU|lento;young|YANG|joven;tall|TOL|alto;short|SHORT|bajo, corto;clean|KLIIN|limpio;empty|EM-ti|vacío;full|FUL|lleno",
+ tiempo:"day|DEI|día;night|NAIT|noche;week|UIIK|semana;month|MANZ|mes;year|IR|año;hour|AU-er|hora;morning|MOR-ning|mañana (parte del día);later|LEI-ter|más tarde",
+ colores:"yellow|IE-lou|amarillo;orange|O-rinch|naranja;gray|GREI|gris",
+ lugares:"shop|SHOP|tienda;restaurant|RES-to-rant|restaurante;hotel|jou-TEL|hotel;park|PARK|parque;bank|BANK|banco;beach|BIICH|playa",
+ pronombres:"me|MI|me, mí;my|MAI|mi;your|IOR|tu;this|DIS|esto",
+ números:"many|ME-ni|muchos",
+ básico:"not|NOT|no (negación);very|VE-ri|muy;more|MOR|más;all|OL|todo"
+}));
+DATA.en.phr.push(...F("Excuse me, where is...?|Disculpe, ¿dónde está...?;I'm hungry|Tengo hambre;I'm thirsty|Tengo sed;I like it|Me gusta;I don't like it|No me gusta;What do you do?|¿A qué te dedicas?;I'm a student|Soy estudiante;Can I pay by card?|¿Puedo pagar con tarjeta?;Speak slowly, please|Hable despacio, por favor;How do you say...?|¿Cómo se dice...?;I'm sorry, I'm late|Lo siento, llego tarde;Turn left|Gire a la izquierda;Turn right|Gire a la derecha;Go straight ahead|Siga recto"));
+DATA.en.key.push("to like");
+DATA.en.ex+=";to like|I like music.|Me gusta la música";
+DATA.de.dic.push(...P({
+ saludos:"guten Tag|GU-ten TAK|buenos días, buenas tardes;guten Abend|GU-ten A-bent|buenas noches;auf Wiedersehen|auf VI-der-ze-en|adiós;bis bald|bis BALT|hasta pronto;Willkommen|VIL-co-men|bienvenido;es tut mir leid|es TUT mir LAIT|lo siento;gern geschehen|guern ge-SHE-en|de nada",
+ básico:"vielleicht|fi-LAIJT|quizás;oder|O-der|o;mit|MIT|con;ohne|O-ne|sin;nicht|NIJT|no (negación);sehr|SER|muy;mehr|MER|más;alles|A-les|todo",
+ pronombres:"ich|IJ|yo;du|DU|tú;er|ER|él;sie|SI|ella;wir|VIR|nosotros;ihr|IR|vosotros;mich|MIJ|me, mí;mein|MAIN|mi;dein|DAIN|tu;dies|DIS|esto",
+ números:"vier|FIR|cuatro;fünf|FÜNF|cinco;sechs|SEKS|seis;sieben|SI-ben|siete;acht|AJT|ocho;neun|NOIN|nueve;elf|ELF|once;zwölf|TSVÖLF|doce;zwanzig|TSVAN-tsiyj|veinte;hundert|JUN-dert|cien;tausend|TAU-sent|mil",
+ familia:"Familie|fa-MI-lie|familia;Bruder|BRU-der|hermano;Schwester|SHVES-ter|hermana;Sohn|SON|hijo;Tochter|TOJ-ter|hija;Eltern|EL-tern|padres;Kind|KINT|niño;Frau|FRAU|mujer, esposa;Mann|MAN|hombre, marido;Oma|O-ma|abuela;Opa|O-pa|abuelo",
+ casa:"Zimmer|TSI-mer|habitación;Küche|KÜ-je|cocina;Tür|TÜR|puerta;Fenster|FENS-ter|ventana;Tisch|TISH|mesa;Bett|BET|cama;Stuhl|SHTUL|silla;Badezimmer|BA-de-tsi-mer|baño;Garten|GAR-ten|jardín;Schlüssel|SHLÜ-sel|llave;Wand|VANT|pared",
+ comida:"Milch|MILJ|leche;Käse|KE-se|queso;Fleisch|FLAISH|carne;Fisch|FISH|pescado;Apfel|AP-fel|manzana;Reis|RAIS|arroz;Ei|AI|huevo;Hähnchen|JEN-jen|pollo;Suppe|ZU-pe|sopa;Salat|za-LAT|ensalada;Zucker|TSU-ker|azúcar;Salz|SALTS|sal;Tee|TE|té;Bier|BIR|cerveza;Wein|VAIN|vino;Frühstück|FRÜ-shtük|desayuno",
+ verbos:"kommen|KO-men|venir;geben|GUE-ben|dar;nehmen|NE-men|tomar;machen|MA-jen|hacer;sagen|SA-guen|decir;denken|DEN-ken|pensar;mögen|MÖ-guen|gustar;lieben|LI-ben|amar;leben|LE-ben|vivir;kaufen|KAU-fen|comprar;schlafen|SHLA-fen|dormir;lesen|LE-sen|leer;schreiben|SHRAI-ben|escribir;öffnen|ÖF-nen|abrir;schließen|SHLI-sen|cerrar;warten|VAR-ten|esperar;fragen|FRA-guen|preguntar;finden|FIN-den|encontrar;essen|E-sen|comer;trinken|TRIN-ken|beber;wollen|VO-len|querer;sprechen|SHPRE-jen|hablar;verstehen|fer-SHTE-en|entender;helfen|JEL-fen|ayudar;wissen|VI-sen|saber;sehen|SE-en|ver;arbeiten|AR-bai-ten|trabajar;lernen|LER-nen|aprender",
+ adjetivos:"gut|GUT|bueno;schlecht|SHLEJT|malo;groß|GROS|grande;klein|KLAIN|pequeño;neu|NOI|nuevo;alt|ALT|viejo;schön|SHÖN|hermoso;einfach|AIN-faj|fácil;schwer|SHVER|difícil, pesado;billig|BI-liyj|barato;teuer|TOI-er|caro;schnell|SHNEL|rápido;langsam|LANG-sam|lento;jung|YUNG|joven;sauber|SAU-ber|limpio;glücklich|GLÜK-liyj|feliz",
+ tiempo:"heute|JOI-te|hoy;morgen|MOR-guen|mañana;gestern|GES-tern|ayer;jetzt|YETST|ahora;immer|I-mer|siempre;nie|NI|nunca;Tag|TAK|día;Nacht|NAJT|noche;Woche|VO-je|semana;Monat|MO-nat|mes;Jahr|YAR|año;Stunde|SHTUN-de|hora;Zeit|TSAIT|tiempo;später|SHPE-ter|más tarde",
+ colores:"rot|ROT|rojo;blau|BLAU|azul;grün|GRÜN|verde;schwarz|SHVARTS|negro;weiß|VAIS|blanco;gelb|GUELP|amarillo;orange|o-RAN-je|naranja;grau|GRAU|gris",
+ lugares:"Schule|SHU-le|escuela;Flughafen|FLUK-ja-fen|aeropuerto;Krankenhaus|KRAN-ken-jaus|hospital;Straße|SHTRA-se|calle;Geschäft|gue-SHEFT|tienda;Restaurant|res-to-RAN|restaurante;Hotel|jo-TEL|hotel;Park|PARK|parque;Bank|BANK|banco;Strand|SHTRANT|playa;Land|LANT|país;Büro|bü-RO|oficina",
+ trabajo:"Arbeit|AR-bait|trabajo;Chef|SHEF|jefe;Geld|GUELT|dinero;Besprechung|be-SHPRE-jung|reunión;Firma|FIR-ma|empresa;Gehalt|gue-JALT|sueldo;Arzt|ARTST|médico;Lehrer|LE-rer|profesor;Student|shtu-DENT|estudiante;Beruf|be-RUF|profesión",
+ cuerpo:"Kopf|KOPF|cabeza;Auge|AU-gue|ojo;Ohr|OR|oreja;Nase|NA-se|nariz;Mund|MUNT|boca;Hand|JANT|mano;Arm|ARM|brazo;Bein|BAIN|pierna;Fuß|FUS|pie;Herz|JERTS|corazón",
+ ropa:"Hemd|JEMT|camisa;Hose|JO-se|pantalones;Kleid|KLAIT|vestido;Schuhe|SHU-e|zapatos;Mantel|MAN-tel|abrigo",
+ naturaleza:"Baum|BAUM|árbol;Blume|BLU-me|flor;Fluss|FLUS|río;Meer|MER|mar;Berg|BERK|montaña;Wald|VALT|bosque;Himmel|JI-mel|cielo",
+ animales:"Vogel|FO-guel|pájaro;Pferd|PFERT|caballo;Kuh|KU|vaca;Schwein|SHVAIN|cerdo;Hase|JA-se|conejo;Maus|MAUS|ratón",
+ transporte:"Auto|AU-to|coche;Bus|BUS|autobús;Zug|TSUK|tren;Flugzeug|FLUK-tsoik|avión;Fahrrad|FAR-rat|bicicleta;Fahrkarte|FAR-kar-te|billete;Taxi|TAK-si|taxi;Schiff|SHIF|barco",
+ tecnología:"Computer|kom-PIU-ter|ordenador;Handy|JEN-di|móvil;Internet|IN-ter-net|internet;Bildschirm|BILT-shirm|pantalla;Passwort|PAS-vort|contraseña;E-Mail|I-meil|correo electrónico;Nachricht|NAJ-rijt|mensaje;Webseite|VEP-sai-te|sitio web",
+ emociones:"froh|FRO|contento;traurig|TRAU-riyj|triste;wütend|VÜ-tent|enfadado;müde|MÜ-de|cansado;Angst|ANGST|miedo;überrascht|ü-ber-RASHT|sorprendido;Liebe|LI-be|amor;stolz|SHTOLTS|orgulloso",
+ clima:"Wetter|VE-ter|clima;Regen|RE-guen|lluvia;Schnee|SHNE|nieve;Wind|VINT|viento;Wolke|VOL-ke|nube;heiß|JAIS|caliente;kalt|KALT|frío;warm|VARM|cálido",
+ días:"Montag|MON-tak|lunes;Dienstag|DINS-tak|martes;Mittwoch|MIT-voj|miércoles;Donnerstag|DO-ners-tak|jueves;Freitag|FRAI-tak|viernes;Samstag|SAMS-tak|sábado;Sonntag|ZON-tak|domingo",
+ meses:"Januar|YA-nu-ar|enero;Februar|FE-bru-ar|febrero;März|MERTS|marzo;April|a-PRIL|abril;Mai|MAI|mayo;Juni|YU-ni|junio;Juli|YU-li|julio;August|au-GUST|agosto;September|sep-TEM-ber|septiembre;Oktober|ok-TO-ber|octubre;November|no-VEM-ber|noviembre;Dezember|de-TSEM-ber|diciembre"
+}));
+DATA.de.phr.push(...F("Guten Tag!|¡Buenos días!;Guten Abend!|¡Buenas noches!;Auf Wiedersehen!|¡Adiós!;Bis morgen!|¡Hasta mañana!;Freut mich!|¡Encantado!;Wie heißt du?|¿Cómo te llamas?;Woher kommst du?|¿De dónde eres?;Ich komme aus Spanien|Soy de España;Wie alt bist du?|¿Cuántos años tienes?;Ich bin Student|Soy estudiante;Ich spreche ein bisschen Deutsch|Hablo un poco de alemán;Können Sie das wiederholen?|¿Puede repetirlo?;Sprechen Sie bitte langsamer|Hable más despacio, por favor;Wie sagt man...?|¿Cómo se dice...?;Ich weiß nicht|No lo sé;Entschuldigung, wo ist...?|Disculpe, ¿dónde está...?;Wo ist die Toilette?|¿Dónde está el baño?;Gehen Sie geradeaus|Siga recto;Biegen Sie links ab|Gire a la izquierda;Biegen Sie rechts ab|Gire a la derecha;Ich möchte...|Quisiera...;Was kostet das?|¿Qué precio tiene?;Das ist zu teuer|Es demasiado caro;Kann ich mit Karte zahlen?|¿Puedo pagar con tarjeta?;Ich habe Durst|Tengo sed;Guten Appetit!|¡Buen provecho!;Es schmeckt gut|Está rico;Wie spät ist es?|¿Qué hora es?;Ich brauche Hilfe|Necesito ayuda;Hilfe!|¡Socorro!;Rufen Sie einen Krankenwagen|Llame a una ambulancia;Ich brauche einen Arzt|Necesito un médico;Mir ist schlecht|Me encuentro mal;Ich habe mich verlaufen|Me he perdido;Viel Glück!|¡Buena suerte!;Alles Gute zum Geburtstag!|¡Feliz cumpleaños!;Schönen Tag noch!|¡Que tengas un buen día!;Ich bin einverstanden|Estoy de acuerdo;Ich liebe dich|Te quiero;Gute Reise!|¡Buen viaje!;Prost!|¡Salud!;Das ist toll|Eso es genial"));
+DATA.de.key.push("tschüss","Entschuldigung","heute","morgen","eins","zwei","drei","wann","warum","Hund","Katze","Haus","Freund","Stadt","gehen","essen","helfen");
+DATA.de.ex+=";tschüss|Tschüss, bis morgen!|¡Chao, hasta mañana!;Entschuldigung|Entschuldigung, ich bin spät.|Perdón, llego tarde.;heute|Heute ist ein guter Tag.|Hoy es un buen día.;morgen|Morgen gehe ich nach Hause.|Mañana voy a casa.;eins|Nur eins, bitte.|Solo uno, por favor.;zwei|Zwei Kaffee, bitte.|Dos cafés, por favor.;drei|Es gibt drei Bücher.|Hay tres libros.;wann|Wann beginnt es?|¿Cuándo empieza?;warum|Warum lernst du Deutsch?|¿Por qué aprendes alemán?;Hund|Der Hund ist groß.|El perro es grande.;Katze|Meine Katze schläft.|Mi gato duerme.;Haus|Unser Haus ist klein.|Nuestra casa es pequeña.;Freund|Er ist mein bester Freund.|Es mi mejor amigo.;Stadt|Die Stadt ist schön.|La ciudad es bonita.;gehen|Ich will nach Hause gehen.|Quiero ir a casa.;essen|Wir essen um acht.|Comemos a las ocho.;helfen|Kannst du mir helfen?|¿Puedes ayudarme?";
+const NW={en:{o:'one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen',t:'twenty thirty forty fifty sixty seventy eighty ninety',h:'one hundred',j:(t,o)=>t+'-'+o},de:{o:'eins zwei drei vier fünf sechs sieben acht neun zehn elf zwölf dreizehn vierzehn fünfzehn sechzehn siebzehn achtzehn neunzehn',t:'zwanzig dreißig vierzig fünfzig sechzig siebzig achtzig neunzig',h:'hundert',j:(t,o)=>(o==='eins'?'ein':o)+'und'+t},it:{o:'uno due tre quattro cinque sei sette otto nove dieci undici dodici tredici quattordici quindici sedici diciassette diciotto diciannove',t:'venti trenta quaranta cinquanta sessanta settanta ottanta novanta',h:'cento',j:(t,o)=>(/^[uo]/.test(o)?t.slice(0,-1):t)+(o==='tre'?'tré':o)},pt:{o:'um dois três quatro cinco seis sete oito nove dez onze doze treze catorze quinze dezasseis dezassete dezoito dezanove',t:'vinte trinta quarenta cinquenta sessenta setenta oitenta noventa',h:'cem',j:(t,o)=>t+' e '+o},ru:{o:'один два три четыре пять шесть семь восемь девять десять одиннадцать двенадцать тринадцать четырнадцать пятнадцать шестнадцать семнадцать восемнадцать девятнадцать',t:'двадцать тридцать сорок пятьдесят шестьдесят семьдесят восемьдесят девяносто',h:'сто',j:(t,o)=>t+' '+o}};
+const FU='un deux trois quatre cinq six sept huit neuf dix onze douze treize quatorze quinze seize'.split(' '),FT='x x vingt trente quarante cinquante soixante'.split(' ');
+function frN(n){if(n===100)return 'cent';if(n<17)return FU[n-1];if(n<20)return 'dix-'+FU[n-11];if(n<70){const t=Math.floor(n/10),u=n%10;return FT[t]+(u?(u===1?' et un':'-'+FU[u-1]):'');}if(n<80){const u=n-60;return 'soixante'+(u===11?' et onze':'-'+frN(u));}return n===80?'quatre-vingts':'quatre-vingt-'+frN(n-80);}
+function numWord(l,n){if(l==='fr')return frN(n);const c=NW[l],o=c.o.split(' '),t=c.t.split(' ');if(n===100)return c.h;if(n<20)return o[n-1];const T=t[Math.floor(n/10)-2],u=n%10;return u?c.j(T,o[u-1]):T;}
+const _r2=render;
+render=function(){if(state.tab!=='num')return _r2();const m=document.getElementById('main');m.getAnimations().forEach(a=>a.cancel());m.innerHTML=`<div class="count">100 números · del 1 al 100</div><div class="list">`+Array.from({length:100},(_,i)=>`<div class="row"><div class="row-main"><div><span class="word">${numWord(state.lang,i+1)}</span></div><div class="tr">${i+1}</div></div></div>`).join('')+`</div>`;anim(m,[{opacity:0,transform:'translateY(12px)'},{opacity:1,transform:'none'}],{duration:480});stagger();};
+function voicesFor(){const p=DATA[state.lang].tts.slice(0,2).toLowerCase();return('speechSynthesis' in window?speechSynthesis.getVoices():[]).filter(v=>v.lang.replace('_','-').toLowerCase().startsWith(p));}
+function fillVoices(){let s=document.getElementById('vsel');if(!s){s=document.createElement('select');s.id='vsel';s.setAttribute('aria-label','Voz');s.style.cssText='display:block;margin:8px auto 0;max-width:92%;padding:7px 12px;border-radius:12px;border:1px solid var(--border);background:var(--glass);color:inherit;font:inherit;font-size:13px';s.onchange=()=>{try{localStorage.setItem('dl_v_'+state.lang,s.value)}catch(e){}};document.getElementById('tabs').insertAdjacentElement('afterend',s);}const vs=voicesFor();let sv='';try{sv=localStorage.getItem('dl_v_'+state.lang)||''}catch(e){}s.innerHTML=vs.length?vs.map(v=>`<option value="${v.name.replace(/"/g,'')}">🗣 ${v.name} (${v.lang})</option>`).join(''):`<option value="">🗣 Voz predeterminada</option>`;if(vs.some(v=>v.name.replace(/"/g,'')===sv))s.value=sv;}
+function speak(t,b){if(!('speechSynthesis' in window))return;speechSynthesis.cancel();document.querySelectorAll('.spk.on').forEach(x=>x.classList.remove('on'));const u=new SpeechSynthesisUtterance(t);u.lang=DATA[state.lang].tts;u.rate=.85;const s=document.getElementById('vsel'),vs=voicesFor(),v=vs.find(x=>s&&x.name.replace(/"/g,'')===s.value)||vs[0];if(v){u.voice=v;u.lang=v.lang;}b.classList.add('on');u.onend=u.onerror=()=>b.classList.remove('on');speechSynthesis.speak(u);}
+const _rl=renderLangs;renderLangs=function(){_rl();fillVoices();};
+if('speechSynthesis' in window)speechSynthesis.onvoiceschanged=fillVoices;
+DATA.it.dic.push(...P({
+saludos:`buonasera|buo-na-SE-ra|buenas tardes;a presto|a PRES-to|hasta pronto;benvenuto|ben-ve-NU-to|bienvenido;mi dispiace|mi dis-PIA-che|lo siento;piacere|pia-CHE-re|encantado`,
+básico:`forse|FOR-se|quizás;o|O|o;con|CON|con;senza|SEN-sa|sin;molto|MOL-to|muy, mucho;più|PIU|más;tutto|TUT-to|todo;poco|PO-co|poco`,
+pronombres:`io|I-o|yo;tu|TU|tú;lui|LUI|él;lei|LEI|ella;noi|NOI|nosotros;voi|VOI|vosotros;loro|LO-ro|ellos;mio|MI-o|mío;questo|CUES-to|esto`,
+números:`quattro|CUAT-tro|cuatro;cinque|CHIN-cue|cinco;sei|SEI|seis;sette|SET-te|siete;otto|OT-to|ocho;nove|NO-ve|nueve;venti|VEN-ti|veinte;cento|CHEN-to|cien;mille|MIL-le|mil`,
+familia:`fratello|fra-TEL-lo|hermano;sorella|so-REL-la|hermana;figlio|FI-llo|hijo;figlia|FI-lla|hija;genitori|che-ni-TO-ri|padres;bambino|bam-BI-no|niño;moglie|MO-lle|esposa;marito|ma-RI-to|marido;nonna|NON-na|abuela;nonno|NON-no|abuelo`,
+comida:`latte|LAT-te|leche;formaggio|for-MAD-yo|queso;carne|CAR-ne|carne;pesce|PE-she|pescado;mela|ME-la|manzana;riso|RI-so|arroz;uovo|UO-vo|huevo;zucchero|TSUC-ke-ro|azúcar;sale|SA-le|sal;vino|VI-no|vino;birra|BIR-ra|cerveza`,
+casa:`camera|CA-me-ra|habitación;cucina|cu-CHI-na|cocina;porta|POR-ta|puerta;finestra|fi-NES-tra|ventana;tavolo|TA-vo-lo|mesa;letto|LET-to|cama;chiave|KIA-ve|llave`,
+verbos:`venire|ve-NI-re|venir;dare|DA-re|dar;fare|FA-re|hacer;dire|DI-re|decir;amare|a-MA-re|amar;vivere|VI-ve-re|vivir;comprare|com-PRA-re|comprar;dormire|dor-MI-re|dormir;mangiare|man-YA-re|comer;bere|BE-re|beber;parlare|par-LA-re|hablar;aiutare|a-iu-TA-re|ayudar`,
+adjetivos:`buono|BUO-no|bueno;cattivo|cat-TI-vo|malo;grande|GRAN-de|grande;piccolo|PIC-co-lo|pequeño;nuovo|NUO-vo|nuevo;vecchio|VEC-kio|viejo;bello|BEL-lo|hermoso;facile|FA-chi-le|fácil;difficile|dif-FI-chi-le|difícil;caro|CA-ro|caro`,
+tiempo:`oggi|OD-yi|hoy;domani|do-MA-ni|mañana;ieri|IE-ri|ayer;adesso|a-DES-so|ahora;sempre|SEM-pre|siempre;mai|MAI|nunca;giorno|YOR-no|día;notte|NOT-te|noche;settimana|set-ti-MA-na|semana;anno|AN-no|año`,
+colores:`rosso|ROS-so|rojo;blu|BLU|azul;verde|VER-de|verde;nero|NE-ro|negro;bianco|BIAN-co|blanco;giallo|YAL-lo|amarillo`,
+lugares:`scuola|SCUO-la|escuela;aeroporto|a-e-ro-POR-to|aeropuerto;ospedale|os-pe-DA-le|hospital;strada|STRA-da|calle;negozio|ne-GO-tsio|tienda;spiaggia|SPIAD-ya|playa`}));
+DATA.it.phr.push(...F(`Buonasera!|¡Buenas tardes!;A domani!|¡Hasta mañana!;Piacere di conoscerti|Encantado de conocerte;Come ti chiami?|¿Cómo te llamas?;Di dove sei?|¿De dónde eres?;Sono spagnolo|Soy español;Quanti anni hai?|¿Cuántos años tienes?;Parla più piano|Habla más despacio;Può ripetere?|¿Puede repetir?;Ho sete|Tengo sed;Mi piace|Me gusta;Dov'è il bagno?|¿Dónde está el baño?;Mi può aiutare?|¿Puede ayudarme?;Non lo so|No lo sé;Buon appetito!|¡Buen provecho!;Buon viaggio!|¡Buen viaje!;Che ore sono?|¿Qué hora es?;Sto bene, grazie|Estoy bien, gracias`));
+DATA.it.key.push('arrivederci','per favore','scusi','oggi','domani','uno','due','tre','quando','perché','cane','gatto','casa','amico','mangiare','parlare','aiutare');
+DATA.pt.dic.push(...P({
+saludos:`boa tarde|BO-a TAR-di|buenas tardes;até logo|a-TE LO-gu|hasta luego;bem-vindo|bein-VIN-du|bienvenido;lamento|la-MEN-tu|lo siento;prazer|pra-ZER|encantado`,
+básico:`talvez|tal-VES|quizás;ou|OU|o;com|COM|con;sem|SEIN|sin;muito|MUI-tu|muy, mucho;mais|MAIS|más;tudo|TU-du|todo;pouco|POU-cu|poco`,
+pronombres:`eu|EU|yo;tu|TU|tú;ele|E-li|él;ela|E-la|ella;nós|NOS|nosotros;vocês|vo-SES|ustedes;eles|E-lis|ellos;meu|MEU|mío;isto|IS-tu|esto`,
+números:`quatro|CUA-tru|cuatro;cinco|SIN-cu|cinco;seis|SEIS|seis;sete|SE-ti|siete;oito|OI-tu|ocho;nove|NO-vi|nueve;vinte|VIN-ti|veinte;cem|SEIN|cien;mil|MIL|mil`,
+familia:`irmão|ir-MÃO|hermano;irmã|ir-MÃ|hermana;filho|FI-liu|hijo;filha|FI-lia|hija;pais|PAIS|padres;criança|cri-AN-sa|niño;esposa|es-PO-za|esposa;marido|ma-RI-du|marido;avó|a-VO|abuela;avô|a-VÔ|abuelo`,
+comida:`leite|LEI-ti|leche;queijo|KEI-ju|queso;carne|CAR-ni|carne;peixe|PEI-xi|pescado;maçã|ma-SÃ|manzana;arroz|a-ROS|arroz;ovo|O-vu|huevo;açúcar|a-SU-car|azúcar;sal|SAL|sal;vinho|VI-niu|vino;cerveja|ser-VE-ja|cerveza`,
+casa:`quarto|CUAR-tu|habitación;cozinha|cu-ZI-nha|cocina;porta|POR-ta|puerta;janela|ja-NE-la|ventana;mesa|ME-za|mesa;cama|CA-ma|cama;chave|XA-vi|llave`,
+verbos:`vir|VIR|venir;dar|DAR|dar;fazer|fa-ZER|hacer;dizer|di-ZER|decir;amar|a-MAR|amar;viver|vi-VER|vivir;comprar|com-PRAR|comprar;dormir|dor-MIR|dormir;comer|cu-MER|comer;beber|be-BER|beber;falar|fa-LAR|hablar;ajudar|a-ju-DAR|ayudar`,
+adjetivos:`bom|BOM|bueno;mau|MAU|malo;grande|GRAN-di|grande;pequeno|pe-KE-nu|pequeño;novo|NO-vu|nuevo;velho|VE-liu|viejo;bonito|bu-NI-tu|bonito;fácil|FA-sil|fácil;difícil|di-FI-sil|difícil;caro|CA-ru|caro`,
+tiempo:`hoje|O-ji|hoy;amanhã|a-ma-NHÃ|mañana;ontem|ON-tein|ayer;agora|a-GO-ra|ahora;sempre|SEM-pri|siempre;nunca|NUN-ca|nunca;dia|DI-a|día;noite|NOI-ti|noche;semana|se-MA-na|semana;ano|A-nu|año`,
+colores:`vermelho|ver-ME-liu|rojo;azul|a-ZUL|azul;verde|VER-di|verde;preto|PRE-tu|negro;branco|BRAN-cu|blanco;amarelo|a-ma-RE-lu|amarillo`,
+lugares:`escola|is-CO-la|escuela;aeroporto|a-e-ro-POR-tu|aeropuerto;hospital|osh-pi-TAL|hospital;rua|RU-a|calle;loja|LO-ja|tienda;praia|PRAI-a|playa`}));
+DATA.pt.phr.push(...F(`Boa tarde!|¡Buenas tardes!;Até amanhã!|¡Hasta mañana!;Prazer em conhecê-lo|Encantado de conocerle;Como se chama?|¿Cómo se llama?;De onde é?|¿De dónde es?;Sou espanhol|Soy español;Quantos anos tem?|¿Cuántos años tiene?;Fale mais devagar|Hable más despacio;Pode repetir?|¿Puede repetir?;Tenho sede|Tengo sed;Gosto disto|Me gusta esto;Onde fica a casa de banho?|¿Dónde está el baño?;Pode ajudar-me?|¿Puede ayudarme?;Não sei|No lo sé;Bom apetite!|¡Buen provecho!;Boa viagem!|¡Buen viaje!;Que horas são?|¿Qué hora es?;Estou bem, obrigado|Estoy bien, gracias`));
+DATA.pt.key.push('tchau','desculpe','de nada','hoje','amanhã','um','dois','três','quando','porquê','cão','gato','casa','amigo','comer','falar','ajudar');
+const _r3=render;
+render=function(){_r3();if(state.tab!=='num')return;const m=document.getElementById('main'),l=m.querySelector('.list');if(!l)return;l.id='numlist';m.insertAdjacentHTML('afterbegin','<input type="search" placeholder="Buscar número (cifra o palabra)..." oninput="filterNum(this.value)">');};
+function filterNum(v){v=v.toLowerCase().trim();let k=0;document.querySelectorAll('#numlist .row').forEach(r=>{const t=r.querySelector('.word').textContent.toLowerCase(),n=r.querySelector('.tr').textContent,ok=!v||t.includes(v)||n.startsWith(v);r.style.display=ok?'':'none';if(ok)k++;});const c=document.querySelector('#main .count');if(c)c.textContent=k?k+' números':'Sin resultados';}
+DATA.it.dic.push(...P({
+días:`lunedì|lu-ne-DI|lunes;martedì|mar-te-DI|martes;mercoledì|mer-co-le-DI|miércoles;giovedì|yo-ve-DI|jueves;venerdì|ve-ner-DI|viernes;sabato|SA-ba-to|sábado;domenica|do-ME-ni-ca|domingo`,
+meses:`gennaio|yen-NA-io|enero;febbraio|feb-BRA-io|febrero;marzo|MAR-tso|marzo;aprile|a-PRI-le|abril;maggio|MAD-yo|mayo;giugno|YU-nio|junio;luglio|LU-lio|julio;agosto|a-GOS-to|agosto;settembre|set-TEM-bre|septiembre;ottobre|ot-TO-bre|octubre;novembre|no-VEM-bre|noviembre;dicembre|di-CHEM-bre|diciembre`,
+trabajo:`lavoro|la-VO-ro|trabajo;capo|CA-po|jefe;soldi|SOL-di|dinero;riunione|riu-NIO-ne|reunión;azienda|a-DZIEN-da|empresa;stipendio|sti-PEN-dio|sueldo;medico|ME-di-co|médico;insegnante|in-se-GNAN-te|profesor`,
+cuerpo:`testa|TES-ta|cabeza;occhio|OC-kio|ojo;orecchio|o-REC-kio|oreja;naso|NA-so|nariz;bocca|BOC-ca|boca;mano|MA-no|mano;braccio|BRA-cho|brazo;gamba|GAM-ba|pierna;piede|PIE-de|pie;cuore|CUO-re|corazón`,
+ropa:`camicia|ca-MI-cha|camisa;pantaloni|pan-ta-LO-ni|pantalones;vestito|ves-TI-to|vestido;scarpe|SCAR-pe|zapatos;cappotto|cap-POT-to|abrigo`,
+naturaleza:`albero|AL-be-ro|árbol;fiore|FIO-re|flor;fiume|FIU-me|río;mare|MA-re|mar;montagna|mon-TA-ña|montaña;bosco|BOS-co|bosque;cielo|CHE-lo|cielo;luna|LU-na|luna`,
+animales:`uccello|uch-CHEL-lo|pájaro;cavallo|ca-VAL-lo|caballo;mucca|MUC-ca|vaca;maiale|ma-IA-le|cerdo`,
+transporte:`macchina|MAC-ki-na|coche;autobus|AU-to-bus|autobús;treno|TRE-no|tren;aereo|a-E-re-o|avión;bicicletta|bi-chi-CLET-ta|bicicleta;biglietto|bi-LLET-to|billete;barca|BAR-ca|barco`,
+tecnología:`computer|com-PIU-ter|ordenador;telefono|te-LE-fo-no|teléfono;schermo|SKER-mo|pantalla;messaggio|mes-SAD-yo|mensaje;sito web|SI-to UEB|sitio web`,
+emociones:`felice|fe-LI-che|feliz;triste|TRIS-te|triste;arrabbiato|ar-rab-BIA-to|enfadado;stanco|STAN-co|cansado;paura|pa-U-ra|miedo;amore|a-MO-re|amor`,
+clima:`tempo|TEM-po|clima;pioggia|PIOD-ya|lluvia;neve|NE-ve|nieve;vento|VEN-to|viento;nuvola|NU-vo-la|nube;caldo|CAL-do|calor;freddo|FRED-do|frío`}));
+DATA.it.phr.push(...F(`Buona notte!|¡Buenas noches!;Come va?|¿Cómo va?;Molto bene|Muy bien;Così così|Así así;Non importa|No importa;Che cosa è?|¿Qué es?;Quanto tempo!|¡Cuánto tiempo!;Ho bisogno di aiuto|Necesito ayuda;Sono stanco|Estoy cansado;Vorrei un caffè|Querría un café;Un tavolo per due|Una mesa para dos;Buon compleanno!|¡Feliz cumpleaños!`));
+DATA.it.key.push('lunedì','domenica','lavoro','soldi','mare','treno','felice','amore','pioggia','freddo');
+DATA.pt.dic.push(...P({
+días:`segunda-feira|se-GUN-da FEI-ra|lunes;terça-feira|TER-sa FEI-ra|martes;quarta-feira|CUAR-ta FEI-ra|miércoles;quinta-feira|QUIN-ta FEI-ra|jueves;sexta-feira|SEIS-ta FEI-ra|viernes;sábado|SA-ba-du|sábado;domingo|du-MIN-gu|domingo`,
+meses:`janeiro|ja-NEI-ru|enero;fevereiro|fe-ve-REI-ru|febrero;março|MAR-su|marzo;abril|a-BRIL|abril;maio|MAI-u|mayo;junho|JU-niu|junio;julho|JU-liu|julio;agosto|a-GOS-tu|agosto;setembro|se-TEM-bru|septiembre;outubro|ou-TU-bru|octubre;novembro|nu-VEM-bru|noviembre;dezembro|de-ZEM-bru|diciembre`,
+trabajo:`trabalho|tra-BA-liu|trabajo;chefe|XE-fi|jefe;dinheiro|di-NHEI-ru|dinero;reunião|reu-ni-ÃO|reunión;empresa|em-PRE-za|empresa;salário|sa-LA-riu|sueldo;médico|ME-di-cu|médico;professor|pro-fe-SOR|profesor`,
+cuerpo:`cabeça|ca-BE-sa|cabeza;olho|O-liu|ojo;orelha|o-RE-lia|oreja;nariz|na-RIS|nariz;boca|BO-ca|boca;mão|MÃO|mano;braço|BRA-su|brazo;perna|PER-na|pierna;pé|PE|pie;coração|co-ra-SÃO|corazón`,
+ropa:`camisa|ca-MI-za|camisa;calças|CAL-sas|pantalones;vestido|vesh-TI-du|vestido;sapatos|sa-PA-tus|zapatos;casaco|ca-ZA-cu|abrigo`,
+naturaleza:`árvore|AR-vo-ri|árbol;flor|FLOR|flor;rio|RI-u|río;mar|MAR|mar;montanha|mon-TA-nha|montaña;floresta|flo-RES-ta|bosque;céu|SEU|cielo;lua|LU-a|luna`,
+animales:`pássaro|PA-sa-ru|pájaro;cavalo|ca-VA-lu|caballo;vaca|VA-ca|vaca;porco|POR-cu|cerdo`,
+transporte:`carro|CA-rru|coche;autocarro|au-to-CA-rru|autobús;comboio|com-BOI-u|tren;avião|a-vi-ÃO|avión;bicicleta|bi-si-CLE-ta|bicicleta;bilhete|bi-LIE-ti|billete;barco|BAR-cu|barco`,
+tecnología:`computador|com-pu-ta-DOR|ordenador;telemóvel|te-le-MO-vel|móvil;ecrã|e-CRÃ|pantalla;mensagem|men-SA-jein|mensaje;site|SAI-ti|sitio web`,
+emociones:`feliz|fe-LIS|feliz;triste|TRIS-ti|triste;zangado|zan-GA-du|enfadado;cansado|can-SA-du|cansado;medo|ME-du|miedo;amor|a-MOR|amor`,
+clima:`tempo|TEM-pu|clima;chuva|XU-va|lluvia;neve|NE-vi|nieve;vento|VEN-tu|viento;nuvem|NU-vein|nube;calor|ca-LOR|calor;frio|FRI-u|frío`}));
+DATA.pt.phr.push(...F(`Boa noite!|¡Buenas noches!;Como vai?|¿Cómo va?;Muito bem|Muy bien;Assim-assim|Así así;Não faz mal|No importa;O que é isto?|¿Qué es esto?;Há quanto tempo!|¡Cuánto tiempo!;Preciso de ajuda|Necesito ayuda;Estou cansado|Estoy cansado;Queria um café|Querría un café;Uma mesa para dois|Una mesa para dos;Feliz aniversário!|¡Feliz cumpleaños!`));
+DATA.pt.key.push('segunda-feira','domingo','trabalho','dinheiro','mar','comboio','feliz','amor','chuva','frio');
+document.head.insertAdjacentHTML('beforeend','<style>#tabs{overflow-x:auto;scrollbar-width:none}#tabs button{white-space:nowrap}.mk{flex-shrink:0;align-self:center;border:none;background:color-mix(in srgb,var(--accent) 12%,transparent);width:34px;height:34px;border-radius:50%;font-size:15px;cursor:pointer;margin-left:6px;color:inherit}.mk.on{background:var(--accent);color:#fff}.seg{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:12px}.seg button{border:1px solid var(--border);background:transparent;color:inherit;border-radius:999px;padding:7px 13px;font:inherit;font-size:13px;cursor:pointer}.seg button.on{background:var(--accent);color:#fff;border-color:var(--accent)}#streak{display:flex;align-items:center;gap:6px;justify-content:center;font-size:13px;margin:8px auto 0;flex-wrap:wrap}#streak i{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:10px;background:var(--border)}#streak i.on{background:linear-gradient(135deg,#ff9f0a,#ff453a);color:#fff}#streak em{font-style:normal;opacity:.65;width:100%;text-align:center;font-size:12px}</style>');
+const ld=(k,f)=>{try{return JSON.parse(localStorage.getItem(k))||f}catch(e){return f}},sv=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+const dayS=o=>{const d=new Date();d.setDate(d.getDate()-o);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');};
+function drawStreak(){let e=document.getElementById('streak');if(!e){e=document.createElement('div');e.id='streak';document.getElementById('tabs').insertAdjacentElement('beforebegin',e);}const D=new Set(ld('dl_days',[])),t=D.has(dayS(0));let n=0;const o=t?0:1;while(D.has(dayS(o+n)))n++;let dots='';for(let k=6;k>=0;k--){const d=new Date();d.setDate(d.getDate()-k);dots+=`<i class="${D.has(dayS(k))?'on':''}">${'DLMXJVS'[d.getDay()]}</i>`;}e.innerHTML=`<b>🔥 ${n} ${n===1?'día':'días'} seguidos</b>${dots}<em>${t?'¡Hoy ya has practicado!':n?'Practica hoy para no perder tu racha':'Responde una pregunta del test para empezar tu racha'}</em>`;}
+function tickStreak(){const D=ld('dl_days',[]);if(!D.includes(dayS(0))){D.push(dayS(0));sv('dl_days',D.slice(-60));}drawStreak();}
+function addMarks(){if(!['dic','key','fav'].includes(state.tab))return;const L=state.lang,F=ld('dl_fav_'+L,[]),H=ld('dl_hard_'+L,{});document.querySelectorAll('#main .row').forEach(r=>{const w=r.querySelector('.word');if(!w||r.querySelector('.mk'))return;const k=w.textContent.trim();[['f','★','☆',F.includes(k)]].forEach(([t,a,b,on])=>{const x=document.createElement('button');x.className='mk'+(on?' on':'');x.textContent=on?a:b;x.setAttribute('aria-label',t==='f'?'Favorita':'Difícil');x.onclick=()=>toggleMark(t,k,x);r.appendChild(x);});});}
+function toggleMark(t,k,x){const L=state.lang;if(t==='f'){let f=ld('dl_fav_'+L,[]);f=f.includes(k)?f.filter(y=>y!==k):[...f,k];sv('dl_fav_'+L,f);const on=f.includes(k);x.classList.toggle('on',on);x.textContent=on?'★':'☆';}else{const h=ld('dl_hard_'+L,{});if(h[k])delete h[k];else h[k]=3;sv('dl_hard_'+L,h);const on=!!h[k];x.classList.toggle('on',on);x.textContent=on?'⚑':'⚐';}}
+const _d=decorate;decorate=function(){_d();addMarks();};
+const _r4=render;
+render=function(){if(state.tab!=='fav')return _r4();const m=document.getElementById('main');m.getAnimations().forEach(a=>a.cancel());const d=DATA[state.lang].dic,F=ld('dl_fav_'+state.lang,[]),H=ld('dl_hard_'+state.lang,{}),fl=d.filter(e=>F.includes(e.w)),hl=d.filter(e=>H[e.w]>=3);m.innerHTML=`<div class="count">★ ${fl.length} favoritas</div>`+(fl.length?`<div class="list">${fl.map(rowWord).join('')}</div><button class="btn" style="margin:12px 0" onclick="startFav()">Test con favoritas</button>`:'<div class="empty">Marca ☆ en el diccionario para guardar palabras aquí.</div>')+`<div class="count" style="margin-top:18px">⚑ ${hl.length} difíciles (aparecen más en el test)</div>`+(hl.length?`<div class="list">${hl.map(rowWord).join('')}</div>`:'<div class="empty">Aquí aparecerán las palabras que más falles en el test.</div>');anim(m,[{opacity:0,transform:'translateY(12px)'},{opacity:1,transform:'none'}],{duration:480});stagger();};
+function seg(){const lv=state.level||'i';return '<div class="seg">'+[['b','Principiante'],['i','Intermedio'],['a','Avanzado']].map(([k,n])=>`<button class="${lv===k?'on':''}" onclick="setLevel('${k}')">${n}</button>`).join('')+`<button class="${state.favOnly?'on':''}" onclick="toggleFavOnly()">★ Solo favoritas</button></div>`;}
+function newQuiz(){state.qi=0;state.score=0;state.questions=genQuiz(20);render();}
+function setLevel(k){state.level=k;newQuiz();}
+function toggleFavOnly(){state.favOnly=!state.favOnly;newQuiz();}
+function startFav(){state.favOnly=true;state.level='i';setTab('quiz');}
+function retryMissed(){state.questions=state.missed;state.missed=[];state.qi=0;state.score=0;render();}
+function genQuiz(n){const L=DATA[state.lang],lv=state.level||'i',H=ld('dl_hard_'+state.lang,{}),Fv=ld('dl_fav_'+state.lang,[]);state.missed=[];let items,all;if(lv==='a'){items=L.phr.map(p=>({k:p.f,a:p.f,b:p.t}));all=L.phr.map(p=>({a:p.f,b:p.t}));}else{let pool=L.dic;if(lv==='b'){const k=pool.filter(e=>L.key.includes(e.w));if(k.length>=4)pool=k;}if(state.favOnly)pool=pool.filter(e=>Fv.includes(e.w));items=pool.map(e=>({k:e.w,a:e.w,b:e.t}));all=L.dic.map(e=>({a:e.w,b:e.t}));}return items.map(i=>({i,s:-Math.log(Math.random())/(1+3*(H[i.k]||0))})).sort((x,y)=>x.s-y.s).slice(0,n).map(x=>{const it=x.i,rev=Math.random()<.5,c=rev?it.a:it.b,dd=shuffle(all.filter(e=>(rev?e.a:e.b)!==c)).slice(0,3).map(e=>rev?e.a:e.b),o=shuffle([c,...dd]);return{q:rev?`¿Cómo se dice "${it.b}" en ${L.name.toLowerCase()}?`:`¿Qué significa "${it.a}"?`,o,a:o.indexOf(c),k:it.k};});}
+const _rq=renderQuiz;
+renderQuiz=function(){const m=document.getElementById('main');if(!state.questions.length)state.questions=genQuiz(20);if(!state.questions.length){m.innerHTML=seg()+'<div class="empty">No hay preguntas con este filtro. Marca ☆ palabras en el diccionario primero.</div>';return;}_rq();if(state.qi===0)m.insertAdjacentHTML('afterbegin',seg());else if(state.qi>=state.questions.length){const c=m.querySelector('.quiz-card'),n=state.missed.length;if(c&&n)c.insertAdjacentHTML('beforeend',`<button class="btn" style="margin-top:10px" onclick="retryMissed()">Repetir falladas (${n})</button>`);}};
+const _an=answer;
+answer=function(i,c){if(answered)return;const q=state.questions[state.qi],ok=i===c;if(q&&q.k){const h=ld('dl_hard_'+state.lang,{});let w=h[q.k]||0;w=ok?Math.max(0,w-1):Math.min(5,w+2);h[q.k]=w;sv('dl_hard_'+state.lang,h);}if(!ok&&q)state.missed.push(q);tickStreak();_an(i,c);};
+state.missed=[];drawStreak();
+DATA.it.dic.push(...P({
+conectores:`chi|KI|quién;cosa|CO-sa|qué, cosa;quale|CUA-le|cuál;quanto|CUAN-to|cuánto;anche|AN-ke|también;ancora|an-CO-ra|todavía;già|YA|ya;qui|CUI|aquí;là|LA|allí;prima|PRI-ma|antes;dopo|DO-po|después`,
+verbos:`vedere|ve-DE-re|ver;sapere|sa-PE-re|saber;potere|po-TE-re|poder;volere|vo-LE-re|querer;leggere|LED-ye-re|leer;scrivere|SCRI-ve-re|escribir;aprire|a-PRI-re|abrir;chiudere|KIU-de-re|cerrar;capire|ca-PI-re|entender;lavorare|la-vo-RA-re|trabajar;studiare|stu-DIA-re|estudiar;cercare|cher-CA-re|buscar`,
+casa:`bagno|BA-ño|baño;giardino|yar-DI-no|jardín;parete|pa-RE-te|pared;sedia|SE-dia|silla`,
+lugares:`parco|PAR-co|parque;banca|BAN-ca|banco;ristorante|ris-to-RAN-te|restaurante;hotel|o-TEL|hotel;paese|pa-E-se|país;ufficio|uf-FI-cho|oficina`,
+comida:`colazione|co-la-TSIO-ne|desayuno;cena|CHE-na|cena;minestra|mi-NES-tra|sopa;insalata|in-sa-LA-ta|ensalada;pollo|POL-lo|pollo;tè|TE|té`,
+adjetivos:`lento|LEN-to|lento;veloce|ve-LO-che|rápido;giovane|YO-va-ne|joven;pulito|pu-LI-to|limpio;pieno|PIE-no|lleno;vuoto|VUO-to|vacío;economico|e-co-NO-mi-co|barato;alto|AL-to|alto`,
+tiempo:`mattina|mat-TI-na|mañana (parte del día);sera|SE-ra|tarde, noche;ora|O-ra|hora;mese|ME-se|mes;presto|PRES-to|pronto;tardi|TAR-di|tarde (hora)`}));
+DATA.it.phr.push(...F(`Non parlo italiano|No hablo italiano;Parlo un po' di italiano|Hablo un poco de italiano;Come si dice...?|¿Cómo se dice...?;Che cosa significa?|¿Qué significa?;Scusi, dov'è...?|Perdone, ¿dónde está...?;Vorrei un'acqua|Querría un agua;Il menù, per favore|La carta, por favor;Posso pagare con la carta?|¿Puedo pagar con tarjeta?;Mi sono perso|Me he perdido;Chiami un medico|Llame a un médico;Che bella giornata!|¡Qué buen día!;Ci vediamo domani|Nos vemos mañana;Buona fortuna!|¡Buena suerte!`));
+DATA.it.ex+=`;arrivederci|Arrivederci, a domani!|¡Adiós, hasta mañana!;per favore|Un caffè, per favore.|Un café, por favor.;scusi|Scusi, dov'è il bagno?|Perdone, ¿dónde está el baño?;oggi|Oggi fa caldo.|Hoy hace calor.;domani|Domani lavoro.|Mañana trabajo.;uno|Ho uno zaino.|Tengo una mochila.;due|Due caffè, per favore.|Dos cafés, por favor.;tre|Ho tre fratelli.|Tengo tres hermanos.;quando|Quando arrivi?|¿Cuándo llegas?;perché|Perché sei triste?|¿Por qué estás triste?;cane|Il cane dorme.|El perro duerme.;gatto|Ho un gatto nero.|Tengo un gato negro.;casa|Sono a casa.|Estoy en casa.;amico|Marco è un mio amico.|Marco es un amigo mío.;mangiare|Voglio mangiare.|Quiero comer.;parlare|Parlo italiano.|Hablo italiano.;aiutare|Puoi aiutarmi?|¿Puedes ayudarme?;lunedì|Lunedì ho lezione.|El lunes tengo clase.;domenica|La domenica riposo.|Los domingos descanso.;lavoro|Il lavoro è difficile.|El trabajo es difícil.;soldi|Non ho soldi.|No tengo dinero.;mare|Andiamo al mare.|Vamos al mar.;treno|Il treno è in ritardo.|El tren llega tarde.;felice|Sono molto felice.|Estoy muy feliz.;amore|L'amore è bello.|El amor es bonito.;pioggia|C'è molta pioggia.|Hay mucha lluvia.;freddo|Ho freddo.|Tengo frío.`;
+DATA.pt.dic.push(...P({
+conectores:`quem|QUEIN|quién;o quê|u QUE|qué;qual|CUAL|cuál;quanto|CUAN-tu|cuánto;também|tam-BEIN|también;ainda|a-IN-da|todavía;já|JA|ya;aqui|a-KI|aquí;ali|a-LI|allí;antes|AN-tis|antes;depois|de-POIS|después`,
+verbos:`ver|VER|ver;saber|sa-BER|saber;poder|pu-DER|poder;querer|qui-RER|querer;ler|LER|leer;escrever|ish-cre-VER|escribir;abrir|a-BRIR|abrir;fechar|fi-XAR|cerrar;entender|en-ten-DER|entender;trabalhar|tra-ba-LIAR|trabajar;estudar|ish-tu-DAR|estudiar;procurar|pru-cu-RAR|buscar`,
+casa:`casa de banho|CA-za di BA-nhu|baño;jardim|jar-DIM|jardín;parede|pa-RE-di|pared;cadeira|ca-DEI-ra|silla`,
+lugares:`parque|PAR-qui|parque;banco|BAN-cu|banco;restaurante|rish-tau-RAN-ti|restaurante;hotel|o-TEL|hotel;país|pa-ISH|país;escritório|ish-cri-TO-riu|oficina`,
+comida:`pequeno-almoço|pe-KE-nu al-MO-su|desayuno;jantar|jan-TAR|cena;sopa|SO-pa|sopa;salada|sa-LA-da|ensalada;frango|FRAN-gu|pollo;chá|XA|té`,
+adjetivos:`lento|LEN-tu|lento;rápido|RA-pi-du|rápido;jovem|JO-vein|joven;limpo|LIM-pu|limpio;cheio|XEI-u|lleno;vazio|va-ZI-u|vacío;barato|ba-RA-tu|barato;alto|AL-tu|alto`,
+tiempo:`manhã|ma-NHÃ|mañana (parte del día);tarde|TAR-di|tarde (hora);hora|O-ra|hora;mês|MES|mes;cedo|SE-du|pronto`}));
+DATA.pt.phr.push(...F(`Não falo português|No hablo portugués;Falo um pouco de português|Hablo un poco de portugués;Como se diz...?|¿Cómo se dice...?;O que significa?|¿Qué significa?;Desculpe, onde fica...?|Perdone, ¿dónde está...?;Queria uma água|Querría un agua;A ementa, por favor|La carta, por favor;Posso pagar com cartão?|¿Puedo pagar con tarjeta?;Estou perdido|Estoy perdido;Chame um médico|Llame a un médico;Que dia bonito!|¡Qué buen día!;Vemo-nos amanhã|Nos vemos mañana;Boa sorte!|¡Buena suerte!`));
+DATA.pt.ex+=`;tchau|Tchau, até amanhã!|¡Chao, hasta mañana!;desculpe|Desculpe, estou atrasado.|Perdón, llego tarde.;de nada|Obrigado! De nada.|¡Gracias! De nada.;hoje|Hoje faz calor.|Hoy hace calor.;amanhã|Amanhã trabalho.|Mañana trabajo.;um|Tenho um irmão.|Tengo un hermano.;dois|Dois cafés, por favor.|Dos cafés, por favor.;três|Tenho três gatos.|Tengo tres gatos.;quando|Quando chegas?|¿Cuándo llegas?;porquê|Porquê estás triste?|¿Por qué estás triste?;cão|O cão dorme.|El perro duerme.;gato|Tenho um gato preto.|Tengo un gato negro.;casa|Estou em casa.|Estoy en casa.;amigo|O Pedro é meu amigo.|Pedro es mi amigo.;comer|Quero comer.|Quiero comer.;falar|Falo português.|Hablo portugués.;ajudar|Pode ajudar-me?|¿Puede ayudarme?;segunda-feira|Segunda-feira tenho aulas.|El lunes tengo clase.;domingo|Ao domingo descanso.|Los domingos descanso.;trabalho|O trabalho é difícil.|El trabajo es difícil.;dinheiro|Não tenho dinheiro.|No tengo dinero.;mar|Vamos ao mar.|Vamos al mar.;comboio|O comboio está atrasado.|El tren llega tarde.;feliz|Estou muito feliz.|Estoy muy feliz.;amor|O amor é bonito.|El amor es bonito.;chuva|Há muita chuva.|Hay mucha lluvia.;frio|Tenho frio.|Tengo frío.`;
+document.head.insertAdjacentHTML('beforeend','<style>.lv{display:inline-block;font-size:10px;padding:1px 7px;border-radius:999px;margin-left:6px;vertical-align:middle;color:#fff}.lv.d{background:#ff453a}.lv.m{background:#ff9f0a}.lv.f{background:#30d158}</style>');
+function addDots(){if(!['dic','key','fav','phr'].includes(state.tab))return;const H=ld('dl_hard_'+state.lang,{});document.querySelectorAll('#main .row').forEach(r=>{const w=r.querySelector('.word'),t=r.querySelector('.tr');if(!w||!t||r.querySelector('.lv'))return;const k=w.textContent.trim();if(!Object.prototype.hasOwnProperty.call(H,k))return;const v=H[k],c=v>=3?'d':v>=1?'m':'f';t.insertAdjacentHTML('beforeend',` <span class="lv ${c}">${{d:'Difícil',m:'Medio',f:'Dominada'}[c]}</span>`);});}
+const _d2=decorate;decorate=function(){_d2();addDots();};
+let _u=null,_ul=false;
+function unlockTTS(){if(_ul||!('speechSynthesis' in window))return;_ul=true;try{const u=new SpeechSynthesisUtterance('.');u.volume=0;speechSynthesis.speak(u);}catch(e){}}
+['touchstart','click'].forEach(e=>document.addEventListener(e,unlockTTS,{once:true,passive:true}));
+function speak(t,b){if(!('speechSynthesis' in window)){alert('Tu navegador no admite voz.');return;}const ss=speechSynthesis;try{ss.resume();}catch(e){}document.querySelectorAll('.spk.on').forEach(x=>x.classList.remove('on'));const u=_u=new SpeechSynthesisUtterance(t),s=document.getElementById('vsel'),vs=voicesFor(),v=vs.find(x=>s&&x.name.replace(/"/g,'')===s.value)||vs[0];u.lang=v?v.lang:DATA[state.lang].tts;if(v)u.voice=v;u.rate=.85;u.volume=1;b.classList.add('on');u.onend=u.onerror=()=>b.classList.remove('on');const go=()=>ss.speak(u);if(ss.speaking||ss.pending){ss.cancel();setTimeout(go,120);}else go();}
+const _fv=fillVoices;fillVoices=function(){_fv();const ios=/iP(hone|ad|od)/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1),s=document.getElementById('vsel');if(ios&&s&&!document.getElementById('vhint'))s.insertAdjacentHTML('afterend','<div id="vhint" style="font-size:11px;opacity:.6;text-align:center;max-width:92%;margin:6px auto 0">Si no suena en iPhone: sube el volumen, desactiva el modo silencio (interruptor lateral) y descarga la voz en Ajustes → Accesibilidad → Contenido leído → Voces.</div>');};
+if('speechSynthesis' in window){speechSynthesis.onvoiceschanged=fillVoices;setTimeout(fillVoices,600);setTimeout(fillVoices,2000);}
+const RM={а:'a',б:'b',в:'v',г:'g',д:'d',е:'ye',ё:'yo',ж:'zh',з:'z',и:'i',й:'y',к:'k',л:'l',м:'m',н:'n',о:'o',п:'p',р:'r',с:'s',т:'t',у:'u',ф:'f',х:'j',ц:'ts',ч:'ch',ш:'sh',щ:'shch',ъ:'',ы:'i',ь:'',э:'e',ю:'yu',я:'ya'};
+const rom=s=>[...s.toLowerCase()].map(c=>c in RM?RM[c]:c).join('');
+const cyr=s=>/[а-яё]/i.test(s);
+function ruP(s){const e=DATA.ru.dic.find(x=>x.w===s);return e&&e.p?e.p:rom(s);}
+const _gq=genQuiz;
+genQuiz=function(n){const qs=_gq(n);if(state.lang!=='ru')return qs;qs.forEach(q=>{q.q=q.q.replace(/"([^"]*)"/,(m,x)=>cyr(x)?`"${x}" (${ruP(x)})`:m);q.o=q.o.map(x=>cyr(x)?`${x} (${ruP(x)})`:x);});return qs;};
+document.head.insertAdjacentHTML('beforeend','<style>@keyframes shine{to{background-position:200% 0}}@keyframes flick{0%,100%{transform:rotate(-4deg) scale(1)}50%{transform:rotate(4deg) scale(1.15)}}@keyframes popin{0%{transform:scale(.4);opacity:0}70%{transform:scale(1.18)}100%{transform:scale(1);opacity:1}}@keyframes ring{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--accent) 45%,transparent)}100%{box-shadow:0 0 0 14px transparent}}@keyframes drift{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(50px,-40px) scale(1.15)}}h1{background-image:linear-gradient(90deg,var(--accent),var(--accent2),var(--accent));background-size:200% 100%;animation:shine 7s linear infinite}#brandrow{display:flex;align-items:center;gap:10px}#flame{display:inline-flex;align-items:center;gap:4px;font-size:13px;font-weight:600;padding:4px 10px;border-radius:999px;background:color-mix(in srgb,#ff9f0a 16%,transparent);color:#ff7a00;white-space:nowrap}#flame b{display:inline-block;font-weight:400;animation:flick 1.6s ease-in-out infinite;transform-origin:50% 80%}#flame.off{filter:grayscale(1);opacity:.6}#flame.off b{animation:none}#flame.pop{animation:popin .6s cubic-bezier(.34,1.56,.64,1)}.spk.on{animation:pulse .9s ease-in-out infinite,ring 1.1s ease-out infinite}.row{transition:transform .2s ease,box-shadow .2s}.row:active{transform:scale(.985)}.lv,.mk.on{animation:popin .45s cubic-bezier(.34,1.56,.64,1) both}input[type=search],#vsel{transition:box-shadow .25s,transform .25s}input[type=search]:focus,#vsel:focus{box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 22%,transparent);transform:translateY(-1px);outline:none}#bg{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden}#bg i{position:absolute;width:46vmax;height:46vmax;border-radius:50%;filter:blur(70px);opacity:.25;animation:drift 22s ease-in-out infinite}@media (prefers-reduced-motion:reduce){h1,#flame b,#bg i,.spk.on,#flame.pop{animation:none!important}}</style>');
+document.body.insertAdjacentHTML('afterbegin','<div id="bg"><i style="background:var(--accent);left:-12vmax;top:-10vmax"></i><i style="background:var(--accent2);right:-14vmax;bottom:-12vmax;animation-delay:-11s"></i></div>');
+function drawStreak(){const o=document.getElementById('streak');if(o)o.remove();let f=document.getElementById('flame');if(!f){const h=document.querySelector('header h1');if(!h)return;let w=document.getElementById('brandrow');if(!w){w=document.createElement('div');w.id='brandrow';h.parentNode.insertBefore(w,h);w.appendChild(h);}f=document.createElement('span');f.id='flame';w.appendChild(f);}const s=ld('dl_streak',{n:0,last:''}),n=(s.last===dayS(0)||s.last===dayS(1))?s.n:0;f.className=n?'':'off';f.title=n?'Racha: '+n+' día(s) completando tests':'Completa un test para empezar tu racha';f.innerHTML='<b>🔥</b> '+n+'d';}
+function tickStreak(){}
+function completeTest(){const s=ld('dl_streak',{n:0,last:''}),t=dayS(0);if(s.last===t)return;s.n=s.last===dayS(1)?s.n+1:1;s.last=t;sv('dl_streak',s);drawStreak();const f=document.getElementById('flame');if(f){f.classList.remove('pop');void f.offsetWidth;f.classList.add('pop');}}
+function confetti(){if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;const cs=['#ff453a','#ff9f0a','#ffd60a','#30d158','#0a84ff','#bf5af2'];for(let i=0;i<28;i++){const p=document.createElement('i');p.style.cssText='position:fixed;left:50%;top:38%;width:8px;height:12px;border-radius:2px;z-index:99;pointer-events:none;background:'+cs[i%6];document.body.appendChild(p);const a=Math.random()*Math.PI*2,d=120+Math.random()*180;p.animate([{transform:'translate(0,0) rotate(0)',opacity:1},{transform:`translate(${Math.cos(a)*d}px,${Math.sin(a)*d+160}px) rotate(${Math.random()*720}deg)`,opacity:0}],{duration:1100+Math.random()*600,easing:'cubic-bezier(.2,.7,.3,1)'}).onfinish=()=>p.remove();}}
+const _rq2=renderQuiz;renderQuiz=function(){_rq2();if(state.tab==='quiz'&&state.questions.length&&state.qi>=state.questions.length){completeTest();if(state.score/state.questions.length>=.8)confetti();}};
+function pickVoice(){const vs=voicesFor().slice().sort((a,b)=>a.name.localeCompare(b.name)),sr=vs.filter(v=>/siri/i.test(v.name)),p=sr.length?sr:vs,s=document.getElementById('vsel'),n=s&&s.value==='2'?1:0;return{v:p[n]||p[0]||null,alt:n===1&&p.length<2};}
+fillVoices=function(){let s=document.getElementById('vsel');if(!s){s=document.createElement('select');s.id='vsel';s.setAttribute('aria-label','Voz');s.style.cssText='display:block;margin:8px auto 0;max-width:92%;padding:7px 12px;border-radius:12px;border:1px solid var(--border);background:var(--glass);color:inherit;font:inherit;font-size:13px';s.onchange=()=>{try{localStorage.setItem('dl_v_'+state.lang,s.value)}catch(e){}};document.getElementById('tabs').insertAdjacentElement('afterend',s);}let v='1';try{v=localStorage.getItem('dl_v_'+state.lang)}catch(e){}s.innerHTML='<option value="1">🗣 Siri 1</option><option value="2">🗣 Siri 2</option>';s.value=v==='2'?'2':'1';const ios=/iP(hone|ad|od)/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);if(ios&&!document.getElementById('vhint'))s.insertAdjacentHTML('afterend','<div id="vhint" style="font-size:11px;opacity:.6;text-align:center;max-width:92%;margin:6px auto 0">Siri 1 y Siri 2 usan las voces instaladas en tu iPhone. Si no suena: sube el volumen, desactiva el modo silencio y descarga voces en Ajustes → Accesibilidad → Contenido leído → Voces.</div>');};
+function speak(t,b){if(!('speechSynthesis' in window)){alert('Tu navegador no admite voz.');return;}const ss=speechSynthesis;try{ss.resume();}catch(e){}document.querySelectorAll('.spk.on').forEach(x=>x.classList.remove('on'));const u=_u=new SpeechSynthesisUtterance(t),{v,alt}=pickVoice();u.lang=v?v.lang:DATA[state.lang].tts;if(v)u.voice=v;u.rate=.85;u.volume=1;u.pitch=alt?1.15:1;b.classList.add('on');u.onend=u.onerror=()=>b.classList.remove('on');const go=()=>ss.speak(u);if(ss.speaking||ss.pending){ss.cancel();setTimeout(go,120);}else go();}
+if('speechSynthesis' in window)speechSynthesis.onvoiceschanged=fillVoices;
+document.head.insertAdjacentHTML('beforeend','<style>@keyframes sheen{0%{left:-60%;opacity:.9}100%{left:120%;opacity:0}}@keyframes glow{0%,100%{box-shadow:0 6px 16px -4px rgba(194,65,12,.6),inset 0 1px 0 rgba(255,255,255,.28),inset 0 -2px 0 rgba(0,0,0,.18)}50%{box-shadow:0 8px 24px -2px rgba(234,88,12,.85),inset 0 1px 0 rgba(255,255,255,.35),inset 0 -2px 0 rgba(0,0,0,.18)}}#flame{background:#c2410c;color:#fff;padding:6px 14px;font-size:14px;font-weight:700;letter-spacing:.01em;border:1px solid #9a3412;box-shadow:0 6px 16px -4px rgba(194,65,12,.6),inset 0 1px 0 rgba(255,255,255,.28),inset 0 -2px 0 rgba(0,0,0,.18)}#flame:not(.off){animation:glow 2.6s ease-in-out infinite}#flame.pop{animation:popin .6s cubic-bezier(.34,1.56,.64,1),glow 2.6s ease-in-out .6s infinite}#flame.off{filter:none;opacity:.8;box-shadow:inset 0 1px 0 rgba(255,255,255,.2)}#flame b{font-size:15px}.langs{background:color-mix(in srgb,var(--text) 8%,transparent);border:1px solid rgba(255,255,255,.3);border-radius:14px;box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 8px 24px -8px rgba(0,0,0,.18)}.langs .thumb{border-radius:11px;overflow:hidden;background:linear-gradient(145deg,rgba(255,255,255,.78),rgba(255,255,255,.3) 55%,rgba(255,255,255,.55));-webkit-backdrop-filter:blur(10px) saturate(190%) brightness(1.08);backdrop-filter:blur(10px) saturate(190%) brightness(1.08);border:1px solid rgba(255,255,255,.75);box-shadow:inset 0 1.5px 1px rgba(255,255,255,.95),inset 0 -8px 14px rgba(255,255,255,.22),0 8px 20px -4px rgba(0,0,0,.28),0 2px 5px rgba(0,0,0,.12)}.langs .thumb::before{content:"";position:absolute;left:8%;top:6%;width:55%;height:42%;border-radius:50%;background:radial-gradient(ellipse at 30% 30%,rgba(255,255,255,.85),transparent 70%);opacity:.7}.langs .thumb::after{content:"";position:absolute;top:0;bottom:0;left:-60%;width:50%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.8),transparent);opacity:0}.langs .thumb.flow::after{animation:sheen .65s ease-out}.langs button{transition:color .3s,transform .4s cubic-bezier(.34,1.56,.64,1)}.langs button.active{transform:scale(1.07);font-weight:600}@media (prefers-color-scheme:dark){.langs{border-color:rgba(255,255,255,.12)}.langs .thumb{background:linear-gradient(145deg,rgba(255,255,255,.26),rgba(255,255,255,.07) 55%,rgba(255,255,255,.16));border-color:rgba(255,255,255,.28);box-shadow:inset 0 1.5px 1px rgba(255,255,255,.45),inset 0 -8px 14px rgba(255,255,255,.06),0 8px 20px -4px rgba(0,0,0,.6)}}@media (prefers-reduced-motion:reduce){#flame{animation:none!important}.langs .thumb::after{animation:none!important}}</style>');
+function liquid(){const t=document.querySelector('#langs .thumb');if(!t||matchMedia('(prefers-reduced-motion:reduce)').matches)return;t.classList.add('flow');setTimeout(()=>t.classList.remove('flow'),700);try{t.animate([{scale:'1 1',filter:'brightness(1) saturate(1)'},{scale:'1.24 .8',filter:'brightness(1.3) saturate(1.5)',offset:.35},{scale:'.97 1.07',offset:.7},{scale:'1 1',filter:'brightness(1) saturate(1)'}],{duration:680,easing:'ease-out'});}catch(e){}}
+let _pl=state.lang;const _rl2=renderLangs;renderLangs=function(){const ch=_pl!==state.lang;_pl=state.lang;_rl2();if(ch)liquid();};
+const BADV=/^(Albert|Bad News|Bahh|Bells|Boing|Bubbles|Cellos|Good News|Jester|Organ|Superstar|Trinoids|Whisper|Wobble|Zarvox|Fred|Junior|Ralph|Kathy|Agnes|Princess|Bruce|Vicki|Victoria)\b/i,ELOQ=/^(Eddy|Flo|Grandma|Grandpa|Reed|Rocko|Sandy|Shelley)\b/i;
+const vq=v=>{const n=v.name;if(BADV.test(n))return -100;let s=0;if(/natural|online/i.test(n))s+=70;if(/google/i.test(n))s+=60;if(/premium|enhanced|neural/i.test(n))s+=45;if(/siri/i.test(n))s+=30;if(/microsoft/i.test(n))s+=20;if(/compact/i.test(n))s-=15;if(ELOQ.test(n))s-=40;if(v.localService===false)s+=10;if(v.default)s+=3;return s;};
+function pickVoice(){const s=document.getElementById('vsel'),k=s?s.value:'3',all=voicesFor().filter(v=>vq(v)>-100).sort((a,b)=>vq(b)-vq(a)||a.name.localeCompare(b.name)),sr=all.filter(v=>/siri/i.test(v.name)),pc=all.find(v=>!/siri/i.test(v.name))||all[0]||null;if(k==='3')return{v:pc,alt:false};const pool=sr.length?sr:all.filter(v=>v!==pc),p=pool.length?pool:all,n=k==='2'?1:0;return{v:p[n]||p[0]||null,alt:k==='2'&&p.length<2};}
+fillVoices=function(){let s=document.getElementById('vsel');if(!s){s=document.createElement('select');s.id='vsel';s.setAttribute('aria-label','Voz');s.style.cssText='display:block;margin:8px auto 0;max-width:92%;padding:7px 12px;border-radius:12px;border:1px solid var(--border);background:var(--glass);color:inherit;font:inherit;font-size:13px';s.onchange=()=>{try{localStorage.setItem('dl_v_'+state.lang,s.value)}catch(e){}};document.getElementById('tabs').insertAdjacentElement('afterend',s);}let v='3';try{v=localStorage.getItem('dl_v_'+state.lang)||'3'}catch(e){}s.innerHTML='<option value="1">🗣 Siri 1</option><option value="2">🗣 Siri 2</option><option value="3">🖥 PC 1 (mejor pronunciación)</option>';s.value=['1','2','3'].includes(v)?v:'3';const ios=/iP(hone|ad|od)/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1),h=document.getElementById('vhint');if(ios&&!h)s.insertAdjacentHTML('afterend','<div id="vhint" style="font-size:11px;opacity:.6;text-align:center;max-width:92%;margin:6px auto 0">Las voces usan las mejores instaladas en tu iPhone. Si no suena: sube el volumen, desactiva el modo silencio y descarga voces mejoradas en Ajustes → Accesibilidad → Contenido leído → Voces.</div>');};
+if('speechSynthesis' in window)speechSynthesis.onvoiceschanged=fillVoices;
+/* v15: voces en escritorio, copia de seguridad JSON y PWA */
+(function(){
+const ios=/iP(hone|ad|od)/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+const clean=t=>String(t).replace(/[’‘`´]/g,"'").replace(/[“”«»]/g,'"').replace(/…/g,'...').replace(/\s*[–—]\s*/g,', ').replace(/\s*[\/|]\s*/g,', ').replace(/\([^)]*\)/g,' ').replace(/[\u{1F000}-\u{1FFFF}\u2600-\u27BF]/gu,'').replace(/\s+/g,' ').trim();
+const rg=v=>v.lang.toLowerCase().replace('_','-')===DATA[state.lang].tts.toLowerCase().replace('_','-')?25:0;
+const ranked=()=>voicesFor().filter(v=>vq(v)>-100).sort((a,b)=>vq(b)+rg(b)-vq(a)-rg(a)||a.name.localeCompare(b.name));
+const _pv=pickVoice;pickVoice=function(){if(ios)return _pv();const s=document.getElementById('vsel'),k=s?s.value:'auto',all=ranked();return{v:all.find(v=>v.voiceURI===k||v.name===k)||all[0]||null,alt:false};};
+const _sp=speak;speak=function(t,b){if(ios||!('speechSynthesis' in window))return _sp(t,b);const ss=speechSynthesis;try{ss.resume()}catch(e){}document.querySelectorAll('.spk.on').forEach(x=>x.classList.remove('on'));const mk=vv=>{const u=_u=new SpeechSynthesisUtterance(clean(t));u.lang=vv?vv.lang:DATA[state.lang].tts;if(vv)u.voice=vv;u.rate=vv&&/natural|online|neural/i.test(vv.name)?1:.92;u.volume=1;return u},u=mk(pickVoice().v);let tried=0;b.classList.add('on');u.onend=()=>b.classList.remove('on');u.onerror=e=>{if(e.error==='canceled'||e.error==='interrupted'||tried++){b.classList.remove('on');return}const u2=mk(null);u2.onend=u2.onerror=()=>b.classList.remove('on');ss.speak(u2)};const go=()=>ss.speak(u);if(ss.speaking||ss.pending){ss.cancel();setTimeout(go,120)}else go();};
+const _fv2=fillVoices;fillVoices=function(){_fv2();if(ios)return;const s=document.getElementById('vsel');if(!s)return;const all=ranked();let v='auto';try{v=localStorage.getItem('dl_v_'+state.lang)||'auto'}catch(e){}s.innerHTML='<option value="auto">🖥 Automática (mejor voz)</option>'+all.map(x=>'<option value="'+x.voiceURI.replace(/"/g,'&quot;')+'">'+x.name.replace(/</g,'&lt;')+' · '+x.lang+'</option>').join('');s.value=[...s.options].some(o=>o.value===v)?v:'auto';const h=document.getElementById('vhint2');if(h)h.remove();if(!all.some(x=>/natural|online/i.test(x.name)))s.insertAdjacentHTML('afterend','<div id="vhint2" style="font-size:11px;opacity:.6;text-align:center;max-width:92%;margin:6px auto 0">Para voces más naturales abre DailyLeng en Microsoft Edge (voces «Online (Natural)») o instala más voces en el sistema.</div>');};
+if('speechSynthesis' in window){speechSynthesis.onvoiceschanged=()=>fillVoices();[300,1200,3000].forEach(ms=>setTimeout(()=>fillVoices(),ms));}
+fillVoices();
+/* Copia de seguridad */
+const OK=/^(dl_(hard_|fav_)|dl_streak$|best_)/,J=s=>{try{return JSON.parse(s)}catch(e){return null}};
+const mkExport=()=>{const d={};Object.keys(localStorage).filter(k=>OK.test(k)).forEach(k=>d[k]=localStorage.getItem(k));return JSON.stringify({app:'DailyLeng',version:1,exported:new Date().toISOString(),data:d},null,1)};
+const mergeIn=(k,nv)=>{const ov=localStorage.getItem(k);if(ov===null)return nv;const a=J(ov),b=J(nv);if(a==null||b==null)return nv;if(/^dl_hard_/.test(k)&&typeof a==='object'&&typeof b==='object'){const r={...a};for(const x in b)r[x]=Math.max(r[x]??0,b[x]);return JSON.stringify(r)}if(/^dl_fav_/.test(k)&&Array.isArray(a)&&Array.isArray(b))return JSON.stringify([...new Set([...a,...b])]);if(k==='dl_streak')return((b.last||'')>(a.last||'')||(b.last===a.last&&b.n>a.n))?nv:ov;if(/^best_/.test(k))return +b>+a?nv:ov;return nv};
+const imp=t=>{const o=J(t);if(!o||o.app!=='DailyLeng'||typeof o.data!=='object')return 'Archivo no válido: no es una copia de DailyLeng.';let n=0;for(const k in o.data){if(!OK.test(k)||typeof o.data[k]!=='string')continue;try{localStorage.setItem(k,mergeIn(k,o.data[k]));n++}catch(e){}}if(!n)return 'No se encontró progreso en el archivo.';setTimeout(()=>location.reload(),1000);return '✓ Progreso importado ('+n+' elementos). Recargando…'};
+document.head.insertAdjacentHTML('beforeend','<style>#pgb{position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:50;width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:var(--glass);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);color:inherit;font-size:20px;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.18)}#pgm{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.4);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);padding:16px}#pgm.on{display:flex}#pgm .bx{width:min(440px,100%);max-height:88vh;overflow:auto;background:var(--glass);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);border:1px solid var(--border);border-radius:22px;padding:18px;box-shadow:0 20px 60px rgba(0,0,0,.35)}#pgm textarea{width:100%;height:110px;border-radius:12px;border:1px solid var(--border);background:transparent;color:inherit;font:12px ui-monospace,monospace;padding:8px;box-sizing:border-box}#pgm button{margin:6px 6px 0 0;padding:8px 14px;border-radius:12px;border:1px solid var(--border);background:var(--glass);color:inherit;font:inherit;font-size:13px;cursor:pointer}#pgm p{font-size:12px;opacity:.7;margin:6px 0}</style>');
+document.body.insertAdjacentHTML('beforeend','<button id="pgb" aria-label="Copia de seguridad del progreso" title="Copia de seguridad">💾</button><div id="pgm"><div class="bx"><b style="font-size:17px">Copia de seguridad</b><p>Guarda tu progreso (falladas, favoritas, racha y mejores puntuaciones) para no perderlo si borras la caché o cambias de dispositivo. Para restaurarlo, pega aquí una copia o elige un archivo; se combina con lo que ya tengas.</p><textarea id="pgt" spellcheck="false"></textarea><div><button id="pgd">⬇ Descargar .json</button><button id="pgc">Copiar</button><button id="pgi">⬆ Importar texto</button><button id="pgf">Elegir archivo…</button><button id="pgx">Cerrar</button></div><input id="pgfi" type="file" accept=".json,application/json" hidden><p id="pgs"></p></div></div>');
+const $=i=>document.getElementById(i),st=m=>{$('pgs').textContent=m};
+$('pgb').onclick=()=>{$('pgt').value=mkExport();st('');$('pgm').classList.add('on')};
+$('pgx').onclick=()=>$('pgm').classList.remove('on');
+$('pgm').onclick=e=>{if(e.target.id==='pgm')$('pgm').classList.remove('on')};
+$('pgc').onclick=async()=>{const t=$('pgt');try{await navigator.clipboard.writeText(t.value);st('✓ Copiado al portapapeles.')}catch(e){t.select();try{document.execCommand('copy');st('✓ Copiado.')}catch(_){st('Selecciona el texto y cópialo manualmente.')}}};
+$('pgd').onclick=async()=>{const name='DailyLeng-progreso-'+new Date().toISOString().slice(0,10)+'.json',data=$('pgt').value;try{const d=window.claude&&claude.use?await claude.use('downloads'):null;if(d){await d.save({filename:name,data});st('✓ Archivo guardado.');return}}catch(e){if(e&&e.code==='declined'){st('Descarga cancelada.');return}}try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([data],{type:'application/json'}));a.download=name;document.body.appendChild(a);a.click();a.remove();st('Descarga iniciada. Si no aparece, usa «Copiar» y guarda el texto en un archivo .json.')}catch(e){st('No se pudo descargar: usa «Copiar».')}};
+$('pgi').onclick=()=>st(imp($('pgt').value));
+$('pgf').onclick=()=>$('pgfi').click();
+$('pgfi').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>st(imp(String(r.result)));r.onerror=()=>st('No se pudo leer el archivo.');r.readAsText(f)};
+/* PWA: manifest, iconos y Service Worker */
+try{const add=h=>document.head.insertAdjacentHTML('beforeend',h);if(!document.querySelector('meta[name=theme-color]'))add('<meta name="theme-color" content="#0a84ff">');add('<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="DailyLeng"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">');const cv=document.createElement('canvas');cv.width=cv.height=512;const c=cv.getContext('2d'),g=c.createLinearGradient(0,0,512,512);g.addColorStop(0,'#0a84ff');g.addColorStop(1,'#bf5af2');c.fillStyle=g;c.fillRect(0,0,512,512);c.fillStyle='#fff';c.font='700 300px -apple-system,Helvetica,Arial,sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText('D',256,276);const ic=cv.toDataURL('image/png');if(!document.querySelector('link[rel=apple-touch-icon]'))add('<link rel="apple-touch-icon" href="'+ic+'">');if(!document.querySelector('link[rel=icon]'))add('<link rel="icon" href="'+ic+'">');if(!document.querySelector('link[rel=manifest]')){const u=location.href.split('#')[0],m={name:'DailyLeng',short_name:'DailyLeng',description:'Aprende idiomas a diario',display:'standalone',background_color:'#0b0b10',theme_color:'#0a84ff',start_url:u,scope:u.replace(/[^\/]*$/,''),icons:[{src:ic,sizes:'512x512',type:'image/png',purpose:'any'}]};add('<link rel="manifest" href="data:application/manifest+json,'+encodeURIComponent(JSON.stringify(m))+'">')}const ml=document.querySelector('link[rel=manifest]');if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)&&ml&&ml.getAttribute('href')==='manifest.webmanifest')navigator.serviceWorker.register('sw.js').catch(()=>{});}catch(e){}
+})();
+window.addEventListener("resize",renderLangs);
+renderLangs();renderTabs();render();
+</script>
+</body>
+</html>
