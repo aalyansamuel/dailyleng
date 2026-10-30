@@ -1,6 +1,19 @@
-DailyLeng PWA (offline)
-1. Sube esta carpeta tal cual a un alojamiento HTTPS (GitHub Pages, Netlify, Cloudflare Pages...) o pruébala en local con: python3 -m http.server 8000 (http://localhost:8000).
-2. Abre la direccion una vez con conexion: el Service Worker guarda la app y despues funciona sin internet.
-3. PC (Chrome/Edge): icono de instalar en la barra de direcciones. iPhone: Safari > Compartir > Anadir a pantalla de inicio.
-4. Al publicar una version nueva, cambia V en sw.js (p. ej. dailyleng-v16) para renovar la cache.
-El progreso se guarda por origen (direccion): usa el boton de copia de seguridad de la app para moverlo desde la version del artefacto.
+DailyLeng · paquete PWA (v20)
+
+Contenido: index.html, manifest.webmanifest, sw.js, icon-192.png, icon-512.png.
+
+1. Sube los cinco archivos a la misma carpeta de un sitio con HTTPS (GitHub Pages, Netlify, Vercel...).
+2. Abre la dirección en el móvil o el ordenador e instálala:
+   - iPhone (Safari): Compartir > Añadir a pantalla de inicio.
+   - Android (Chrome): menú > Instalar aplicación / Añadir a pantalla de inicio.
+   - Ordenador (Chrome o Edge): icono de instalar en la barra de direcciones.
+3. Funciona sin conexión después de la primera visita.
+
+Actualizar a una versión nueva:
+- Sustituye index.html (y sw.js si cambia) en tu servidor.
+- Cambia la línea  const V='dailyleng-v20';  de sw.js por un nombre nuevo (p. ej. v21) cada vez que subas cambios.
+- Al abrir la app instalada aparecerá «Hay una versión nueva de DailyLeng» con el botón Actualizar.
+
+Notas:
+- El progreso se guarda en cada navegador. En esta copia no hay sincronización automática (solo funciona dentro de claude.ai): usa el botón 💾 para exportar e importar.
+- Los ejemplos generados con Claude y la sincronización solo funcionan abriendo la app desde su enlace de claude.ai.
