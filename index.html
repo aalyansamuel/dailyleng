@@ -133,689 +133,12 @@ input[type=search]:focus{outline:none;border-color:var(--accent);box-shadow:0 0 
 </header>
 <nav id="tabs"></nav>
 <main id="main"></main>
+<script>(function(){var k=["fr","ru","en","de","it","pt"],l="fr";try{var s=localStorage.getItem("dl_lang");if(k.indexOf(s)>-1)l=s}catch(e){}window.__L0=l;window.__DV="23";document.write('<script src="data/'+l+'.js?v=23" onerror="window.__LDERR=1"><\/script>');})();</script>
 <script>
-const DATA = {
- fr:{name:"Francés",flag:"🇫🇷",
-  dic:[
-   {w:"bonjour",p:"bon-ZHUR",t:"hola, buenos días",c:"saludos"},
-   {w:"bonsoir",p:"bon-SWAR",t:"buenas tardes, buenas noches",c:"saludos"},
-   {w:"salut",p:"sa-LU",t:"hola, chao (informal)",c:"saludos"},
-   {w:"au revoir",p:"o-rə-VWAR",t:"adiós",c:"saludos"},
-   {w:"merci",p:"mer-SI",t:"gracias",c:"saludos"},
-   {w:"s'il vous plaît",p:"sil-vu-PLE",t:"por favor",c:"saludos"},
-   {w:"pardon",p:"par-DÕ",t:"perdón",c:"saludos"},
-   {w:"de rien",p:"də-RYÃ",t:"de nada",c:"saludos"},
-   {w:"oui",p:"WI",t:"sí",c:"básico"},
-   {w:"non",p:"NÕ",t:"no",c:"básico"},
-   {w:"peut-être",p:"pø-TETR",t:"tal vez",c:"básico"},
-   {w:"et",p:"E",t:"y",c:"básico"},
-   {w:"ou",p:"U",t:"o",c:"básico"},
-   {w:"mais",p:"ME",t:"pero",c:"básico"},
-   {w:"avec",p:"a-VEK",t:"con",c:"básico"},
-   {w:"sans",p:"SÃ",t:"sin",c:"básico"},
-   {w:"je",p:"ZHə",t:"yo",c:"pronombres"},
-   {w:"tu",p:"TU",t:"tú",c:"pronombres"},
-   {w:"il",p:"IL",t:"él",c:"pronombres"},
-   {w:"elle",p:"EL",t:"ella",c:"pronombres"},
-   {w:"nous",p:"NU",t:"nosotros",c:"pronombres"},
-   {w:"vous",p:"VU",t:"usted, vosotros",c:"pronombres"},
-   {w:"ils",p:"IL",t:"ellos",c:"pronombres"},
-   {w:"un",p:"Ã",t:"uno",c:"números"},
-   {w:"deux",p:"DØ",t:"dos",c:"números"},
-   {w:"trois",p:"TRWA",t:"tres",c:"números"},
-   {w:"quatre",p:"KATR",t:"cuatro",c:"números"},
-   {w:"cinq",p:"SÃK",t:"cinco",c:"números"},
-   {w:"six",p:"SIS",t:"seis",c:"números"},
-   {w:"sept",p:"SET",t:"siete",c:"números"},
-   {w:"huit",p:"UIT",t:"ocho",c:"números"},
-   {w:"neuf",p:"NØF",t:"nueve",c:"números"},
-   {w:"dix",p:"DIS",t:"diez",c:"números"},
-   {w:"onze",p:"ÕZ",t:"once",c:"números"},
-   {w:"douze",p:"DUZ",t:"doce",c:"números"},
-   {w:"treize",p:"TREZ",t:"trece",c:"números"},
-   {w:"quatorze",p:"ka-TORZ",t:"catorce",c:"números"},
-   {w:"quinze",p:"KÃZ",t:"quince",c:"números"},
-   {w:"seize",p:"SEZ",t:"dieciséis",c:"números"},
-   {w:"dix-sept",p:"dis-SET",t:"diecisiete",c:"números"},
-   {w:"dix-huit",p:"di-ZUIT",t:"dieciocho",c:"números"},
-   {w:"dix-neuf",p:"diz-NØF",t:"diecinueve",c:"números"},
-   {w:"vingt",p:"VÃ",t:"veinte",c:"números"},
-   {w:"trente",p:"TRÃT",t:"treinta",c:"números"},
-   {w:"quarante",p:"ka-RÃT",t:"cuarenta",c:"números"},
-   {w:"cinquante",p:"sÃ-KÃT",t:"cincuenta",c:"números"},
-   {w:"soixante",p:"swa-SÃT",t:"sesenta",c:"números"},
-   {w:"soixante-dix",p:"swa-sãt-DIS",t:"setenta",c:"números"},
-   {w:"quatre-vingts",p:"ka-trə-VÃ",t:"ochenta",c:"números"},
-   {w:"quatre-vingt-dix",p:"ka-trə-vÃ-DIS",t:"noventa",c:"números"},
-   {w:"cent",p:"SÃ",t:"cien",c:"números"},
-   {w:"mille",p:"MIL",t:"mil",c:"números"},
-   {w:"famille",p:"fa-MIY",t:"familia",c:"familia"},
-   {w:"mère",p:"MER",t:"madre",c:"familia"},
-   {w:"père",p:"PER",t:"padre",c:"familia"},
-   {w:"frère",p:"FRER",t:"hermano",c:"familia"},
-   {w:"sœur",p:"SØR",t:"hermana",c:"familia"},
-   {w:"fils",p:"FIS",t:"hijo",c:"familia"},
-   {w:"fille",p:"FIY",t:"hija, chica",c:"familia"},
-   {w:"enfant",p:"ã-FÃ",t:"niño",c:"familia"},
-   {w:"maison",p:"me-ZÕ",t:"casa",c:"casa"},
-   {w:"chambre",p:"SHÃBR",t:"habitación",c:"casa"},
-   {w:"cuisine",p:"kui-ZIN",t:"cocina",c:"casa"},
-   {w:"porte",p:"PORT",t:"puerta",c:"casa"},
-   {w:"fenêtre",p:"fə-NETR",t:"ventana",c:"casa"},
-   {w:"table",p:"TABL",t:"mesa",c:"casa"},
-   {w:"salon",p:"sa-LÕ",t:"salón",c:"casa"},
-   {w:"jardin",p:"zhar-DÃ",t:"jardín",c:"casa"},
-   {w:"escalier",p:"es-ka-LYE",t:"escalera",c:"casa"},
-   {w:"lit",p:"LI",t:"cama",c:"casa"},
-   {w:"canapé",p:"ka-na-PE",t:"sofá",c:"casa"},
-   {w:"pain",p:"PÃ",t:"pan",c:"comida"},
-   {w:"fromage",p:"fro-MAZH",t:"queso",c:"comida"},
-   {w:"eau",p:"O",t:"agua",c:"comida"},
-   {w:"vin",p:"VÃ",t:"vino",c:"comida"},
-   {w:"lait",p:"LE",t:"leche",c:"comida"},
-   {w:"viande",p:"VYÃD",t:"carne",c:"comida"},
-   {w:"poisson",p:"pwa-SÕ",t:"pescado",c:"comida"},
-   {w:"fruit",p:"FRUI",t:"fruta",c:"comida"},
-   {w:"légume",p:"le-GUM",t:"verdura",c:"comida"},
-   {w:"œuf",p:"ØF",t:"huevo",c:"comida"},
-   {w:"café",p:"ka-FE",t:"café",c:"comida"},
-   {w:"thé",p:"TE",t:"té",c:"comida"},
-   {w:"gâteau",p:"ga-TO",t:"pastel",c:"comida"},
-   {w:"soupe",p:"SUP",t:"sopa",c:"comida"},
-   {w:"salade",p:"sa-LAD",t:"ensalada",c:"comida"},
-   {w:"riz",p:"RI",t:"arroz",c:"comida"},
-   {w:"poulet",p:"pu-LE",t:"pollo",c:"comida"},
-   {w:"bœuf",p:"BØF",t:"ternera",c:"comida"},
-   {w:"chocolat",p:"sho-ko-LA",t:"chocolate",c:"comida"},
-   {w:"miel",p:"MYEL",t:"miel",c:"comida"},
-   {w:"pâtes",p:"PAT",t:"pasta",c:"comida"},
-   {w:"être",p:"ETR",t:"ser, estar",c:"verbos"},
-   {w:"avoir",p:"a-VWAR",t:"tener",c:"verbos"},
-   {w:"faire",p:"FER",t:"hacer",c:"verbos"},
-   {w:"aller",p:"a-LE",t:"ir",c:"verbos"},
-   {w:"venir",p:"və-NIR",t:"venir",c:"verbos"},
-   {w:"manger",p:"mã-ZHE",t:"comer",c:"verbos"},
-   {w:"boire",p:"BWAR",t:"beber",c:"verbos"},
-   {w:"parler",p:"par-LE",t:"hablar",c:"verbos"},
-   {w:"voir",p:"VWAR",t:"ver",c:"verbos"},
-   {w:"savoir",p:"sa-VWAR",t:"saber",c:"verbos"},
-   {w:"pouvoir",p:"pu-VWAR",t:"poder",c:"verbos"},
-   {w:"vouloir",p:"vu-LWAR",t:"querer",c:"verbos"},
-   {w:"dire",p:"DIR",t:"decir",c:"verbos"},
-   {w:"prendre",p:"PRÃDR",t:"tomar, coger",c:"verbos"},
-   {w:"écrire",p:"e-KRIR",t:"escribir",c:"verbos"},
-   {w:"lire",p:"LIR",t:"leer",c:"verbos"},
-   {w:"écouter",p:"e-ku-TE",t:"escuchar",c:"verbos"},
-   {w:"regarder",p:"rə-gar-DE",t:"mirar",c:"verbos"},
-   {w:"travailler",p:"tra-va-YE",t:"trabajar",c:"verbos"},
-   {w:"étudier",p:"e-tu-DYE",t:"estudiar",c:"verbos"},
-   {w:"apprendre",p:"a-PRÃDR",t:"aprender",c:"verbos"},
-   {w:"acheter",p:"ash-TE",t:"comprar",c:"verbos"},
-   {w:"vendre",p:"VÃDR",t:"vender",c:"verbos"},
-   {w:"payer",p:"pe-YE",t:"pagar",c:"verbos"},
-   {w:"jouer",p:"zhu-E",t:"jugar",c:"verbos"},
-   {w:"chanter",p:"shã-TE",t:"cantar",c:"verbos"},
-   {w:"danser",p:"dã-SE",t:"bailar",c:"verbos"},
-   {w:"dormir",p:"dor-MIR",t:"dormir",c:"verbos"},
-   {w:"ouvrir",p:"u-VRIR",t:"abrir",c:"verbos"},
-   {w:"fermer",p:"fer-ME",t:"cerrar",c:"verbos"},
-   {w:"commencer",p:"ko-mã-SE",t:"empezar",c:"verbos"},
-   {w:"aider",p:"e-DE",t:"ayudar",c:"verbos"},
-   {w:"grand",p:"GRÃ",t:"grande",c:"adjetivos"},
-   {w:"petit",p:"pə-TI",t:"pequeño",c:"adjetivos"},
-   {w:"beau",p:"BO",t:"bonito",c:"adjetivos"},
-   {w:"bon",p:"BÕ",t:"bueno",c:"adjetivos"},
-   {w:"mauvais",p:"mo-VE",t:"malo",c:"adjetivos"},
-   {w:"nouveau",p:"nu-VO",t:"nuevo",c:"adjetivos"},
-   {w:"vieux",p:"VYØ",t:"viejo",c:"adjetivos"},
-   {w:"facile",p:"fa-SIL",t:"fácil",c:"adjetivos"},
-   {w:"difficile",p:"di-fi-SIL",t:"difícil",c:"adjetivos"},
-   {w:"heureux",p:"ø-RØ",t:"feliz",c:"adjetivos"},
-   {w:"rapide",p:"ra-PID",t:"rápido",c:"adjetivos"},
-   {w:"lent",p:"LÃ",t:"lento",c:"adjetivos"},
-   {w:"fort",p:"FOR",t:"fuerte",c:"adjetivos"},
-   {w:"faible",p:"FEBL",t:"débil",c:"adjetivos"},
-   {w:"propre",p:"PROPR",t:"limpio",c:"adjetivos"},
-   {w:"sale",p:"SAL",t:"sucio",c:"adjetivos"},
-   {w:"riche",p:"RISH",t:"rico",c:"adjetivos"},
-   {w:"gentil",p:"zhã-TI",t:"amable",c:"adjetivos"},
-   {w:"aujourd'hui",p:"o-zhur-DUI",t:"hoy",c:"tiempo"},
-   {w:"demain",p:"də-MÃ",t:"mañana",c:"tiempo"},
-   {w:"hier",p:"YER",t:"ayer",c:"tiempo"},
-   {w:"maintenant",p:"mã-tə-NÃ",t:"ahora",c:"tiempo"},
-   {w:"jour",p:"ZHUR",t:"día",c:"tiempo"},
-   {w:"nuit",p:"NUI",t:"noche",c:"tiempo"},
-   {w:"semaine",p:"sə-MEN",t:"semana",c:"tiempo"},
-   {w:"mois",p:"MWA",t:"mes",c:"tiempo"},
-   {w:"année",p:"a-NE",t:"año",c:"tiempo"},
-   {w:"matin",p:"ma-TÃ",t:"mañana (parte del día)",c:"tiempo"},
-   {w:"après-midi",p:"a-pre-mi-DI",t:"tarde",c:"tiempo"},
-   {w:"soir",p:"SWAR",t:"noche (atardecer)",c:"tiempo"},
-   {w:"printemps",p:"prÃ-TÃ",t:"primavera",c:"tiempo"},
-   {w:"été",p:"e-TE",t:"verano",c:"tiempo"},
-   {w:"automne",p:"o-TON",t:"otoño",c:"tiempo"},
-   {w:"hiver",p:"i-VER",t:"invierno",c:"tiempo"},
-   {w:"blanc",p:"BLÃ",t:"blanco",c:"colores"},
-   {w:"noir",p:"NWAR",t:"negro",c:"colores"},
-   {w:"rouge",p:"RUZH",t:"rojo",c:"colores"},
-   {w:"bleu",p:"BLØ",t:"azul",c:"colores"},
-   {w:"vert",p:"VER",t:"verde",c:"colores"},
-   {w:"jaune",p:"ZHON",t:"amarillo",c:"colores"},
-   {w:"ville",p:"VIL",t:"ciudad",c:"lugares"},
-   {w:"rue",p:"RU",t:"calle",c:"lugares"},
-   {w:"gare",p:"GAR",t:"estación",c:"lugares"},
-   {w:"aéroport",p:"a-e-ro-POR",t:"aeropuerto",c:"lugares"},
-   {w:"hôtel",p:"o-TEL",t:"hotel",c:"lugares"},
-   {w:"restaurant",p:"res-to-RÃ",t:"restaurante",c:"lugares"},
-   {w:"magasin",p:"ma-ga-ZÃ",t:"tienda",c:"lugares"},
-   {w:"école",p:"e-KOL",t:"escuela",c:"lugares"},
-   {w:"hôpital",p:"o-pi-TAL",t:"hospital",c:"lugares"},
-   {w:"pharmacie",p:"far-ma-SI",t:"farmacia",c:"lugares"},
-   {w:"banque",p:"BÃK",t:"banco",c:"lugares"},
-   {w:"église",p:"e-GLIZ",t:"iglesia",c:"lugares"},
-   {w:"parc",p:"PARK",t:"parque",c:"lugares"},
-   {w:"plage",p:"PLAZH",t:"playa",c:"lugares"},
-   {w:"marché",p:"mar-SHE",t:"mercado",c:"lugares"},
-   {w:"travail",p:"tra-VAI",t:"trabajo",c:"trabajo"},
-   {w:"bureau",p:"by-RO",t:"oficina",c:"trabajo"},
-   {w:"argent",p:"ar-ZHÃ",t:"dinero",c:"trabajo"},
-   {w:"livre",p:"LIVR",t:"libro",c:"trabajo"},
-   {w:"ami",p:"a-MI",t:"amigo",c:"trabajo"},
-   {w:"ordinateur",p:"or-di-na-TØR",t:"ordenador",c:"trabajo"},
-   {w:"tête",p:"TET",t:"cabeza",c:"cuerpo"},
-   {w:"main",p:"MÃ",t:"mano",c:"cuerpo"},
-   {w:"œil",p:"ØY",t:"ojo",c:"cuerpo"},
-   {w:"bouche",p:"BUSH",t:"boca",c:"cuerpo"},
-   {w:"pied",p:"PYE",t:"pie",c:"cuerpo"},
-   {w:"cœur",p:"KØR",t:"corazón",c:"cuerpo"},
-   {w:"bras",p:"BRA",t:"brazo",c:"cuerpo"},
-   {w:"jambe",p:"ZHÃB",t:"pierna",c:"cuerpo"},
-   {w:"dos",p:"DO",t:"espalda",c:"cuerpo"},
-   {w:"nez",p:"NE",t:"nariz",c:"cuerpo"},
-   {w:"vêtement",p:"vet-MÃ",t:"ropa",c:"ropa"},
-   {w:"chemise",p:"shə-MIZ",t:"camisa",c:"ropa"},
-   {w:"pantalon",p:"pã-ta-LÕ",t:"pantalón",c:"ropa"},
-   {w:"chaussure",p:"sho-SUR",t:"zapato",c:"ropa"},
-   {w:"robe",p:"ROB",t:"vestido",c:"ropa"},
-   {w:"chapeau",p:"sha-PO",t:"sombrero",c:"ropa"},
-   {w:"veste",p:"VEST",t:"chaqueta",c:"ropa"},
-   {w:"jupe",p:"ZHUP",t:"falda",c:"ropa"},
-   {w:"arbre",p:"ARBR",t:"árbol",c:"naturaleza"},
-   {w:"fleur",p:"FLØR",t:"flor",c:"naturaleza"},
-   {w:"soleil",p:"so-LEY",t:"sol",c:"naturaleza"},
-   {w:"lune",p:"LUN",t:"luna",c:"naturaleza"},
-   {w:"montagne",p:"mõ-TANY",t:"montaña",c:"naturaleza"},
-   {w:"mer",p:"MER",t:"mar",c:"naturaleza"},
-   {w:"ciel",p:"SYEL",t:"cielo",c:"naturaleza"},
-   {w:"pluie",p:"PLUI",t:"lluvia",c:"naturaleza"},
-   {w:"chien",p:"SHYÃ",t:"perro",c:"animales"},
-   {w:"chat",p:"SHA",t:"gato",c:"animales"},
-   {w:"oiseau",p:"wa-ZO",t:"pájaro",c:"animales"},
-   {w:"cheval",p:"shə-VAL",t:"caballo",c:"animales"},
-   {w:"vache",p:"VASH",t:"vaca",c:"animales"},
-   {w:"lion",p:"LYÕ",t:"león",c:"animales"},
-   {w:"ours",p:"URS",t:"oso",c:"animales"},
-   {w:"souris",p:"su-RI",t:"ratón",c:"animales"},
-   {w:"voiture",p:"vwa-TUR",t:"coche",c:"transporte"},
-   {w:"train",p:"TRÃ",t:"tren",c:"transporte"},
-   {w:"avion",p:"a-VYÕ",t:"avión",c:"transporte"},
-   {w:"bus",p:"BUS",t:"autobús",c:"transporte"},
-   {w:"bateau",p:"ba-TO",t:"barco",c:"transporte"},
-   {w:"vélo",p:"ve-LO",t:"bicicleta",c:"transporte"},
-   {w:"taxi",p:"tak-SI",t:"taxi",c:"transporte"},
-   {w:"métro",p:"me-TRO",t:"metro",c:"transporte"},
-   {w:"téléphone",p:"te-le-FON",t:"teléfono",c:"tecnología"},
-   {w:"internet",p:"Ã-ter-net",t:"internet",c:"tecnología"},
-   {w:"télévision",p:"te-le-vi-ZYÕ",t:"televisión",c:"tecnología"},
-   {w:"email",p:"i-MEL",t:"correo electrónico",c:"tecnología"},
-   {w:"message",p:"me-SAZH",t:"mensaje",c:"tecnología"},
-   {w:"écran",p:"e-KRÃ",t:"pantalla",c:"tecnología"},
-   {w:"content",p:"kõ-TÃ",t:"contento",c:"emociones"},
-   {w:"en colère",p:"ã-ko-LER",t:"enfadado",c:"emociones"},
-   {w:"fatigué",p:"fa-ti-GE",t:"cansado",c:"emociones"},
-   {w:"surpris",p:"sur-PRI",t:"sorprendido",c:"emociones"},
-   {w:"inquiet",p:"Ã-kye",t:"preocupado",c:"emociones"},
-   {w:"calme",p:"KALM",t:"tranquilo",c:"emociones"},
-   {w:"chaud",p:"SHO",t:"caluroso",c:"clima"},
-   {w:"froid",p:"FRWA",t:"frío",c:"clima"},
-   {w:"nuageux",p:"nua-ZHØ",t:"nublado",c:"clima"},
-   {w:"ensoleillé",p:"ã-so-le-YE",t:"soleado",c:"clima"},
-   {w:"orage",p:"o-RAZH",t:"tormenta",c:"clima"},
-   {w:"lundi",p:"lÃ-DI",t:"lunes",c:"días"},
-   {w:"mardi",p:"mar-DI",t:"martes",c:"días"},
-   {w:"mercredi",p:"mer-krə-DI",t:"miércoles",c:"días"},
-   {w:"jeudi",p:"zhø-DI",t:"jueves",c:"días"},
-   {w:"vendredi",p:"vã-drə-DI",t:"viernes",c:"días"},
-   {w:"samedi",p:"sam-DI",t:"sábado",c:"días"},
-   {w:"dimanche",p:"di-MÃSH",t:"domingo",c:"días"},
-   {w:"janvier",p:"zhã-VYE",t:"enero",c:"meses"},
-   {w:"février",p:"fe-vri-YE",t:"febrero",c:"meses"},
-   {w:"mars",p:"MARS",t:"marzo",c:"meses"},
-   {w:"avril",p:"a-VRIL",t:"abril",c:"meses"},
-   {w:"mai",p:"ME",t:"mayo",c:"meses"},
-   {w:"juin",p:"ZHUÃ",t:"junio",c:"meses"},
-   {w:"juillet",p:"zhui-YE",t:"julio",c:"meses"},
-   {w:"août",p:"U",t:"agosto",c:"meses"},
-   {w:"septembre",p:"sep-TÃBR",t:"septiembre",c:"meses"},
-   {w:"octobre",p:"ok-TOBR",t:"octubre",c:"meses"},
-   {w:"novembre",p:"no-VÃBR",t:"noviembre",c:"meses"},
-   {w:"décembre",p:"de-SÃBR",t:"diciembre",c:"meses"},
-   {w:"qui",p:"KI",t:"quién",c:"conectores"},
-   {w:"quoi",p:"KWA",t:"qué",c:"conectores"},
-   {w:"où",p:"U",t:"dónde",c:"conectores"},
-   {w:"quand",p:"KÃ",t:"cuándo",c:"conectores"},
-   {w:"pourquoi",p:"pur-KWA",t:"por qué",c:"conectores"},
-   {w:"comment",p:"ko-MÃ",t:"cómo",c:"conectores"},
-   {w:"combien",p:"kõ-BYÃ",t:"cuánto",c:"conectores"},
-   {w:"donc",p:"DÕK",t:"por eso",c:"conectores"},
-   {w:"aussi",p:"o-SI",t:"también",c:"conectores"}
-  ],
-  phr:[
-   {f:"Comment ça va ?",t:"¿Cómo estás?"},
-   {f:"Je m'appelle...",t:"Me llamo..."},
-   {f:"Comment vous appelez-vous ?",t:"¿Cómo se llama usted?"},
-   {f:"Je ne comprends pas",t:"No entiendo"},
-   {f:"Je ne parle pas bien français",t:"No hablo bien francés"},
-   {f:"Pouvez-vous répéter, s'il vous plaît ?",t:"¿Puede repetir, por favor?"},
-   {f:"Parlez-vous anglais ?",t:"¿Habla usted inglés?"},
-   {f:"Où sont les toilettes ?",t:"¿Dónde está el baño?"},
-   {f:"Où est la gare ?",t:"¿Dónde está la estación?"},
-   {f:"Combien ça coûte ?",t:"¿Cuánto cuesta?"},
-   {f:"Je voudrais...",t:"Me gustaría..."},
-   {f:"L'addition, s'il vous plaît",t:"La cuenta, por favor"},
-   {f:"Quelle heure est-il ?",t:"¿Qué hora es?"},
-   {f:"Pouvez-vous m'aider ?",t:"¿Puede ayudarme?"},
-   {f:"Je ne sais pas",t:"No sé"},
-   {f:"À bientôt",t:"Hasta pronto"},
-   {f:"Bon appétit",t:"Buen provecho"},
-   {f:"Qu'est-ce que c'est ?",t:"¿Qué es esto?"},
-   {f:"C'est combien ?",t:"¿Cuánto es?"},
-   {f:"Je suis perdu(e)",t:"Estoy perdido/a"},
-   {f:"Au secours !",t:"¡Socorro!"},
-   {f:"Appelez une ambulance !",t:"¡Llame a una ambulancia!"},
-   {f:"Quel est votre nom ?",t:"¿Cuál es su nombre?"},
-   {f:"D'où venez-vous ?",t:"¿De dónde es usted?"},
-   {f:"Je viens d'Espagne",t:"Vengo de España"},
-   {f:"Quel âge avez-vous ?",t:"¿Cuántos años tiene?"},
-   {f:"Enchanté(e)",t:"Encantado/a"},
-   {f:"À demain",t:"Hasta mañana"},
-   {f:"Bonne journée",t:"Que tenga un buen día"},
-   {f:"Bonne nuit",t:"Buenas noches"},
-   {f:"Avez-vous une chambre libre ?",t:"¿Tiene una habitación libre?"},
-   {f:"Je voudrais réserver une table",t:"Me gustaría reservar una mesa"},
-   {f:"C'est trop cher",t:"Es demasiado caro"},
-   {f:"Pouvez-vous me faire une réduction ?",t:"¿Puede hacerme un descuento?"},
-   {f:"Où puis-je acheter des billets ?",t:"¿Dónde puedo comprar billetes?"},
-   {f:"À quelle heure part le train ?",t:"¿A qué hora sale el tren?"},
-   {f:"Je suis allergique à...",t:"Soy alérgico/a a..."},
-   {f:"J'ai besoin d'un médecin",t:"Necesito un médico"},
-   {f:"Je ne me sens pas bien",t:"No me siento bien"},
-   {f:"Félicitations !",t:"¡Felicidades!"},
-   {f:"Bon anniversaire !",t:"¡Feliz cumpleaños!"},
-   {f:"Bonne chance !",t:"¡Buena suerte!"},
-   {f:"C'est délicieux",t:"Está delicioso"},
-   {f:"J'adore ça",t:"Me encanta"},
-   {f:"Je suis d'accord",t:"Estoy de acuerdo"},
-   {f:"Je ne suis pas d'accord",t:"No estoy de acuerdo"},
-   {f:"Il n'y a pas de quoi",t:"No hay de qué"},
-   {f:"Avec plaisir",t:"Con mucho gusto"},
-   {f:"Quel dommage",t:"Qué pena"},
-   {f:"On y va !",t:"¡Vamos!"}
-  ],
-  key:["bonjour","au revoir","merci","s'il vous plaît","oui","non","pardon","de rien","eau","aujourd'hui","aller","manger","un","deux","trois","où","quand","comment","combien","aider","chien","chat","maison","ami","travail"]
- },
- ru:{name:"Ruso",flag:"🇷🇺",
-  dic:[
-   {w:"привет",p:"privét",t:"hola",c:"saludos"},
-   {w:"здравствуйте",p:"zdrástvuyte",t:"hola (formal)",c:"saludos"},
-   {w:"до свидания",p:"da svidánia",t:"adiós",c:"saludos"},
-   {w:"спасибо",p:"spasíba",t:"gracias",c:"saludos"},
-   {w:"пожалуйста",p:"pazhálusta",t:"por favor, de nada",c:"saludos"},
-   {w:"извините",p:"izviníte",t:"perdón",c:"saludos"},
-   {w:"пока",p:"paká",t:"chao (informal)",c:"saludos"},
-   {w:"добрый день",p:"dóbryy dyen'",t:"buenos días, buenas tardes",c:"saludos"},
-   {w:"да",p:"da",t:"sí",c:"básico"},
-   {w:"нет",p:"nyet",t:"no",c:"básico"},
-   {w:"может быть",p:"mózhet byt'",t:"tal vez",c:"básico"},
-   {w:"и",p:"i",t:"y",c:"básico"},
-   {w:"или",p:"íli",t:"o",c:"básico"},
-   {w:"но",p:"no",t:"pero",c:"básico"},
-   {w:"с",p:"s",t:"con",c:"básico"},
-   {w:"без",p:"byez",t:"sin",c:"básico"},
-   {w:"я",p:"ya",t:"yo",c:"pronombres"},
-   {w:"ты",p:"ty",t:"tú",c:"pronombres"},
-   {w:"он",p:"on",t:"él",c:"pronombres"},
-   {w:"она",p:"aná",t:"ella",c:"pronombres"},
-   {w:"мы",p:"my",t:"nosotros",c:"pronombres"},
-   {w:"вы",p:"vy",t:"usted, vosotros",c:"pronombres"},
-   {w:"они",p:"aní",t:"ellos",c:"pronombres"},
-   {w:"один",p:"adín",t:"uno",c:"números"},
-   {w:"два",p:"dva",t:"dos",c:"números"},
-   {w:"три",p:"tri",t:"tres",c:"números"},
-   {w:"четыре",p:"chetýre",t:"cuatro",c:"números"},
-   {w:"пять",p:"pyat'",t:"cinco",c:"números"},
-   {w:"шесть",p:"shest'",t:"seis",c:"números"},
-   {w:"семь",p:"syem'",t:"siete",c:"números"},
-   {w:"восемь",p:"vósem'",t:"ocho",c:"números"},
-   {w:"девять",p:"dévyat'",t:"nueve",c:"números"},
-   {w:"десять",p:"désyat'",t:"diez",c:"números"},
-   {w:"одиннадцать",p:"adínnadtsat'",t:"once",c:"números"},
-   {w:"двенадцать",p:"dvenádtsat'",t:"doce",c:"números"},
-   {w:"тринадцать",p:"trinádtsat'",t:"trece",c:"números"},
-   {w:"четырнадцать",p:"chetýrnadtsat'",t:"catorce",c:"números"},
-   {w:"пятнадцать",p:"pyatnádtsat'",t:"quince",c:"números"},
-   {w:"шестнадцать",p:"shestnádtsat'",t:"dieciséis",c:"números"},
-   {w:"семнадцать",p:"semnádtsat'",t:"diecisiete",c:"números"},
-   {w:"восемнадцать",p:"vosemnádtsat'",t:"dieciocho",c:"números"},
-   {w:"девятнадцать",p:"devyatnádtsat'",t:"diecinueve",c:"números"},
-   {w:"двадцать",p:"dvádtsat'",t:"veinte",c:"números"},
-   {w:"тридцать",p:"trídtsat'",t:"treinta",c:"números"},
-   {w:"сорок",p:"sórak",t:"cuarenta",c:"números"},
-   {w:"пятьдесят",p:"pyat'desyát",t:"cincuenta",c:"números"},
-   {w:"шестьдесят",p:"shest'desyát",t:"sesenta",c:"números"},
-   {w:"семьдесят",p:"syém'desyat",t:"setenta",c:"números"},
-   {w:"восемьдесят",p:"vósem'desyat",t:"ochenta",c:"números"},
-   {w:"девяносто",p:"devyanósta",t:"noventa",c:"números"},
-   {w:"сто",p:"sto",t:"cien",c:"números"},
-   {w:"тысяча",p:"týsyacha",t:"mil",c:"números"},
-   {w:"семья",p:"sem'yá",t:"familia",c:"familia"},
-   {w:"мать",p:"mat'",t:"madre",c:"familia"},
-   {w:"отец",p:"atéts",t:"padre",c:"familia"},
-   {w:"брат",p:"brat",t:"hermano",c:"familia"},
-   {w:"сестра",p:"sestrá",t:"hermana",c:"familia"},
-   {w:"сын",p:"syn",t:"hijo",c:"familia"},
-   {w:"дочь",p:"doch'",t:"hija",c:"familia"},
-   {w:"ребёнок",p:"rebyónak",t:"niño",c:"familia"},
-   {w:"дом",p:"dom",t:"casa",c:"casa"},
-   {w:"комната",p:"kómnata",t:"habitación",c:"casa"},
-   {w:"кухня",p:"kúkhnya",t:"cocina",c:"casa"},
-   {w:"дверь",p:"dvyer'",t:"puerta",c:"casa"},
-   {w:"окно",p:"aknó",t:"ventana",c:"casa"},
-   {w:"стол",p:"stol",t:"mesa",c:"casa"},
-   {w:"гостиная",p:"gastínaya",t:"salón",c:"casa"},
-   {w:"сад",p:"sad",t:"jardín",c:"casa"},
-   {w:"лестница",p:"lyéstnitsa",t:"escalera",c:"casa"},
-   {w:"кровать",p:"kravát'",t:"cama",c:"casa"},
-   {w:"диван",p:"diván",t:"sofá",c:"casa"},
-   {w:"хлеб",p:"khlyeb",t:"pan",c:"comida"},
-   {w:"сыр",p:"syr",t:"queso",c:"comida"},
-   {w:"вода",p:"vadá",t:"agua",c:"comida"},
-   {w:"вино",p:"vinó",t:"vino",c:"comida"},
-   {w:"молоко",p:"malakó",t:"leche",c:"comida"},
-   {w:"мясо",p:"myása",t:"carne",c:"comida"},
-   {w:"рыба",p:"rýba",t:"pescado",c:"comida"},
-   {w:"фрукт",p:"frukt",t:"fruta",c:"comida"},
-   {w:"овощ",p:"óvashch",t:"verdura",c:"comida"},
-   {w:"яйцо",p:"yaytsó",t:"huevo",c:"comida"},
-   {w:"кофе",p:"kófye",t:"café",c:"comida"},
-   {w:"чай",p:"chay",t:"té",c:"comida"},
-   {w:"торт",p:"tort",t:"pastel",c:"comida"},
-   {w:"суп",p:"sup",t:"sopa",c:"comida"},
-   {w:"салат",p:"salát",t:"ensalada",c:"comida"},
-   {w:"рис",p:"ris",t:"arroz",c:"comida"},
-   {w:"курица",p:"kúritsa",t:"pollo",c:"comida"},
-   {w:"говядина",p:"gavyádina",t:"ternera",c:"comida"},
-   {w:"шоколад",p:"shakalát",t:"chocolate",c:"comida"},
-   {w:"мёд",p:"myod",t:"miel",c:"comida"},
-   {w:"макароны",p:"makaróny",t:"pasta",c:"comida"},
-   {w:"быть",p:"byt'",t:"ser, estar",c:"verbos"},
-   {w:"иметь",p:"imét'",t:"tener",c:"verbos"},
-   {w:"делать",p:"délat'",t:"hacer",c:"verbos"},
-   {w:"идти",p:"idtí",t:"ir",c:"verbos"},
-   {w:"приходить",p:"prikhadít'",t:"venir",c:"verbos"},
-   {w:"есть",p:"yest'",t:"comer",c:"verbos"},
-   {w:"пить",p:"pit'",t:"beber",c:"verbos"},
-   {w:"говорить",p:"gavarít'",t:"hablar",c:"verbos"},
-   {w:"видеть",p:"vídet'",t:"ver",c:"verbos"},
-   {w:"знать",p:"znat'",t:"saber",c:"verbos"},
-   {w:"мочь",p:"moch'",t:"poder",c:"verbos"},
-   {w:"хотеть",p:"khatét'",t:"querer",c:"verbos"},
-   {w:"сказать",p:"skazát'",t:"decir",c:"verbos"},
-   {w:"брать",p:"brat'",t:"tomar, coger",c:"verbos"},
-   {w:"писать",p:"pisát'",t:"escribir",c:"verbos"},
-   {w:"читать",p:"chitát'",t:"leer",c:"verbos"},
-   {w:"слушать",p:"slúshat'",t:"escuchar",c:"verbos"},
-   {w:"смотреть",p:"smatryét'",t:"mirar",c:"verbos"},
-   {w:"работать",p:"rabótat'",t:"trabajar",c:"verbos"},
-   {w:"учиться",p:"uchítsa",t:"estudiar",c:"verbos"},
-   {w:"учить",p:"uchít'",t:"aprender, enseñar",c:"verbos"},
-   {w:"покупать",p:"pakupát'",t:"comprar",c:"verbos"},
-   {w:"продавать",p:"pradavát'",t:"vender",c:"verbos"},
-   {w:"платить",p:"platít'",t:"pagar",c:"verbos"},
-   {w:"играть",p:"igrát'",t:"jugar",c:"verbos"},
-   {w:"петь",p:"pyet'",t:"cantar",c:"verbos"},
-   {w:"танцевать",p:"tantsevát'",t:"bailar",c:"verbos"},
-   {w:"спать",p:"spat'",t:"dormir",c:"verbos"},
-   {w:"открывать",p:"atkryvát'",t:"abrir",c:"verbos"},
-   {w:"закрывать",p:"zakryvát'",t:"cerrar",c:"verbos"},
-   {w:"начинать",p:"nachinát'",t:"empezar",c:"verbos"},
-   {w:"помогать",p:"pamagát'",t:"ayudar",c:"verbos"},
-   {w:"большой",p:"bal'shói",t:"grande",c:"adjetivos"},
-   {w:"маленький",p:"málen'kiy",t:"pequeño",c:"adjetivos"},
-   {w:"красивый",p:"krasívyy",t:"bonito",c:"adjetivos"},
-   {w:"хороший",p:"kharóshiy",t:"bueno",c:"adjetivos"},
-   {w:"плохой",p:"plakhói",t:"malo",c:"adjetivos"},
-   {w:"новый",p:"nóvyy",t:"nuevo",c:"adjetivos"},
-   {w:"старый",p:"stáryy",t:"viejo",c:"adjetivos"},
-   {w:"лёгкий",p:"lyókhkiy",t:"fácil",c:"adjetivos"},
-   {w:"трудный",p:"trúdnyy",t:"difícil",c:"adjetivos"},
-   {w:"счастливый",p:"schastlívyy",t:"feliz",c:"adjetivos"},
-   {w:"быстрый",p:"býstryy",t:"rápido",c:"adjetivos"},
-   {w:"медленный",p:"myédlennyy",t:"lento",c:"adjetivos"},
-   {w:"сильный",p:"síl'nyy",t:"fuerte",c:"adjetivos"},
-   {w:"слабый",p:"slábyy",t:"débil",c:"adjetivos"},
-   {w:"чистый",p:"chístyy",t:"limpio",c:"adjetivos"},
-   {w:"грязный",p:"gryáznyy",t:"sucio",c:"adjetivos"},
-   {w:"богатый",p:"bagátyy",t:"rico",c:"adjetivos"},
-   {w:"добрый",p:"dóbryy",t:"amable",c:"adjetivos"},
-   {w:"сегодня",p:"sevódnya",t:"hoy",c:"tiempo"},
-   {w:"завтра",p:"závtra",t:"mañana",c:"tiempo"},
-   {w:"вчера",p:"vcherá",t:"ayer",c:"tiempo"},
-   {w:"сейчас",p:"seychás",t:"ahora",c:"tiempo"},
-   {w:"день",p:"dyen'",t:"día",c:"tiempo"},
-   {w:"ночь",p:"noch'",t:"noche",c:"tiempo"},
-   {w:"неделя",p:"nedélya",t:"semana",c:"tiempo"},
-   {w:"месяц",p:"mésyats",t:"mes",c:"tiempo"},
-   {w:"год",p:"god",t:"año",c:"tiempo"},
-   {w:"весна",p:"vesná",t:"primavera",c:"tiempo"},
-   {w:"лето",p:"lyéta",t:"verano",c:"tiempo"},
-   {w:"осень",p:"ósen'",t:"otoño",c:"tiempo"},
-   {w:"зима",p:"zimá",t:"invierno",c:"tiempo"},
-   {w:"утро",p:"útra",t:"mañana (parte del día)",c:"tiempo"},
-   {w:"вечер",p:"vyécher",t:"tarde, noche",c:"tiempo"},
-   {w:"полночь",p:"pólnach'",t:"medianoche",c:"tiempo"},
-   {w:"белый",p:"byélyy",t:"blanco",c:"colores"},
-   {w:"чёрный",p:"chyórnyy",t:"negro",c:"colores"},
-   {w:"красный",p:"krásnyy",t:"rojo",c:"colores"},
-   {w:"синий",p:"síniy",t:"azul",c:"colores"},
-   {w:"зелёный",p:"zelyónyy",t:"verde",c:"colores"},
-   {w:"жёлтый",p:"zhyóltyy",t:"amarillo",c:"colores"},
-   {w:"город",p:"górad",t:"ciudad",c:"lugares"},
-   {w:"улица",p:"úlitsa",t:"calle",c:"lugares"},
-   {w:"вокзал",p:"vakzál",t:"estación",c:"lugares"},
-   {w:"аэропорт",p:"aeropórt",t:"aeropuerto",c:"lugares"},
-   {w:"гостиница",p:"gastínitsa",t:"hotel",c:"lugares"},
-   {w:"ресторан",p:"restarán",t:"restaurante",c:"lugares"},
-   {w:"магазин",p:"magazín",t:"tienda",c:"lugares"},
-   {w:"школа",p:"shkóla",t:"escuela",c:"lugares"},
-   {w:"больница",p:"bal'nítsa",t:"hospital",c:"lugares"},
-   {w:"аптека",p:"aptyéka",t:"farmacia",c:"lugares"},
-   {w:"банк",p:"bank",t:"banco",c:"lugares"},
-   {w:"церковь",p:"tsérkav'",t:"iglesia",c:"lugares"},
-   {w:"парк",p:"park",t:"parque",c:"lugares"},
-   {w:"пляж",p:"plyazh",t:"playa",c:"lugares"},
-   {w:"рынок",p:"rýnak",t:"mercado",c:"lugares"},
-   {w:"работа",p:"rabóta",t:"trabajo",c:"trabajo"},
-   {w:"офис",p:"ófis",t:"oficina",c:"trabajo"},
-   {w:"деньги",p:"dyen'gi",t:"dinero",c:"trabajo"},
-   {w:"книга",p:"kníga",t:"libro",c:"trabajo"},
-   {w:"друг",p:"drug",t:"amigo",c:"trabajo"},
-   {w:"компьютер",p:"kamp'yúter",t:"ordenador",c:"trabajo"},
-   {w:"голова",p:"galavá",t:"cabeza",c:"cuerpo"},
-   {w:"рука",p:"ruká",t:"mano",c:"cuerpo"},
-   {w:"глаз",p:"glaz",t:"ojo",c:"cuerpo"},
-   {w:"рот",p:"rot",t:"boca",c:"cuerpo"},
-   {w:"нога",p:"nagá",t:"pierna",c:"cuerpo"},
-   {w:"сердце",p:"syértse",t:"corazón",c:"cuerpo"},
-   {w:"плечо",p:"plechó",t:"hombro",c:"cuerpo"},
-   {w:"спина",p:"spiná",t:"espalda",c:"cuerpo"},
-   {w:"нос",p:"nos",t:"nariz",c:"cuerpo"},
-   {w:"ухо",p:"úkha",t:"oreja",c:"cuerpo"},
-   {w:"одежда",p:"adyézhda",t:"ropa",c:"ropa"},
-   {w:"рубашка",p:"rubáshka",t:"camisa",c:"ropa"},
-   {w:"брюки",p:"bryúki",t:"pantalón",c:"ropa"},
-   {w:"обувь",p:"óbuv'",t:"calzado",c:"ropa"},
-   {w:"платье",p:"plát'ye",t:"vestido",c:"ropa"},
-   {w:"шапка",p:"shápka",t:"gorro",c:"ropa"},
-   {w:"куртка",p:"kúrtka",t:"chaqueta",c:"ropa"},
-   {w:"юбка",p:"yúpka",t:"falda",c:"ropa"},
-   {w:"дерево",p:"dyérevo",t:"árbol",c:"naturaleza"},
-   {w:"цветок",p:"tsvetók",t:"flor",c:"naturaleza"},
-   {w:"солнце",p:"sóntse",t:"sol",c:"naturaleza"},
-   {w:"луна",p:"luná",t:"luna",c:"naturaleza"},
-   {w:"гора",p:"gorá",t:"montaña",c:"naturaleza"},
-   {w:"море",p:"mórye",t:"mar",c:"naturaleza"},
-   {w:"небо",p:"nyébo",t:"cielo",c:"naturaleza"},
-   {w:"дождь",p:"dozhd'",t:"lluvia",c:"naturaleza"},
-   {w:"собака",p:"sabáka",t:"perro",c:"animales"},
-   {w:"кошка",p:"kóshka",t:"gato",c:"animales"},
-   {w:"птица",p:"ptítsa",t:"pájaro",c:"animales"},
-   {w:"лошадь",p:"lóshad'",t:"caballo",c:"animales"},
-   {w:"корова",p:"karóva",t:"vaca",c:"animales"},
-   {w:"лев",p:"lyev",t:"león",c:"animales"},
-   {w:"медведь",p:"medvéd'",t:"oso",c:"animales"},
-   {w:"мышь",p:"mysh'",t:"ratón",c:"animales"},
-   {w:"поезд",p:"póyezd",t:"tren",c:"transporte"},
-   {w:"самолёт",p:"samalyót",t:"avión",c:"transporte"},
-   {w:"автобус",p:"avtóbus",t:"autobús",c:"transporte"},
-   {w:"корабль",p:"karábl'",t:"barco",c:"transporte"},
-   {w:"велосипед",p:"velasipéd",t:"bicicleta",c:"transporte"},
-   {w:"такси",p:"taksí",t:"taxi",c:"transporte"},
-   {w:"метро",p:"metró",t:"metro",c:"transporte"},
-   {w:"грузовик",p:"gruzavík",t:"camión",c:"transporte"},
-   {w:"телефон",p:"telefón",t:"teléfono",c:"tecnología"},
-   {w:"интернет",p:"internét",t:"internet",c:"tecnología"},
-   {w:"телевизор",p:"televízar",t:"televisión",c:"tecnología"},
-   {w:"имейл",p:"iméyl",t:"correo electrónico",c:"tecnología"},
-   {w:"сообщение",p:"saabshchyénie",t:"mensaje",c:"tecnología"},
-   {w:"экран",p:"ekrán",t:"pantalla",c:"tecnología"},
-   {w:"довольный",p:"davól'nyy",t:"contento",c:"emociones"},
-   {w:"сердитый",p:"serdítyy",t:"enfadado",c:"emociones"},
-   {w:"усталый",p:"ustályy",t:"cansado",c:"emociones"},
-   {w:"удивлённый",p:"udivlyónnyy",t:"sorprendido",c:"emociones"},
-   {w:"взволнованный",p:"vzvalnóvannyy",t:"preocupado",c:"emociones"},
-   {w:"спокойный",p:"spakóynyy",t:"tranquilo",c:"emociones"},
-   {w:"жаркий",p:"zhárkiy",t:"caluroso",c:"clima"},
-   {w:"холодный",p:"khalódnyy",t:"frío",c:"clima"},
-   {w:"облачный",p:"óblachnyy",t:"nublado",c:"clima"},
-   {w:"солнечный",p:"sólnechnyy",t:"soleado",c:"clima"},
-   {w:"гроза",p:"grazá",t:"tormenta",c:"clima"},
-   {w:"понедельник",p:"panedyél'nik",t:"lunes",c:"días"},
-   {w:"вторник",p:"vtórnik",t:"martes",c:"días"},
-   {w:"среда",p:"sredá",t:"miércoles",c:"días"},
-   {w:"четверг",p:"chetvyérk",t:"jueves",c:"días"},
-   {w:"пятница",p:"pyátnitsa",t:"viernes",c:"días"},
-   {w:"суббота",p:"subbóta",t:"sábado",c:"días"},
-   {w:"воскресенье",p:"vaskresén'ye",t:"domingo",c:"días"},
-   {w:"январь",p:"yanvár'",t:"enero",c:"meses"},
-   {w:"февраль",p:"fevrál'",t:"febrero",c:"meses"},
-   {w:"март",p:"mart",t:"marzo",c:"meses"},
-   {w:"апрель",p:"aprél'",t:"abril",c:"meses"},
-   {w:"май",p:"may",t:"mayo",c:"meses"},
-   {w:"июнь",p:"iyún'",t:"junio",c:"meses"},
-   {w:"июль",p:"iyúl'",t:"julio",c:"meses"},
-   {w:"август",p:"ávgust",t:"agosto",c:"meses"},
-   {w:"сентябрь",p:"sentyábr'",t:"septiembre",c:"meses"},
-   {w:"октябрь",p:"aktyábr'",t:"octubre",c:"meses"},
-   {w:"ноябрь",p:"noyábr'",t:"noviembre",c:"meses"},
-   {w:"декабрь",p:"dekábr'",t:"diciembre",c:"meses"},
-   {w:"кто",p:"kto",t:"quién",c:"conectores"},
-   {w:"что",p:"shto",t:"qué",c:"conectores"},
-   {w:"где",p:"gdye",t:"dónde",c:"conectores"},
-   {w:"когда",p:"kagdá",t:"cuándo",c:"conectores"},
-   {w:"почему",p:"pachemú",t:"por qué",c:"conectores"},
-   {w:"как",p:"kak",t:"cómo",c:"conectores"},
-   {w:"сколько",p:"skól'ka",t:"cuánto",c:"conectores"},
-   {w:"поэтому",p:"paétamu",t:"por eso",c:"conectores"},
-   {w:"тоже",p:"tózhe",t:"también",c:"conectores"}
-  ],
-  phr:[
-   {f:"Как дела?",t:"¿Cómo estás?"},
-   {f:"Меня зовут...",t:"Me llamo..."},
-   {f:"Как вас зовут?",t:"¿Cómo se llama usted?"},
-   {f:"Я не понимаю",t:"No entiendo"},
-   {f:"Я плохо говорю по-русски",t:"No hablo bien ruso"},
-   {f:"Повторите, пожалуйста",t:"Repita, por favor"},
-   {f:"Вы говорите по-английски?",t:"¿Habla usted inglés?"},
-   {f:"Где туалет?",t:"¿Dónde está el baño?"},
-   {f:"Где вокзал?",t:"¿Dónde está la estación?"},
-   {f:"Сколько это стоит?",t:"¿Cuánto cuesta?"},
-   {f:"Я хотел бы...",t:"Me gustaría..."},
-   {f:"Счёт, пожалуйста",t:"La cuenta, por favor"},
-   {f:"Который час?",t:"¿Qué hora es?"},
-   {f:"Вы можете мне помочь?",t:"¿Puede ayudarme?"},
-   {f:"Я не знаю",t:"No sé"},
-   {f:"До скорого",t:"Hasta pronto"},
-   {f:"Приятного аппетита",t:"Buen provecho"},
-   {f:"Что это?",t:"¿Qué es esto?"},
-   {f:"Сколько это?",t:"¿Cuánto es?"},
-   {f:"Я заблудился",t:"Estoy perdido"},
-   {f:"Помогите!",t:"¡Socorro!"},
-   {f:"Вызовите скорую помощь!",t:"¡Llame a una ambulancia!"},
-   {f:"Откуда вы?",t:"¿De dónde es usted?"},
-   {f:"Я из Испании",t:"Vengo de España"},
-   {f:"Сколько вам лет?",t:"¿Cuántos años tiene?"},
-   {f:"Очень приятно",t:"Encantado/a"},
-   {f:"До завтра",t:"Hasta mañana"},
-   {f:"Хорошего дня",t:"Que tenga un buen día"},
-   {f:"Спокойной ночи",t:"Buenas noches"},
-   {f:"У вас есть свободный номер?",t:"¿Tiene una habitación libre?"},
-   {f:"Я хочу заказать столик",t:"Me gustaría reservar una mesa"},
-   {f:"Это слишком дорого",t:"Es demasiado caro"},
-   {f:"Можете сделать скидку?",t:"¿Puede hacerme un descuento?"},
-   {f:"Где можно купить билеты?",t:"¿Dónde puedo comprar billetes?"},
-   {f:"Во сколько отправляется поезд?",t:"¿A qué hora sale el tren?"},
-   {f:"У меня аллергия на...",t:"Soy alérgico/a a..."},
-   {f:"Мне нужен врач",t:"Necesito un médico"},
-   {f:"Я плохо себя чувствую",t:"No me siento bien"},
-   {f:"Поздравляю!",t:"¡Felicidades!"},
-   {f:"С днём рождения!",t:"¡Feliz cumpleaños!"},
-   {f:"Удачи!",t:"¡Buena suerte!"},
-   {f:"Это очень вкусно",t:"Está delicioso"},
-   {f:"Мне это очень нравится",t:"Me encanta"},
-   {f:"Я согласен",t:"Estoy de acuerdo"},
-   {f:"Я не согласен",t:"No estoy de acuerdo"},
-   {f:"Не за что",t:"No hay de qué"},
-   {f:"С удовольствием",t:"Con mucho gusto"},
-   {f:"Как жаль",t:"Qué pena"},
-   {f:"Пошли!",t:"¡Vamos!"},
-   {f:"Добро пожаловать",t:"Bienvenido"}
-  ],
-  key:["привет","до свидания","спасибо","пожалуйста","да","нет","извините","пока","вода","сегодня","идти","есть","один","два","три","где","когда","как","сколько","помогать","собака","кошка","дом","друг","работа"]
- },
- en:{name:"Inglés",flag:"🇬🇧",
-  dic:Object.entries({
-   saludos:"hello|je-LOU|hola;good morning|gud MOR-ning|buenos días;good evening|gud IV-ning|buenas tardes;good night|gud NAIT|buenas noches;goodbye|gud-BAI|adiós;see you|si IU|hasta luego;please|PLIIS|por favor;thank you|ZANK-iu|gracias;sorry|SO-ri|lo siento;excuse me|ek-SKIUS mi|disculpe;you're welcome|ior UEL-kam|de nada;welcome|UEL-kam|bienvenido",
-   básico:"yes|IES|sí;no|NOU|no;maybe|MEI-bi|quizás;and|AND|y;or|OR|o;but|BAT|pero;with|UIZ|con;without|uiz-AUT|sin",
-   pronombres:"I|AI|yo;you|IU|tú, usted;he|JI|él;she|SHI|ella;we|UI|nosotros;they|DEI|ellos",
-   números:"one|UAN|uno;two|TU|dos;three|ZRI|tres;four|FOR|cuatro;five|FAIV|cinco;six|SIKS|seis;seven|SE-ven|siete;eight|EIT|ocho;nine|NAIN|nueve;ten|TEN|diez;twenty|TUEN-ti|veinte;hundred|JAN-dred|cien;thousand|ZAU-sand|mil",
-   familia:"family|FA-mi-li|familia;mother|MA-der|madre;father|FA-der|padre;brother|BRA-der|hermano;sister|SIS-ter|hermana;son|SAN|hijo;daughter|DO-ter|hija;friend|FREND|amigo",
-   casa:"house|JAUS|casa;room|RUM|habitación;kitchen|KI-chen|cocina;door|DOR|puerta;window|UIN-dou|ventana;table|TEI-bol|mesa;bed|BED|cama",
-   comida:"bread|BRED|pan;water|UO-ter|agua;milk|MILK|leche;cheese|CHIIS|queso;meat|MIIT|carne;fish|FISH|pescado;apple|A-pol|manzana;coffee|KO-fi|café",
-   verbos:"to be|tu BI|ser, estar;to have|tu JAV|tener;to go|tu GOU|ir;to eat|tu IIT|comer;to drink|tu DRINK|beber;to want|tu UONT|querer;to speak|tu SPIIK|hablar;to understand|tu an-der-STAND|entender;to help|tu JELP|ayudar;to know|tu NOU|saber;to see|tu SI|ver;to work|tu UERK|trabajar;to learn|tu LERN|aprender",
-   adjetivos:"good|GUD|bueno;bad|BAD|malo;big|BIG|grande;small|SMOL|pequeño;new|NIU|nuevo;old|OULD|viejo;beautiful|BIU-ti-ful|hermoso;easy|I-si|fácil;difficult|DI-fi-calt|difícil",
-   tiempo:"today|tu-DEI|hoy;tomorrow|tu-MO-rou|mañana;yesterday|IES-ter-dei|ayer;now|NAU|ahora;always|OL-ueis|siempre;never|NE-ver|nunca",
-   colores:"red|RED|rojo;blue|BLU|azul;green|GRIIN|verde;black|BLAK|negro;white|JUAIT|blanco",
-   lugares:"city|SI-ti|ciudad;street|STRIIT|calle;school|SKUL|escuela;airport|ER-port|aeropuerto;hospital|JOS-pi-tal|hospital",
-   animales:"dog|DOG|perro;cat|KAT|gato",
-   conectores:"where|JUER|dónde;when|JUEN|cuándo;why|JUAI|por qué;how|JAU|cómo;how much|jau MACH|cuánto;also|OL-sou|también;because|bi-KOS|porque"
-  }).flatMap(([c,s])=>s.split(";").map(x=>{const[w,p,t]=x.split("|");return{w,p,t,c};})),
-  phr:"How are you?|¿Cómo estás?;My name is...|Me llamo...;What's your name?|¿Cómo te llamas?;Nice to meet you|Encantado de conocerte;I don't understand|No entiendo;I don't speak English well|No hablo bien inglés;Can you repeat, please?|¿Puede repetir, por favor?;Do you speak Spanish?|¿Habla español?;Where is the bathroom?|¿Dónde está el baño?;Where is the station?|¿Dónde está la estación?;How much is it?|¿Cuánto cuesta?;I would like...|Me gustaría...;The bill, please|La cuenta, por favor;What time is it?|¿Qué hora es?;Can you help me?|¿Puede ayudarme?;I don't know|No sé;See you soon|Hasta pronto;Enjoy your meal|Buen provecho;What is this?|¿Qué es esto?;I'm lost|Estoy perdido;Help!|¡Socorro!;Call an ambulance!|¡Llame a una ambulancia!;Where are you from?|¿De dónde eres?;I'm from Spain|Soy de España;How old are you?|¿Cuántos años tienes?;See you tomorrow|Hasta mañana;Have a nice day|Que tengas un buen día;Good luck!|¡Buena suerte!;Happy birthday!|¡Feliz cumpleaños!;It's delicious|Está delicioso;I agree|Estoy de acuerdo;I don't feel well|No me siento bien;I need a doctor|Necesito un médico;That's too expensive|Es demasiado caro;I'm allergic to...|Soy alérgico a...;Let's go!|¡Vamos!".split(";").map(x=>{const[f,t]=x.split("|");return{f,t};}),
-  key:["hello","goodbye","thank you","please","sorry","yes","no","water","today","to go","to eat","to help","to work","one","two","three","where","when","how","how much","dog","cat","house","friend"]
- }
-};
+const DATA={fr:{name:"Francés",flag:"🇫🇷",tts:"fr-FR",dic:[],phr:[],key:[],ex:""},ru:{name:"Ruso",flag:"🇷🇺",tts:"ru-RU",dic:[],phr:[],key:[],ex:""},en:{name:"Inglés",flag:"🇬🇧",tts:"en-US",dic:[],phr:[],key:[],ex:""},de:{name:"Alemán",flag:"🇩🇪",tts:"de-DE",dic:[],phr:[],key:[],ex:""},it:{name:"Italiano",flag:"🇮🇹",tts:"it-IT",dic:[],phr:[],key:[],ex:""},pt:{name:"Portugués",flag:"🇵🇹",tts:"pt-PT",dic:[],phr:[],key:[],ex:""}};
+for(const l in DATA)useLang(l);
 
-let state={lang:"fr",tab:"dic",qi:0,score:0,questions:[]};
+let state={lang:window.__L0||"fr",tab:"dic",qi:0,score:0,questions:[]};
 let answered=false;
 
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
@@ -847,7 +170,7 @@ function render(){
   const d=DATA[state.lang];
   const main=document.getElementById("main");
   if(state.tab==="dic"){
-    main.innerHTML=`<input type="search" placeholder="Buscar palabra..." oninput="filterDic(this.value)">`+
+    main.innerHTML=`<input type="search" placeholder="Buscar palabra..." oninput="filterDicD(this.value)">`+
       `<div class="count">${d.dic.length} palabras</div>`+
       `<div class="list" id="diclist">`+d.dic.map(rowWord).join("")+`</div>`;
   } else if(state.tab==="phr"){
@@ -935,7 +258,7 @@ function renderLangs(){
 function renderTabs(){
   const n=document.getElementById("tabs");
   if(!n.firstChild){
-    n.innerHTML=[["dic","Diccionario"],["phr","Frases"],["key","Palabras clave"],["num","Números"],["fav","★ Favs"],["quiz","Test"]].map(t=>`<button data-t="${t[0]}" onclick="setTab('${t[0]}')">${t[1]}</button>`).join("");
+    n.innerHTML=[["dic","Diccionario"],["phr","Frases"],["key","Palabras clave"],["num","Números"],["pro","Pronunciación"],["fav","★ Favs"],["quiz","Test"]].map(t=>`<button data-t="${t[0]}" onclick="setTab('${t[0]}')">${t[1]}</button>`).join("");
   }
   n.querySelectorAll("button").forEach(b=>b.classList.toggle("active",b.dataset.t===state.tab));
 }
@@ -1018,105 +341,22 @@ function answer(i,correct){
 }
 const P=o=>Object.entries(o).flatMap(([c,s])=>s.split(";").map(x=>{const[w,p,t]=x.split("|");return{w,p,t,c};}));
 const F=s=>s.split(";").map(x=>{const[f,t]=x.split("|");return{f,t};});
-DATA.fr.tts="fr-FR";DATA.ru.tts="ru-RU";DATA.en.tts="en-US";
-DATA.en.dic.push(...P({
- tecnología:"computer|kom-PIU-ter|ordenador;phone|FOUN|teléfono;internet|IN-ter-net|internet;screen|SKRIIN|pantalla;password|PAS-uerd|contraseña;email|I-meil|correo electrónico;message|ME-sich|mensaje;website|UEB-sait|sitio web;battery|BA-te-ri|batería;camera|KA-me-ra|cámara",
- emociones:"happy|JA-pi|feliz;sad|SAD|triste;angry|AN-gri|enfadado;tired|TAI-erd|cansado;afraid|a-FREID|asustado;surprised|ser-PRAIZD|sorprendido;love|LAV|amor;worried|UE-rid|preocupado;proud|PRAUD|orgulloso;bored|BORD|aburrido",
- clima:"weather|UE-der|clima;sun|SAN|sol;rain|REIN|lluvia;snow|SNOU|nieve;wind|UIND|viento;cloud|KLAUD|nube;hot|JOT|caliente;cold|KOULD|frío",
- días:"Monday|MAN-dei|lunes;Tuesday|TIUS-dei|martes;Wednesday|UENS-dei|miércoles;Thursday|ZERS-dei|jueves;Friday|FRAI-dei|viernes;Saturday|SA-ter-dei|sábado;Sunday|SAN-dei|domingo",
- meses:"January|YAN-iu-e-ri|enero;February|FEB-ru-e-ri|febrero;March|MARCH|marzo;April|EI-pril|abril;May|MEI|mayo;June|YUN|junio;July|yu-LAI|julio;August|O-gast|agosto;September|sep-TEM-ber|septiembre;October|ok-TOU-ber|octubre;November|nou-VEM-ber|noviembre;December|di-SEM-ber|diciembre"
-}));
-DATA.de={name:"Alemán",flag:"🇩🇪",tts:"de-DE",dic:P({
- saludos:"hallo|JA-lo|hola;guten Morgen|GU-ten MOR-guen|buenos días;gute Nacht|GU-te NAJT|buenas noches (al despedirse);tschüss|CHÜS|adiós (informal);danke|DAN-ke|gracias;bitte|BI-te|por favor, de nada;Entschuldigung|ent-SHUL-di-gung|perdón",
- básico:"ja|YA|sí;nein|NAIN|no;und|UNT|y;aber|A-ber|pero",
- números:"eins|AINS|uno;zwei|TSVAI|dos;drei|DRAI|tres;zehn|TSEN|diez",
- familia:"Mutter|MU-ter|madre;Vater|FA-ter|padre;Freund|FROINT|amigo",
- comida:"Wasser|VA-ser|agua;Brot|BROT|pan;Kaffee|KA-fe|café",
- lugares:"Haus|JAUS|casa;Stadt|SHTAT|ciudad",
- conectores:"wo|VO|dónde;wann|VAN|cuándo;wie|VI|cómo;warum|va-RUM|por qué",
- animales:"Hund|JUNT|perro;Katze|KAT-se|gato",
- verbos:"sein|SAIN|ser, estar;haben|JA-ben|tener;gehen|GUE-en|ir"}),
- phr:F("Wie geht's?|¿Qué tal?;Ich heiße...|Me llamo...;Ich verstehe nicht|No entiendo;Sprechen Sie Englisch?|¿Habla inglés?;Wo ist der Bahnhof?|¿Dónde está la estación?;Wie viel kostet das?|¿Cuánto cuesta?;Die Rechnung, bitte|La cuenta, por favor;Ich habe Hunger|Tengo hambre"),
- key:["hallo","danke","bitte","ja","nein","Wasser","wo","wie"],
- ex:"hallo|Hallo, ich heiße Ana.|Hola, me llamo Ana.;danke|Danke für deine Hilfe.|Gracias por tu ayuda.;bitte|Ein Kaffee, bitte.|Un café, por favor.;ja|Ja, ich verstehe.|Sí, entiendo.;nein|Nein, danke.|No, gracias.;Wasser|Ich trinke Wasser.|Bebo agua.;wo|Wo ist das Haus?|¿Dónde está la casa?;wie|Wie heißt du?|¿Cómo te llamas?"};
-DATA.it={name:"Italiano",flag:"🇮🇹",tts:"it-IT",dic:P({
- saludos:"ciao|CHAO|hola, adiós;buongiorno|buon-YOR-no|buenos días;buonanotte|buo-na-NOT-te|buenas noches;arrivederci|a-ri-ve-DER-chi|adiós;grazie|GRA-tsie|gracias;prego|PRE-go|de nada;per favore|per fa-VO-re|por favor;scusi|SCU-si|perdone",
- básico:"sì|SI|sí;no|NO|no;e|E|y;ma|MA|pero",
- números:"uno|U-no|uno;due|DU-e|dos;tre|TRE|tres;dieci|DIE-chi|diez",
- familia:"madre|MA-dre|madre;padre|PA-dre|padre;amico|a-MI-co|amigo",
- comida:"acqua|AC-cua|agua;pane|PA-ne|pan;caffè|caf-FE|café",
- lugares:"casa|CA-sa|casa;città|chit-TA|ciudad",
- conectores:"dove|DO-ve|dónde;quando|CUAN-do|cuándo;come|CO-me|cómo;perché|per-QUE|por qué",
- animales:"cane|CA-ne|perro;gatto|GAT-to|gato",
- verbos:"essere|ES-se-re|ser, estar;avere|a-VE-re|tener;andare|an-DA-re|ir"}),
- phr:F("Come stai?|¿Qué tal?;Mi chiamo...|Me llamo...;Non capisco|No entiendo;Parla inglese?|¿Habla inglés?;Dov'è la stazione?|¿Dónde está la estación?;Quanto costa?|¿Cuánto cuesta?;Il conto, per favore|La cuenta, por favor;Ho fame|Tengo hambre"),
- key:["ciao","grazie","prego","sì","no","acqua","dove","come"],
- ex:"ciao|Ciao, come stai?|Hola, ¿qué tal?;grazie|Grazie mille!|¡Muchas gracias!;prego|Prego, si accomodi.|Adelante, siéntese.;sì|Sì, certo.|Sí, claro.;no|No, grazie.|No, gracias.;acqua|Un bicchiere d'acqua.|Un vaso de agua.;dove|Dove abiti?|¿Dónde vives?;come|Come ti chiami?|¿Cómo te llamas?"};
-DATA.pt={name:"Portugués",flag:"🇵🇹",tts:"pt-PT",dic:P({
- saludos:"olá|o-LA|hola;bom dia|bom DI-a|buenos días;boa noite|BO-a NOI-te|buenas noches;tchau|CHAU|adiós;obrigado|o-bri-GA-du|gracias;por favor|por fa-VOR|por favor;desculpe|des-CUL-pe|perdón;de nada|di NA-da|de nada",
- básico:"sim|SIM|sí;não|NÃO|no;e|I|y;mas|MAS|pero",
- números:"um|UM|uno;dois|DOIS|dos;três|TRES|tres;dez|DES|diez",
- familia:"mãe|MÃE|madre;pai|PAI|padre;amigo|a-MI-gu|amigo",
- comida:"água|A-gua|agua;pão|PÃO|pan;café|ca-FE|café",
- lugares:"casa|CA-za|casa;cidade|si-DA-di|ciudad",
- conectores:"onde|ON-di|dónde;quando|CUAN-du|cuándo;como|CO-mu|cómo;porquê|por-QUE|por qué",
- animales:"cão|CÃO|perro;gato|GA-tu|gato",
- verbos:"ser|SER|ser;ter|TER|tener;ir|IR|ir"}),
- phr:F("Como está?|¿Cómo está?;Chamo-me...|Me llamo...;Não entendo|No entiendo;Fala inglês?|¿Habla inglés?;Onde fica a estação?|¿Dónde está la estación?;Quanto custa?|¿Cuánto cuesta?;A conta, por favor|La cuenta, por favor;Tenho fome|Tengo hambre"),
- key:["olá","obrigado","por favor","sim","não","água","onde","como"],
- ex:"olá|Olá, tudo bem?|Hola, ¿qué tal?;obrigado|Muito obrigado!|¡Muchas gracias!;por favor|Um café, por favor.|Un café, por favor.;sim|Sim, claro.|Sí, claro.;não|Não, obrigado.|No, gracias.;água|Quero uma água.|Quiero un agua.;onde|Onde moras?|¿Dónde vives?;como|Como te chamas?|¿Cómo te llamas?"};
-DATA.en.ex="hello|Hello, how are you?|Hola, ¿cómo estás?;goodbye|Goodbye, see you soon!|¡Adiós, hasta pronto!;thank you|Thank you for your help.|Gracias por tu ayuda.;please|Water, please.|Agua, por favor.;sorry|Sorry, I'm late.|Perdón, llego tarde.;yes|Yes, I understand.|Sí, entiendo.;no|No, thank you.|No, gracias.;water|I drink water every day.|Bebo agua cada día.;today|Today is a good day.|Hoy es un buen día.;to go|I want to go home.|Quiero ir a casa.;to eat|We eat at eight.|Comemos a las ocho.;to help|Can you help me?|¿Puedes ayudarme?;to work|She works in a bank.|Ella trabaja en un banco.;one|I have one brother.|Tengo un hermano.;two|Two coffees, please.|Dos cafés, por favor.;three|There are three books.|Hay tres libros.;where|Where is the station?|¿Dónde está la estación?;when|When does it start?|¿Cuándo empieza?;how|How do you say it?|¿Cómo se dice?;how much|How much is this?|¿Cuánto cuesta esto?;dog|The dog is big.|El perro es grande.;cat|My cat sleeps a lot.|Mi gato duerme mucho.;house|Our house is small.|Nuestra casa es pequeña.;friend|He is my best friend.|Es mi mejor amigo.";
-DATA.ru.ex="привет|Привет, как дела?|Hola, ¿qué tal?;до свидания|До свидания, до завтра!|¡Adiós, hasta mañana!;спасибо|Спасибо за помощь.|Gracias por la ayuda.;пожалуйста|Воду, пожалуйста.|Agua, por favor.;да|Да, я понимаю.|Sí, entiendo.;нет|Нет, спасибо.|No, gracias.;извините|Извините, я опоздал.|Perdone, llego tarde.;пока|Пока, увидимся!|¡Chao, nos vemos!;вода|Я пью воду.|Bebo agua.;сегодня|Сегодня хороший день.|Hoy es un buen día.;идти|Я хочу идти домой.|Quiero ir a casa.;есть|Мы хотим есть.|Queremos comer.;один|У меня один брат.|Tengo un hermano.;два|Два кофе, пожалуйста.|Dos cafés, por favor.;три|Здесь три книги.|Aquí hay tres libros.;где|Где вокзал?|¿Dónde está la estación?;когда|Когда начинается?|¿Cuándo empieza?;как|Как это сказать?|¿Cómo se dice esto?;сколько|Сколько это стоит?|¿Cuánto cuesta esto?;помогать|Я люблю помогать.|Me gusta ayudar.;собака|Собака большая.|El perro es grande.;кошка|Моя кошка спит.|Mi gata duerme.;дом|Наш дом маленький.|Nuestra casa es pequeña.;друг|Он мой лучший друг.|Es mi mejor amigo.;работа|У меня новая работа.|Tengo un trabajo nuevo.";
-DATA.fr.ex="bonjour|Bonjour, comment allez-vous ?|Hola, ¿cómo está usted?;au revoir|Au revoir, à demain !|¡Adiós, hasta mañana!;merci|Merci beaucoup !|¡Muchas gracias!;s'il vous plaît|Un café, s'il vous plaît.|Un café, por favor.;oui|Oui, je comprends.|Sí, entiendo.;non|Non, merci.|No, gracias.;pardon|Pardon, je suis en retard.|Perdón, llego tarde.;salut|Salut, ça va ?|Hola, ¿qué tal?;eau|Je bois de l'eau.|Bebo agua.;aujourd'hui|Aujourd'hui, il fait beau.|Hoy hace buen tiempo.;aller|Je veux aller à la maison.|Quiero ir a casa.;manger|Nous allons manger.|Vamos a comer.;un|J'ai un frère.|Tengo un hermano.;deux|Deux cafés, s'il vous plaît.|Dos cafés, por favor.;trois|Il y a trois livres.|Hay tres libros.;où|Où est la gare ?|¿Dónde está la estación?;quand|Quand ça commence ?|¿Cuándo empieza?;comment|Comment dit-on ça ?|¿Cómo se dice eso?;combien|C'est combien ?|¿Cuánto cuesta?;aider|Je peux vous aider ?|¿Puedo ayudarle?;chien|Le chien est grand.|El perro es grande.;chat|Mon chat dort.|Mi gato duerme.;maison|Notre maison est petite.|Nuestra casa es pequeña.;ami|C'est mon meilleur ami.|Es mi mejor amigo.;travail|J'ai un nouveau travail.|Tengo un trabajo nuevo.";
-DATA.en.dic.push(...P({
- trabajo:"job|YOB|trabajo, empleo;boss|BOS|jefe;office|O-fis|oficina;money|MA-ni|dinero;meeting|MII-ting|reunión;company|KAM-pa-ni|empresa;salary|SA-la-ri|sueldo;doctor|DOK-ter|médico;teacher|TII-cher|profesor;student|STIU-dent|estudiante",
- cuerpo:"head|JED|cabeza;eye|AI|ojo;ear|IR|oreja;nose|NOUS|nariz;mouth|MAUZ|boca;hand|JAND|mano;arm|ARM|brazo;leg|LEG|pierna;foot|FUT|pie;heart|JART|corazón;back|BAK|espalda;hair|JER|pelo",
- ropa:"shirt|SHERT|camisa;pants|PANTS|pantalones;dress|DRES|vestido;shoes|SHUS|zapatos;coat|KOUT|abrigo",
- naturaleza:"tree|TRII|árbol;flower|FLAU-er|flor;river|RI-ver|río;sea|SII|mar;mountain|MAUN-ten|montaña;forest|FO-rest|bosque;sky|SKAI|cielo;moon|MUUN|luna",
- animales:"bird|BERD|pájaro;horse|JORS|caballo;cow|KAU|vaca;pig|PIG|cerdo",
- transporte:"car|KAR|coche;bus|BAS|autobús;train|TREIN|tren;plane|PLEIN|avión;bicycle|BAI-si-kol|bicicleta;ticket|TI-ket|billete;taxi|TAK-si|taxi;boat|BOUT|barco",
- comida:"rice|RAIS|arroz;egg|EG|huevo;chicken|CHI-ken|pollo;soup|SUP|sopa;salad|SA-lad|ensalada;sugar|SHU-gar|azúcar;salt|SOLT|sal;tea|TII|té;breakfast|BREK-fast|desayuno;dinner|DI-ner|cena",
- casa:"chair|CHER|silla;bathroom|BAZ-rum|baño;garden|GAR-den|jardín;key|KII|llave;wall|UOL|pared",
- verbos:"to come|tu KAM|venir;to give|tu GIV|dar;to take|tu TEIK|tomar;to do|tu DU|hacer;to say|tu SEI|decir;to think|tu ZINK|pensar;to like|tu LAIK|gustar;to love|tu LAV|amar;to live|tu LIV|vivir;to buy|tu BAI|comprar;to sleep|tu SLIIP|dormir;to read|tu RIID|leer;to write|tu RAIT|escribir;to open|tu OU-pen|abrir;to close|tu KLOUS|cerrar;to wait|tu UEIT|esperar;to ask|tu ASK|preguntar;to find|tu FAIND|encontrar",
- adjetivos:"cheap|CHIIP|barato;expensive|ik-SPEN-siv|caro;fast|FAST|rápido;slow|SLOU|lento;young|YANG|joven;tall|TOL|alto;short|SHORT|bajo, corto;clean|KLIIN|limpio;empty|EM-ti|vacío;full|FUL|lleno",
- tiempo:"day|DEI|día;night|NAIT|noche;week|UIIK|semana;month|MANZ|mes;year|IR|año;hour|AU-er|hora;morning|MOR-ning|mañana (parte del día);later|LEI-ter|más tarde",
- colores:"yellow|IE-lou|amarillo;orange|O-rinch|naranja;gray|GREI|gris",
- lugares:"shop|SHOP|tienda;restaurant|RES-to-rant|restaurante;hotel|jou-TEL|hotel;park|PARK|parque;bank|BANK|banco;beach|BIICH|playa",
- pronombres:"me|MI|me, mí;my|MAI|mi;your|IOR|tu;this|DIS|esto",
- números:"many|ME-ni|muchos",
- básico:"not|NOT|no (negación);very|VE-ri|muy;more|MOR|más;all|OL|todo"
-}));
-DATA.en.phr.push(...F("Excuse me, where is...?|Disculpe, ¿dónde está...?;I'm hungry|Tengo hambre;I'm thirsty|Tengo sed;I like it|Me gusta;I don't like it|No me gusta;What do you do?|¿A qué te dedicas?;I'm a student|Soy estudiante;Can I pay by card?|¿Puedo pagar con tarjeta?;Speak slowly, please|Hable despacio, por favor;How do you say...?|¿Cómo se dice...?;I'm sorry, I'm late|Lo siento, llego tarde;Turn left|Gire a la izquierda;Turn right|Gire a la derecha;Go straight ahead|Siga recto"));
-DATA.en.key.push("to like");
-DATA.en.ex+=";to like|I like music.|Me gusta la música";
-DATA.de.dic.push(...P({
- saludos:"guten Tag|GU-ten TAK|buenos días, buenas tardes;guten Abend|GU-ten A-bent|buenas tardes (al anochecer);auf Wiedersehen|auf VI-der-ze-en|adiós (formal);bis bald|bis BALT|hasta pronto;Willkommen|VIL-co-men|bienvenido;es tut mir leid|es TUT mir LAIT|lo siento;gern geschehen|guern ge-SHE-en|de nada",
- básico:"vielleicht|fi-LAIJT|quizás;oder|O-der|o;mit|MIT|con;ohne|O-ne|sin;nicht|NIJT|no (negación);sehr|SER|muy;mehr|MER|más;alles|A-les|todo",
- pronombres:"ich|IJ|yo;du|DU|tú;er|ER|él;sie|SI|ella;wir|VIR|nosotros;ihr|IR|vosotros;mich|MIJ|me, mí;mein|MAIN|mi;dein|DAIN|tu;dies|DIS|esto",
- números:"vier|FIR|cuatro;fünf|FÜNF|cinco;sechs|SEKS|seis;sieben|SI-ben|siete;acht|AJT|ocho;neun|NOIN|nueve;elf|ELF|once;zwölf|TSVÖLF|doce;zwanzig|TSVAN-tsiyj|veinte;hundert|JUN-dert|cien;tausend|TAU-sent|mil",
- familia:"Familie|fa-MI-lie|familia;Bruder|BRU-der|hermano;Schwester|SHVES-ter|hermana;Sohn|SON|hijo;Tochter|TOJ-ter|hija;Eltern|EL-tern|padres;Kind|KINT|niño;Frau|FRAU|mujer, esposa;Mann|MAN|hombre, marido;Oma|O-ma|abuela;Opa|O-pa|abuelo",
- casa:"Zimmer|TSI-mer|habitación;Küche|KÜ-je|cocina;Tür|TÜR|puerta;Fenster|FENS-ter|ventana;Tisch|TISH|mesa;Bett|BET|cama;Stuhl|SHTUL|silla;Badezimmer|BA-de-tsi-mer|baño;Garten|GAR-ten|jardín;Schlüssel|SHLÜ-sel|llave;Wand|VANT|pared",
- comida:"Milch|MILJ|leche;Käse|KE-se|queso;Fleisch|FLAISH|carne;Fisch|FISH|pescado;Apfel|AP-fel|manzana;Reis|RAIS|arroz;Ei|AI|huevo;Hähnchen|JEN-jen|pollo;Suppe|ZU-pe|sopa;Salat|za-LAT|ensalada;Zucker|TSU-ker|azúcar;Salz|SALTS|sal;Tee|TE|té;Bier|BIR|cerveza;Wein|VAIN|vino;Frühstück|FRÜ-shtük|desayuno",
- verbos:"kommen|KO-men|venir;geben|GUE-ben|dar;nehmen|NE-men|tomar;machen|MA-jen|hacer;sagen|SA-guen|decir;denken|DEN-ken|pensar;mögen|MÖ-guen|gustar;lieben|LI-ben|amar;leben|LE-ben|vivir;kaufen|KAU-fen|comprar;schlafen|SHLA-fen|dormir;lesen|LE-sen|leer;schreiben|SHRAI-ben|escribir;öffnen|ÖF-nen|abrir;schließen|SHLI-sen|cerrar;warten|VAR-ten|esperar;fragen|FRA-guen|preguntar;finden|FIN-den|encontrar;essen|E-sen|comer;trinken|TRIN-ken|beber;wollen|VO-len|querer;sprechen|SHPRE-jen|hablar;verstehen|fer-SHTE-en|entender;helfen|JEL-fen|ayudar;wissen|VI-sen|saber;sehen|SE-en|ver;arbeiten|AR-bai-ten|trabajar;lernen|LER-nen|aprender",
- adjetivos:"gut|GUT|bueno;schlecht|SHLEJT|malo;groß|GROS|grande;klein|KLAIN|pequeño;neu|NOI|nuevo;alt|ALT|viejo;schön|SHÖN|hermoso;einfach|AIN-faj|fácil;schwer|SHVER|difícil, pesado;billig|BI-liyj|barato;teuer|TOI-er|caro;schnell|SHNEL|rápido;langsam|LANG-sam|lento;jung|YUNG|joven;sauber|SAU-ber|limpio;glücklich|GLÜK-liyj|feliz",
- tiempo:"heute|JOI-te|hoy;morgen|MOR-guen|mañana;gestern|GES-tern|ayer;jetzt|YETST|ahora;immer|I-mer|siempre;nie|NI|nunca;Tag|TAK|día;Nacht|NAJT|noche;Woche|VO-je|semana;Monat|MO-nat|mes;Jahr|YAR|año;Stunde|SHTUN-de|hora;Zeit|TSAIT|tiempo;später|SHPE-ter|más tarde",
- colores:"rot|ROT|rojo;blau|BLAU|azul;grün|GRÜN|verde;schwarz|SHVARTS|negro;weiß|VAIS|blanco;gelb|GUELP|amarillo;orange|o-RAN-je|naranja;grau|GRAU|gris",
- lugares:"Schule|SHU-le|escuela;Flughafen|FLUK-ja-fen|aeropuerto;Krankenhaus|KRAN-ken-jaus|hospital;Straße|SHTRA-se|calle;Geschäft|gue-SHEFT|tienda;Restaurant|res-to-RAN|restaurante;Hotel|jo-TEL|hotel;Park|PARK|parque;Bank|BANK|banco;Strand|SHTRANT|playa;Land|LANT|país;Büro|bü-RO|oficina",
- trabajo:"Arbeit|AR-bait|trabajo;Chef|SHEF|jefe;Geld|GUELT|dinero;Besprechung|be-SHPRE-jung|reunión;Firma|FIR-ma|empresa;Gehalt|gue-JALT|sueldo;Arzt|ARTST|médico;Lehrer|LE-rer|profesor;Student|shtu-DENT|estudiante;Beruf|be-RUF|profesión",
- cuerpo:"Kopf|KOPF|cabeza;Auge|AU-gue|ojo;Ohr|OR|oreja;Nase|NA-se|nariz;Mund|MUNT|boca;Hand|JANT|mano;Arm|ARM|brazo;Bein|BAIN|pierna;Fuß|FUS|pie;Herz|JERTS|corazón",
- ropa:"Hemd|JEMT|camisa;Hose|JO-se|pantalones;Kleid|KLAIT|vestido;Schuhe|SHU-e|zapatos;Mantel|MAN-tel|abrigo",
- naturaleza:"Baum|BAUM|árbol;Blume|BLU-me|flor;Fluss|FLUS|río;Meer|MER|mar;Berg|BERK|montaña;Wald|VALT|bosque;Himmel|JI-mel|cielo",
- animales:"Vogel|FO-guel|pájaro;Pferd|PFERT|caballo;Kuh|KU|vaca;Schwein|SHVAIN|cerdo;Hase|JA-se|conejo;Maus|MAUS|ratón",
- transporte:"Auto|AU-to|coche;Bus|BUS|autobús;Zug|TSUK|tren;Flugzeug|FLUK-tsoik|avión;Fahrrad|FAR-rat|bicicleta;Fahrkarte|FAR-kar-te|billete;Taxi|TAK-si|taxi;Schiff|SHIF|barco",
- tecnología:"Computer|kom-PIU-ter|ordenador;Handy|JEN-di|móvil;Internet|IN-ter-net|internet;Bildschirm|BILT-shirm|pantalla;Passwort|PAS-vort|contraseña;E-Mail|I-meil|correo electrónico;Nachricht|NAJ-rijt|mensaje;Webseite|VEP-sai-te|sitio web",
- emociones:"froh|FRO|contento;traurig|TRAU-riyj|triste;wütend|VÜ-tent|enfadado;müde|MÜ-de|cansado;Angst|ANGST|miedo;überrascht|ü-ber-RASHT|sorprendido;Liebe|LI-be|amor;stolz|SHTOLTS|orgulloso",
- clima:"Wetter|VE-ter|clima;Regen|RE-guen|lluvia;Schnee|SHNE|nieve;Wind|VINT|viento;Wolke|VOL-ke|nube;heiß|JAIS|caliente;kalt|KALT|frío;warm|VARM|cálido",
- días:"Montag|MON-tak|lunes;Dienstag|DINS-tak|martes;Mittwoch|MIT-voj|miércoles;Donnerstag|DO-ners-tak|jueves;Freitag|FRAI-tak|viernes;Samstag|SAMS-tak|sábado;Sonntag|ZON-tak|domingo",
- meses:"Januar|YA-nu-ar|enero;Februar|FE-bru-ar|febrero;März|MERTS|marzo;April|a-PRIL|abril;Mai|MAI|mayo;Juni|YU-ni|junio;Juli|YU-li|julio;August|au-GUST|agosto;September|sep-TEM-ber|septiembre;Oktober|ok-TO-ber|octubre;November|no-VEM-ber|noviembre;Dezember|de-TSEM-ber|diciembre"
-}));
-DATA.de.phr.push(...F("Guten Tag!|¡Buenos días!;Guten Abend!|¡Buenas noches!;Auf Wiedersehen!|¡Adiós!;Bis morgen!|¡Hasta mañana!;Freut mich!|¡Encantado!;Wie heißt du?|¿Cómo te llamas?;Woher kommst du?|¿De dónde eres?;Ich komme aus Spanien|Soy de España;Wie alt bist du?|¿Cuántos años tienes?;Ich bin Student|Soy estudiante;Ich spreche ein bisschen Deutsch|Hablo un poco de alemán;Können Sie das wiederholen?|¿Puede repetirlo?;Sprechen Sie bitte langsamer|Hable más despacio, por favor;Wie sagt man...?|¿Cómo se dice...?;Ich weiß nicht|No lo sé;Entschuldigung, wo ist...?|Disculpe, ¿dónde está...?;Wo ist die Toilette?|¿Dónde está el baño?;Gehen Sie geradeaus|Siga recto;Biegen Sie links ab|Gire a la izquierda;Biegen Sie rechts ab|Gire a la derecha;Ich möchte...|Quisiera...;Was kostet das?|¿Qué precio tiene?;Das ist zu teuer|Es demasiado caro;Kann ich mit Karte zahlen?|¿Puedo pagar con tarjeta?;Ich habe Durst|Tengo sed;Guten Appetit!|¡Buen provecho!;Es schmeckt gut|Está rico;Wie spät ist es?|¿Qué hora es?;Ich brauche Hilfe|Necesito ayuda;Hilfe!|¡Socorro!;Rufen Sie einen Krankenwagen|Llame a una ambulancia;Ich brauche einen Arzt|Necesito un médico;Mir ist schlecht|Me encuentro mal;Ich habe mich verlaufen|Me he perdido;Viel Glück!|¡Buena suerte!;Alles Gute zum Geburtstag!|¡Feliz cumpleaños!;Schönen Tag noch!|¡Que tengas un buen día!;Ich bin einverstanden|Estoy de acuerdo;Ich liebe dich|Te quiero;Gute Reise!|¡Buen viaje!;Prost!|¡Salud!;Das ist toll|Eso es genial"));
-DATA.de.key.push("tschüss","Entschuldigung","heute","morgen","eins","zwei","drei","wann","warum","Hund","Katze","Haus","Freund","Stadt","gehen","essen","helfen");
-DATA.de.ex+=";tschüss|Tschüss, bis morgen!|¡Chao, hasta mañana!;Entschuldigung|Entschuldigung, ich bin spät.|Perdón, llego tarde.;heute|Heute ist ein guter Tag.|Hoy es un buen día.;morgen|Morgen gehe ich nach Hause.|Mañana voy a casa.;eins|Nur eins, bitte.|Solo uno, por favor.;zwei|Zwei Kaffee, bitte.|Dos cafés, por favor.;drei|Es gibt drei Bücher.|Hay tres libros.;wann|Wann beginnt es?|¿Cuándo empieza?;warum|Warum lernst du Deutsch?|¿Por qué aprendes alemán?;Hund|Der Hund ist groß.|El perro es grande.;Katze|Meine Katze schläft.|Mi gato duerme.;Haus|Unser Haus ist klein.|Nuestra casa es pequeña.;Freund|Er ist mein bester Freund.|Es mi mejor amigo.;Stadt|Die Stadt ist schön.|La ciudad es bonita.;gehen|Ich will nach Hause gehen.|Quiero ir a casa.;essen|Wir essen um acht.|Comemos a las ocho.;helfen|Kannst du mir helfen?|¿Puedes ayudarme?";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 const NW={en:{o:'one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen',t:'twenty thirty forty fifty sixty seventy eighty ninety',h:'one hundred',j:(t,o)=>t+'-'+o},de:{o:'eins zwei drei vier fünf sechs sieben acht neun zehn elf zwölf dreizehn vierzehn fünfzehn sechzehn siebzehn achtzehn neunzehn',t:'zwanzig dreißig vierzig fünfzig sechzig siebzig achtzig neunzig',h:'hundert',j:(t,o)=>(o==='eins'?'ein':o)+'und'+t},it:{o:'uno due tre quattro cinque sei sette otto nove dieci undici dodici tredici quattordici quindici sedici diciassette diciotto diciannove',t:'venti trenta quaranta cinquanta sessanta settanta ottanta novanta',h:'cento',j:(t,o)=>(/^[uo]/.test(o)?t.slice(0,-1):t)+(o==='tre'?'tré':o)},pt:{o:'um dois três quatro cinco seis sete oito nove dez onze doze treze catorze quinze dezasseis dezassete dezoito dezanove',t:'vinte trinta quarenta cinquenta sessenta setenta oitenta noventa',h:'cem',j:(t,o)=>t+' e '+o},ru:{o:'один два три четыре пять шесть семь восемь девять десять одиннадцать двенадцать тринадцать четырнадцать пятнадцать шестнадцать семнадцать восемнадцать девятнадцать',t:'двадцать тридцать сорок пятьдесят шестьдесят семьдесят восемьдесят девяносто',h:'сто',j:(t,o)=>t+' '+o}};
 const FU='un deux trois quatre cinq six sept huit neuf dix onze douze treize quatorze quinze seize'.split(' '),FT='x x vingt trente quarante cinquante soixante'.split(' ');
 function frN(n){if(n===100)return 'cent';if(n<17)return FU[n-1];if(n<20)return 'dix-'+FU[n-11];if(n<70){const t=Math.floor(n/10),u=n%10;return FT[t]+(u?(u===1?' et un':'-'+FU[u-1]):'');}if(n<80){const u=n-60;return 'soixante'+(u===11?' et onze':'-'+frN(u));}return n===80?'quatre-vingts':'quatre-vingt-'+frN(n-80);}
@@ -1128,67 +368,21 @@ function fillVoices(){let s=document.getElementById('vsel');if(!s){s=document.cr
 function speak(t,b){if(!('speechSynthesis' in window))return;speechSynthesis.cancel();document.querySelectorAll('.spk.on').forEach(x=>x.classList.remove('on'));const u=new SpeechSynthesisUtterance(t);u.lang=DATA[state.lang].tts;u.rate=.85;const s=document.getElementById('vsel'),vs=voicesFor(),v=vs.find(x=>s&&x.name.replace(/"/g,'')===s.value)||vs[0];if(v){u.voice=v;u.lang=v.lang;}b.classList.add('on');u.onend=u.onerror=()=>b.classList.remove('on');speechSynthesis.speak(u);}
 const _rl=renderLangs;renderLangs=function(){_rl();fillVoices();};
 if('speechSynthesis' in window)speechSynthesis.onvoiceschanged=fillVoices;
-DATA.it.dic.push(...P({
-saludos:`buonasera|buo-na-SE-ra|buenas tardes;a presto|a PRES-to|hasta pronto;benvenuto|ben-ve-NU-to|bienvenido;mi dispiace|mi dis-PIA-che|lo siento;piacere|pia-CHE-re|encantado`,
-básico:`forse|FOR-se|quizás;o|O|o;con|CON|con;senza|SEN-sa|sin;molto|MOL-to|muy, mucho;più|PIU|más;tutto|TUT-to|todo;poco|PO-co|poco`,
-pronombres:`io|I-o|yo;tu|TU|tú;lui|LUI|él;lei|LEI|ella;noi|NOI|nosotros;voi|VOI|vosotros;loro|LO-ro|ellos;mio|MI-o|mío;questo|CUES-to|esto`,
-números:`quattro|CUAT-tro|cuatro;cinque|CHIN-cue|cinco;sei|SEI|seis;sette|SET-te|siete;otto|OT-to|ocho;nove|NO-ve|nueve;venti|VEN-ti|veinte;cento|CHEN-to|cien;mille|MIL-le|mil`,
-familia:`fratello|fra-TEL-lo|hermano;sorella|so-REL-la|hermana;figlio|FI-llo|hijo;figlia|FI-lla|hija;genitori|che-ni-TO-ri|padres;bambino|bam-BI-no|niño;moglie|MO-lle|esposa;marito|ma-RI-to|marido;nonna|NON-na|abuela;nonno|NON-no|abuelo`,
-comida:`latte|LAT-te|leche;formaggio|for-MAD-yo|queso;carne|CAR-ne|carne;pesce|PE-she|pescado;mela|ME-la|manzana;riso|RI-so|arroz;uovo|UO-vo|huevo;zucchero|TSUC-ke-ro|azúcar;sale|SA-le|sal;vino|VI-no|vino;birra|BIR-ra|cerveza`,
-casa:`camera|CA-me-ra|habitación;cucina|cu-CHI-na|cocina;porta|POR-ta|puerta;finestra|fi-NES-tra|ventana;tavolo|TA-vo-lo|mesa;letto|LET-to|cama;chiave|KIA-ve|llave`,
-verbos:`venire|ve-NI-re|venir;dare|DA-re|dar;fare|FA-re|hacer;dire|DI-re|decir;amare|a-MA-re|amar;vivere|VI-ve-re|vivir;comprare|com-PRA-re|comprar;dormire|dor-MI-re|dormir;mangiare|man-YA-re|comer;bere|BE-re|beber;parlare|par-LA-re|hablar;aiutare|a-iu-TA-re|ayudar`,
-adjetivos:`buono|BUO-no|bueno;cattivo|cat-TI-vo|malo;grande|GRAN-de|grande;piccolo|PIC-co-lo|pequeño;nuovo|NUO-vo|nuevo;vecchio|VEC-kio|viejo;bello|BEL-lo|hermoso;facile|FA-chi-le|fácil;difficile|dif-FI-chi-le|difícil;caro|CA-ro|caro`,
-tiempo:`oggi|OD-yi|hoy;domani|do-MA-ni|mañana;ieri|IE-ri|ayer;adesso|a-DES-so|ahora;sempre|SEM-pre|siempre;mai|MAI|nunca;giorno|YOR-no|día;notte|NOT-te|noche;settimana|set-ti-MA-na|semana;anno|AN-no|año`,
-colores:`rosso|ROS-so|rojo;blu|BLU|azul;verde|VER-de|verde;nero|NE-ro|negro;bianco|BIAN-co|blanco;giallo|YAL-lo|amarillo`,
-lugares:`scuola|SCUO-la|escuela;aeroporto|a-e-ro-POR-to|aeropuerto;ospedale|os-pe-DA-le|hospital;strada|STRA-da|calle;negozio|ne-GO-tsio|tienda;spiaggia|SPIAD-ya|playa`}));
-DATA.it.phr.push(...F(`Buonasera!|¡Buenas tardes!;A domani!|¡Hasta mañana!;Piacere di conoscerti|Encantado de conocerte;Come ti chiami?|¿Cómo te llamas?;Di dove sei?|¿De dónde eres?;Sono spagnolo|Soy español;Quanti anni hai?|¿Cuántos años tienes?;Parla più piano|Habla más despacio;Può ripetere?|¿Puede repetir?;Ho sete|Tengo sed;Mi piace|Me gusta;Dov'è il bagno?|¿Dónde está el baño?;Mi può aiutare?|¿Puede ayudarme?;Non lo so|No lo sé;Buon appetito!|¡Buen provecho!;Buon viaggio!|¡Buen viaje!;Che ore sono?|¿Qué hora es?;Sto bene, grazie|Estoy bien, gracias`));
-DATA.it.key.push('arrivederci','per favore','scusi','oggi','domani','uno','due','tre','quando','perché','cane','gatto','casa','amico','mangiare','parlare','aiutare');
-DATA.pt.dic.push(...P({
-saludos:`boa tarde|BO-a TAR-di|buenas tardes;até logo|a-TE LO-gu|hasta luego;bem-vindo|bein-VIN-du|bienvenido;lamento|la-MEN-tu|lo siento;prazer|pra-ZER|encantado`,
-básico:`talvez|tal-VES|quizás;ou|OU|o;com|COM|con;sem|SEIN|sin;muito|MUI-tu|muy, mucho;mais|MAIS|más;tudo|TU-du|todo;pouco|POU-cu|poco`,
-pronombres:`eu|EU|yo;tu|TU|tú;ele|E-li|él;ela|E-la|ella;nós|NOS|nosotros;vocês|vo-SES|ustedes;eles|E-lis|ellos;meu|MEU|mío;isto|IS-tu|esto`,
-números:`quatro|CUA-tru|cuatro;cinco|SIN-cu|cinco;seis|SEIS|seis;sete|SE-ti|siete;oito|OI-tu|ocho;nove|NO-vi|nueve;vinte|VIN-ti|veinte;cem|SEIN|cien;mil|MIL|mil`,
-familia:`irmão|ir-MÃO|hermano;irmã|ir-MÃ|hermana;filho|FI-liu|hijo;filha|FI-lia|hija;pais|PAIS|padres;criança|cri-AN-sa|niño;esposa|es-PO-za|esposa;marido|ma-RI-du|marido;avó|a-VO|abuela;avô|a-VÔ|abuelo`,
-comida:`leite|LEI-ti|leche;queijo|KEI-ju|queso;carne|CAR-ni|carne;peixe|PEI-xi|pescado;maçã|ma-SÃ|manzana;arroz|a-ROS|arroz;ovo|O-vu|huevo;açúcar|a-SU-car|azúcar;sal|SAL|sal;vinho|VI-niu|vino;cerveja|ser-VE-ja|cerveza`,
-casa:`quarto|CUAR-tu|habitación;cozinha|cu-ZI-nha|cocina;porta|POR-ta|puerta;janela|ja-NE-la|ventana;mesa|ME-za|mesa;cama|CA-ma|cama;chave|XA-vi|llave`,
-verbos:`vir|VIR|venir;dar|DAR|dar;fazer|fa-ZER|hacer;dizer|di-ZER|decir;amar|a-MAR|amar;viver|vi-VER|vivir;comprar|com-PRAR|comprar;dormir|dor-MIR|dormir;comer|cu-MER|comer;beber|be-BER|beber;falar|fa-LAR|hablar;ajudar|a-ju-DAR|ayudar`,
-adjetivos:`bom|BOM|bueno;mau|MAU|malo;grande|GRAN-di|grande;pequeno|pe-KE-nu|pequeño;novo|NO-vu|nuevo;velho|VE-liu|viejo;bonito|bu-NI-tu|bonito;fácil|FA-sil|fácil;difícil|di-FI-sil|difícil;caro|CA-ru|caro`,
-tiempo:`hoje|O-ji|hoy;amanhã|a-ma-NHÃ|mañana;ontem|ON-tein|ayer;agora|a-GO-ra|ahora;sempre|SEM-pri|siempre;nunca|NUN-ca|nunca;dia|DI-a|día;noite|NOI-ti|noche;semana|se-MA-na|semana;ano|A-nu|año`,
-colores:`vermelho|ver-ME-liu|rojo;azul|a-ZUL|azul;verde|VER-di|verde;preto|PRE-tu|negro;branco|BRAN-cu|blanco;amarelo|a-ma-RE-lu|amarillo`,
-lugares:`escola|is-CO-la|escuela;aeroporto|a-e-ro-POR-tu|aeropuerto;hospital|osh-pi-TAL|hospital;rua|RU-a|calle;loja|LO-ja|tienda;praia|PRAI-a|playa`}));
-DATA.pt.phr.push(...F(`Boa tarde!|¡Buenas tardes!;Até amanhã!|¡Hasta mañana!;Prazer em conhecê-lo|Encantado de conocerle;Como se chama?|¿Cómo se llama?;De onde é?|¿De dónde es?;Sou espanhol|Soy español;Quantos anos tem?|¿Cuántos años tiene?;Fale mais devagar|Hable más despacio;Pode repetir?|¿Puede repetir?;Tenho sede|Tengo sed;Gosto disto|Me gusta esto;Onde fica a casa de banho?|¿Dónde está el baño?;Pode ajudar-me?|¿Puede ayudarme?;Não sei|No lo sé;Bom apetite!|¡Buen provecho!;Boa viagem!|¡Buen viaje!;Que horas são?|¿Qué hora es?;Estou bem, obrigado|Estoy bien, gracias`));
-DATA.pt.key.push('tchau','desculpe','de nada','hoje','amanhã','um','dois','três','quando','porquê','cão','gato','casa','amigo','comer','falar','ajudar');
+
+
+
+
+
+
 const _r3=render;
 render=function(){_r3();if(state.tab!=='num')return;const m=document.getElementById('main'),l=m.querySelector('.list');if(!l)return;l.id='numlist';m.insertAdjacentHTML('afterbegin','<input type="search" placeholder="Buscar número (cifra o palabra)..." oninput="filterNum(this.value)">');};
 function filterNum(v){v=v.toLowerCase().trim();let k=0;document.querySelectorAll('#numlist .row').forEach(r=>{const t=r.querySelector('.word').textContent.toLowerCase(),n=r.querySelector('.tr').textContent,ok=!v||t.includes(v)||n.startsWith(v);r.style.display=ok?'':'none';if(ok)k++;});const c=document.querySelector('#main .count');if(c)c.textContent=k?k+' números':'Sin resultados';}
-DATA.it.dic.push(...P({
-días:`lunedì|lu-ne-DI|lunes;martedì|mar-te-DI|martes;mercoledì|mer-co-le-DI|miércoles;giovedì|yo-ve-DI|jueves;venerdì|ve-ner-DI|viernes;sabato|SA-ba-to|sábado;domenica|do-ME-ni-ca|domingo`,
-meses:`gennaio|yen-NA-io|enero;febbraio|feb-BRA-io|febrero;marzo|MAR-tso|marzo;aprile|a-PRI-le|abril;maggio|MAD-yo|mayo;giugno|YU-nio|junio;luglio|LU-lio|julio;agosto|a-GOS-to|agosto;settembre|set-TEM-bre|septiembre;ottobre|ot-TO-bre|octubre;novembre|no-VEM-bre|noviembre;dicembre|di-CHEM-bre|diciembre`,
-trabajo:`lavoro|la-VO-ro|trabajo;capo|CA-po|jefe;soldi|SOL-di|dinero;riunione|riu-NIO-ne|reunión;azienda|a-DZIEN-da|empresa;stipendio|sti-PEN-dio|sueldo;medico|ME-di-co|médico;insegnante|in-se-GNAN-te|profesor`,
-cuerpo:`testa|TES-ta|cabeza;occhio|OC-kio|ojo;orecchio|o-REC-kio|oreja;naso|NA-so|nariz;bocca|BOC-ca|boca;mano|MA-no|mano;braccio|BRA-cho|brazo;gamba|GAM-ba|pierna;piede|PIE-de|pie;cuore|CUO-re|corazón`,
-ropa:`camicia|ca-MI-cha|camisa;pantaloni|pan-ta-LO-ni|pantalones;vestito|ves-TI-to|vestido;scarpe|SCAR-pe|zapatos;cappotto|cap-POT-to|abrigo`,
-naturaleza:`albero|AL-be-ro|árbol;fiore|FIO-re|flor;fiume|FIU-me|río;mare|MA-re|mar;montagna|mon-TA-ña|montaña;bosco|BOS-co|bosque;cielo|CHE-lo|cielo;luna|LU-na|luna`,
-animales:`uccello|uch-CHEL-lo|pájaro;cavallo|ca-VAL-lo|caballo;mucca|MUC-ca|vaca;maiale|ma-IA-le|cerdo`,
-transporte:`macchina|MAC-ki-na|coche;autobus|AU-to-bus|autobús;treno|TRE-no|tren;aereo|a-E-re-o|avión;bicicletta|bi-chi-CLET-ta|bicicleta;biglietto|bi-LLET-to|billete;barca|BAR-ca|barco`,
-tecnología:`computer|com-PIU-ter|ordenador;telefono|te-LE-fo-no|teléfono;schermo|SKER-mo|pantalla;messaggio|mes-SAD-yo|mensaje;sito web|SI-to UEB|sitio web`,
-emociones:`felice|fe-LI-che|feliz;triste|TRIS-te|triste;arrabbiato|ar-rab-BIA-to|enfadado;stanco|STAN-co|cansado;paura|pa-U-ra|miedo;amore|a-MO-re|amor`,
-clima:`tempo|TEM-po|clima;pioggia|PIOD-ya|lluvia;neve|NE-ve|nieve;vento|VEN-to|viento;nuvola|NU-vo-la|nube;caldo|CAL-do|calor;freddo|FRED-do|frío`}));
-DATA.it.phr.push(...F(`Buona notte!|¡Buenas noches!;Come va?|¿Cómo va?;Molto bene|Muy bien;Così così|Así así;Non importa|No importa;Che cosa è?|¿Qué es?;Quanto tempo!|¡Cuánto tiempo!;Ho bisogno di aiuto|Necesito ayuda;Sono stanco|Estoy cansado;Vorrei un caffè|Querría un café;Un tavolo per due|Una mesa para dos;Buon compleanno!|¡Feliz cumpleaños!`));
-DATA.it.key.push('lunedì','domenica','lavoro','soldi','mare','treno','felice','amore','pioggia','freddo');
-DATA.pt.dic.push(...P({
-días:`segunda-feira|se-GUN-da FEI-ra|lunes;terça-feira|TER-sa FEI-ra|martes;quarta-feira|CUAR-ta FEI-ra|miércoles;quinta-feira|QUIN-ta FEI-ra|jueves;sexta-feira|SEIS-ta FEI-ra|viernes;sábado|SA-ba-du|sábado;domingo|du-MIN-gu|domingo`,
-meses:`janeiro|ja-NEI-ru|enero;fevereiro|fe-ve-REI-ru|febrero;março|MAR-su|marzo;abril|a-BRIL|abril;maio|MAI-u|mayo;junho|JU-niu|junio;julho|JU-liu|julio;agosto|a-GOS-tu|agosto;setembro|se-TEM-bru|septiembre;outubro|ou-TU-bru|octubre;novembro|nu-VEM-bru|noviembre;dezembro|de-ZEM-bru|diciembre`,
-trabajo:`trabalho|tra-BA-liu|trabajo;chefe|XE-fi|jefe;dinheiro|di-NHEI-ru|dinero;reunião|reu-ni-ÃO|reunión;empresa|em-PRE-za|empresa;salário|sa-LA-riu|sueldo;médico|ME-di-cu|médico;professor|pro-fe-SOR|profesor`,
-cuerpo:`cabeça|ca-BE-sa|cabeza;olho|O-liu|ojo;orelha|o-RE-lia|oreja;nariz|na-RIS|nariz;boca|BO-ca|boca;mão|MÃO|mano;braço|BRA-su|brazo;perna|PER-na|pierna;pé|PE|pie;coração|co-ra-SÃO|corazón`,
-ropa:`camisa|ca-MI-za|camisa;calças|CAL-sas|pantalones;vestido|vesh-TI-du|vestido;sapatos|sa-PA-tus|zapatos;casaco|ca-ZA-cu|abrigo`,
-naturaleza:`árvore|AR-vo-ri|árbol;flor|FLOR|flor;rio|RI-u|río;mar|MAR|mar;montanha|mon-TA-nha|montaña;floresta|flo-RES-ta|bosque;céu|SEU|cielo;lua|LU-a|luna`,
-animales:`pássaro|PA-sa-ru|pájaro;cavalo|ca-VA-lu|caballo;vaca|VA-ca|vaca;porco|POR-cu|cerdo`,
-transporte:`carro|CA-rru|coche;autocarro|au-to-CA-rru|autobús;comboio|com-BOI-u|tren;avião|a-vi-ÃO|avión;bicicleta|bi-si-CLE-ta|bicicleta;bilhete|bi-LIE-ti|billete;barco|BAR-cu|barco`,
-tecnología:`computador|com-pu-ta-DOR|ordenador;telemóvel|te-le-MO-vel|móvil;ecrã|e-CRÃ|pantalla;mensagem|men-SA-jein|mensaje;site|SAI-ti|sitio web`,
-emociones:`feliz|fe-LIS|feliz;triste|TRIS-ti|triste;zangado|zan-GA-du|enfadado;cansado|can-SA-du|cansado;medo|ME-du|miedo;amor|a-MOR|amor`,
-clima:`tempo|TEM-pu|clima;chuva|XU-va|lluvia;neve|NE-vi|nieve;vento|VEN-tu|viento;nuvem|NU-vein|nube;calor|ca-LOR|calor;frio|FRI-u|frío`}));
-DATA.pt.phr.push(...F(`Boa noite!|¡Buenas noches!;Como vai?|¿Cómo va?;Muito bem|Muy bien;Assim-assim|Así así;Não faz mal|No importa;O que é isto?|¿Qué es esto?;Há quanto tempo!|¡Cuánto tiempo!;Preciso de ajuda|Necesito ayuda;Estou cansado|Estoy cansado;Queria um café|Querría un café;Uma mesa para dois|Una mesa para dos;Feliz aniversário!|¡Feliz cumpleaños!`));
-DATA.pt.key.push('segunda-feira','domingo','trabalho','dinheiro','mar','comboio','feliz','amor','chuva','frio');
+
+
+
+
+
+
 document.head.insertAdjacentHTML('beforeend','<style>#tabs{overflow-x:auto;scrollbar-width:none}#tabs button{white-space:nowrap}.mk{flex-shrink:0;align-self:center;border:none;background:color-mix(in srgb,var(--accent) 12%,transparent);width:34px;height:34px;border-radius:50%;font-size:15px;cursor:pointer;margin-left:6px;color:inherit}.mk.on{background:var(--accent);color:#fff}.seg{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:12px}.seg button{border:1px solid var(--border);background:transparent;color:inherit;border-radius:999px;padding:7px 13px;font:inherit;font-size:13px;cursor:pointer}.seg button.on{background:var(--accent);color:#fff;border-color:var(--accent)}#streak{display:flex;align-items:center;gap:6px;justify-content:center;font-size:13px;margin:8px auto 0;flex-wrap:wrap}#streak i{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:10px;background:var(--border)}#streak i.on{background:linear-gradient(135deg,#ff9f0a,#ff453a);color:#fff}#streak em{font-style:normal;opacity:.65;width:100%;text-align:center;font-size:12px}</style>');
 const ld=(k,f)=>{try{return JSON.parse(localStorage.getItem(k))||f}catch(e){return f}},sv=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
 const dayS=o=>{const d=new Date();d.setDate(d.getDate()-o);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');};
@@ -1211,26 +405,12 @@ renderQuiz=function(){const m=document.getElementById('main');if(!state.question
 const _an=answer;
 answer=function(i,c){if(answered)return;const q=state.questions[state.qi],ok=i===c;if(q&&q.k){const h=ld('dl_hard_'+state.lang,{});let w=h[q.k]||0;w=ok?Math.max(0,w-1):Math.min(5,w+2);h[q.k]=w;sv('dl_hard_'+state.lang,h);}if(!ok&&q)state.missed.push(q);tickStreak();_an(i,c);};
 state.missed=[];drawStreak();
-DATA.it.dic.push(...P({
-conectores:`chi|KI|quién;cosa|CO-sa|qué, cosa;quale|CUA-le|cuál;quanto|CUAN-to|cuánto;anche|AN-ke|también;ancora|an-CO-ra|todavía;già|YA|ya;qui|CUI|aquí;là|LA|allí;prima|PRI-ma|antes;dopo|DO-po|después`,
-verbos:`vedere|ve-DE-re|ver;sapere|sa-PE-re|saber;potere|po-TE-re|poder;volere|vo-LE-re|querer;leggere|LED-ye-re|leer;scrivere|SCRI-ve-re|escribir;aprire|a-PRI-re|abrir;chiudere|KIU-de-re|cerrar;capire|ca-PI-re|entender;lavorare|la-vo-RA-re|trabajar;studiare|stu-DIA-re|estudiar;cercare|cher-CA-re|buscar`,
-casa:`bagno|BA-ño|baño;giardino|yar-DI-no|jardín;parete|pa-RE-te|pared;sedia|SE-dia|silla`,
-lugares:`parco|PAR-co|parque;banca|BAN-ca|banco;ristorante|ris-to-RAN-te|restaurante;hotel|o-TEL|hotel;paese|pa-E-se|país;ufficio|uf-FI-cho|oficina`,
-comida:`colazione|co-la-TSIO-ne|desayuno;cena|CHE-na|cena;minestra|mi-NES-tra|sopa;insalata|in-sa-LA-ta|ensalada;pollo|POL-lo|pollo;tè|TE|té`,
-adjetivos:`lento|LEN-to|lento;veloce|ve-LO-che|rápido;giovane|YO-va-ne|joven;pulito|pu-LI-to|limpio;pieno|PIE-no|lleno;vuoto|VUO-to|vacío;economico|e-co-NO-mi-co|barato;alto|AL-to|alto`,
-tiempo:`mattina|mat-TI-na|mañana (parte del día);sera|SE-ra|tarde, noche;ora|O-ra|hora;mese|ME-se|mes;presto|PRES-to|pronto;tardi|TAR-di|tarde (hora)`}));
-DATA.it.phr.push(...F(`Non parlo italiano|No hablo italiano;Parlo un po' di italiano|Hablo un poco de italiano;Come si dice...?|¿Cómo se dice...?;Che cosa significa?|¿Qué significa?;Scusi, dov'è...?|Perdone, ¿dónde está...?;Vorrei un'acqua|Querría un agua;Il menù, per favore|La carta, por favor;Posso pagare con la carta?|¿Puedo pagar con tarjeta?;Mi sono perso|Me he perdido;Chiami un medico|Llame a un médico;Che bella giornata!|¡Qué buen día!;Ci vediamo domani|Nos vemos mañana;Buona fortuna!|¡Buena suerte!`));
-DATA.it.ex+=`;arrivederci|Arrivederci, a domani!|¡Adiós, hasta mañana!;per favore|Un caffè, per favore.|Un café, por favor.;scusi|Scusi, dov'è il bagno?|Perdone, ¿dónde está el baño?;oggi|Oggi fa caldo.|Hoy hace calor.;domani|Domani lavoro.|Mañana trabajo.;uno|Ho uno zaino.|Tengo una mochila.;due|Due caffè, per favore.|Dos cafés, por favor.;tre|Ho tre fratelli.|Tengo tres hermanos.;quando|Quando arrivi?|¿Cuándo llegas?;perché|Perché sei triste?|¿Por qué estás triste?;cane|Il cane dorme.|El perro duerme.;gatto|Ho un gatto nero.|Tengo un gato negro.;casa|Sono a casa.|Estoy en casa.;amico|Marco è un mio amico.|Marco es un amigo mío.;mangiare|Voglio mangiare.|Quiero comer.;parlare|Parlo italiano.|Hablo italiano.;aiutare|Puoi aiutarmi?|¿Puedes ayudarme?;lunedì|Lunedì ho lezione.|El lunes tengo clase.;domenica|La domenica riposo.|Los domingos descanso.;lavoro|Il lavoro è difficile.|El trabajo es difícil.;soldi|Non ho soldi.|No tengo dinero.;mare|Andiamo al mare.|Vamos al mar.;treno|Il treno è in ritardo.|El tren llega tarde.;felice|Sono molto felice.|Estoy muy feliz.;amore|L'amore è bello.|El amor es bonito.;pioggia|C'è molta pioggia.|Hay mucha lluvia.;freddo|Ho freddo.|Tengo frío.`;
-DATA.pt.dic.push(...P({
-conectores:`quem|QUEIN|quién;o quê|u QUE|qué;qual|CUAL|cuál;quanto|CUAN-tu|cuánto;também|tam-BEIN|también;ainda|a-IN-da|todavía;já|JA|ya;aqui|a-KI|aquí;ali|a-LI|allí;antes|AN-tis|antes;depois|de-POIS|después`,
-verbos:`ver|VER|ver;saber|sa-BER|saber;poder|pu-DER|poder;querer|qui-RER|querer;ler|LER|leer;escrever|ish-cre-VER|escribir;abrir|a-BRIR|abrir;fechar|fi-XAR|cerrar;entender|en-ten-DER|entender;trabalhar|tra-ba-LIAR|trabajar;estudar|ish-tu-DAR|estudiar;procurar|pru-cu-RAR|buscar`,
-casa:`casa de banho|CA-za di BA-nhu|baño;jardim|jar-DIM|jardín;parede|pa-RE-di|pared;cadeira|ca-DEI-ra|silla`,
-lugares:`parque|PAR-qui|parque;banco|BAN-cu|banco;restaurante|rish-tau-RAN-ti|restaurante;hotel|o-TEL|hotel;país|pa-ISH|país;escritório|ish-cri-TO-riu|oficina`,
-comida:`pequeno-almoço|pe-KE-nu al-MO-su|desayuno;jantar|jan-TAR|cena;sopa|SO-pa|sopa;salada|sa-LA-da|ensalada;frango|FRAN-gu|pollo;chá|XA|té`,
-adjetivos:`lento|LEN-tu|lento;rápido|RA-pi-du|rápido;jovem|JO-vein|joven;limpo|LIM-pu|limpio;cheio|XEI-u|lleno;vazio|va-ZI-u|vacío;barato|ba-RA-tu|barato;alto|AL-tu|alto`,
-tiempo:`manhã|ma-NHÃ|mañana (parte del día);tarde|TAR-di|tarde (hora);hora|O-ra|hora;mês|MES|mes;cedo|SE-du|pronto`}));
-DATA.pt.phr.push(...F(`Não falo português|No hablo portugués;Falo um pouco de português|Hablo un poco de portugués;Como se diz...?|¿Cómo se dice...?;O que significa?|¿Qué significa?;Desculpe, onde fica...?|Perdone, ¿dónde está...?;Queria uma água|Querría un agua;A ementa, por favor|La carta, por favor;Posso pagar com cartão?|¿Puedo pagar con tarjeta?;Estou perdido|Estoy perdido;Chame um médico|Llame a un médico;Que dia bonito!|¡Qué buen día!;Vemo-nos amanhã|Nos vemos mañana;Boa sorte!|¡Buena suerte!`));
-DATA.pt.ex+=`;tchau|Tchau, até amanhã!|¡Chao, hasta mañana!;desculpe|Desculpe, estou atrasado.|Perdón, llego tarde.;de nada|Obrigado! De nada.|¡Gracias! De nada.;hoje|Hoje faz calor.|Hoy hace calor.;amanhã|Amanhã trabalho.|Mañana trabajo.;um|Tenho um irmão.|Tengo un hermano.;dois|Dois cafés, por favor.|Dos cafés, por favor.;três|Tenho três gatos.|Tengo tres gatos.;quando|Quando chegas?|¿Cuándo llegas?;porquê|Porquê estás triste?|¿Por qué estás triste?;cão|O cão dorme.|El perro duerme.;gato|Tenho um gato preto.|Tengo un gato negro.;casa|Estou em casa.|Estoy en casa.;amigo|O Pedro é meu amigo.|Pedro es mi amigo.;comer|Quero comer.|Quiero comer.;falar|Falo português.|Hablo portugués.;ajudar|Pode ajudar-me?|¿Puede ayudarme?;segunda-feira|Segunda-feira tenho aulas.|El lunes tengo clase.;domingo|Ao domingo descanso.|Los domingos descanso.;trabalho|O trabalho é difícil.|El trabajo es difícil.;dinheiro|Não tenho dinheiro.|No tengo dinero.;mar|Vamos ao mar.|Vamos al mar.;comboio|O comboio está atrasado.|El tren llega tarde.;feliz|Estou muito feliz.|Estoy muy feliz.;amor|O amor é bonito.|El amor es bonito.;chuva|Há muita chuva.|Hay mucha lluvia.;frio|Tenho frio.|Tengo frío.`;
+
+
+
+
+
+
 document.head.insertAdjacentHTML('beforeend','<style>.lv{display:inline-block;font-size:10px;padding:1px 7px;border-radius:999px;margin-left:6px;vertical-align:middle;color:#fff}.lv.d{background:#ff453a}.lv.m{background:#ff9f0a}.lv.f{background:#30d158}</style>');
 function addDots(){if(!['dic','key','fav','phr'].includes(state.tab))return;const H=ld('dl_hard_'+state.lang,{});document.querySelectorAll('#main .row').forEach(r=>{const w=r.querySelector('.word'),t=r.querySelector('.tr');if(!w||!t||r.querySelector('.lv'))return;const k=w.textContent.trim();if(!Object.prototype.hasOwnProperty.call(H,k))return;const v=H[k],c=v>=3?'d':v>=1?'m':'f';t.insertAdjacentHTML('beforeend',` <span class="lv ${c}">${{d:'Difícil',m:'Medio',f:'Dominada'}[c]}</span>`);});}
 const _d2=decorate;decorate=function(){_d2();addDots();};
@@ -1301,18 +481,18 @@ try{const add=h=>document.head.insertAdjacentHTML('beforeend',h);if(!document.qu
 })();
 /* v16: resultados, nº de preguntas, test de números y vocabulario de cocina (atajos de teclado retirados en v17) */
 (function(){
-DATA.fr.dic.push(...P({cocina:`serviette|ser-VIET|servilleta;mayonnaise|ma-yo-NEZ|mayonesa;cuillère|kui-YER|cuchara;fourchette|fur-SHET|tenedor;couteau|ku-TO|cuchillo;assiette|a-SIET|plato;verre|VER|vaso;poêle|PUAL|sartén;casserole|kas-ROL|olla;huile|UIL|aceite;vinaigre|vi-NE-gr|vinagre;poivre|PUA-vr|pimienta;farine|fa-RIN|harina;beurre|BER|mantequilla;oignon|o-NYON|cebolla;ail|AY|ajo;bouillir|bu-YIR|hervir;frire|FRIR|freír`}));
-DATA.fr.phr.push(...F(`Passez-moi le sel, s'il vous plaît|Pásame la sal, por favor;Une serviette, s'il vous plaît|Una servilleta, por favor;Sans mayonnaise, s'il vous plaît|Sin mayonesa, por favor;Qu'y a-t-il dans ce plat ?|¿Qué lleva este plato?;C'est trop salé|Está demasiado salado`));
-DATA.ru.dic.push(...P({cocina:`салфетка|salfétka|servilleta;майонез|mayonés|mayonesa;ложка|lózhka|cuchara;вилка|vílka|tenedor;нож|nozh|cuchillo;тарелка|tarélka|plato;стакан|stakán|vaso;сковорода|skovorodá|sartén;кастрюля|kastryúlya|olla;растительное масло|rastítel'noye máslo|aceite;уксус|úksus|vinagre;перец|pérets|pimienta;мука|muká|harina;сливочное масло|slívochnoye máslo|mantequilla;лук|luk|cebolla;чеснок|chesnók|ajo;кипятить|kipyatít'|hervir;жарить|zhárit'|freír`}));
-DATA.ru.phr.push(...F(`Передайте соль, пожалуйста|Pásame la sal, por favor;Салфетку, пожалуйста|Una servilleta, por favor;Без майонеза, пожалуйста|Sin mayonesa, por favor;Что в этом блюде?|¿Qué lleva este plato?;Слишком солёно|Está demasiado salado`));
-DATA.en.dic.push(...P({cocina:`napkin|NAP-kin|servilleta;mayonnaise|mei-o-NEIS|mayonesa;spoon|SPUUN|cuchara;fork|FORK|tenedor;knife|NAIF|cuchillo;plate|PLEIT|plato;glass|GLAS|vaso;frying pan|FRAI-ing PAN|sartén;pot|POT|olla;oil|OIL|aceite;vinegar|VI-ne-gar|vinagre;pepper|PE-per|pimienta;flour|FLAU-er|harina;butter|BA-ter|mantequilla;onion|A-nion|cebolla;garlic|GAR-lik|ajo;to boil|tu BOIL|hervir;to fry|tu FRAI|freír`}));
-DATA.en.phr.push(...F(`Could you pass the salt?|¿Me pasa la sal?;Can I have a napkin, please?|¿Me da una servilleta, por favor?;No mayonnaise, please|Sin mayonesa, por favor;What's in this dish?|¿Qué lleva este plato?;It's too salty|Está demasiado salado`));
-DATA.de.dic.push(...P({cocina:`Serviette|zer-VIE-te|servilleta;Mayonnaise|ma-yo-NE-ze|mayonesa;Löffel|LÖ-fel|cuchara;Gabel|GA-bel|tenedor;Messer|ME-ser|cuchillo;Teller|TE-ler|plato;Pfanne|PFA-ne|sartén;Topf|TOPF|olla;Öl|ÖL|aceite;Essig|E-sich|vinagre;Pfeffer|PFE-fer|pimienta;Mehl|MEL|harina;Butter|BU-ter|mantequilla;Zwiebel|TSVI-bel|cebolla;Knoblauch|KNOP-lauj|ajo;kochen|KO-jen|hervir, cocinar;braten|BRA-ten|freír, asar`}));
-DATA.de.phr.push(...F(`Können Sie mir das Salz reichen?|¿Me pasa la sal?;Eine Serviette, bitte|Una servilleta, por favor;Ohne Mayonnaise, bitte|Sin mayonesa, por favor;Was ist in diesem Gericht?|¿Qué lleva este plato?;Es ist zu salzig|Está demasiado salado`));
-DATA.it.dic.push(...P({cocina:`tovagliolo|to-va-LIO-lo|servilleta;maionese|ma-io-NE-se|mayonesa;cucchiaio|cuc-KIA-io|cuchara;forchetta|for-KET-ta|tenedor;coltello|col-TEL-lo|cuchillo;piatto|PIAT-to|plato;bicchiere|bic-KIE-re|vaso;padella|pa-DEL-la|sartén;pentola|PEN-to-la|olla;olio|O-lio|aceite;aceto|a-CHE-to|vinagre;pepe|PE-pe|pimienta;farina|fa-RI-na|harina;burro|BUR-ro|mantequilla;cipolla|chi-POL-la|cebolla;aglio|A-llo|ajo;bollire|bol-LI-re|hervir;friggere|FRID-ye-re|freír`}));
-DATA.it.phr.push(...F(`Mi passa il sale, per favore?|¿Me pasa la sal, por favor?;Un tovagliolo, per favore|Una servilleta, por favor;Senza maionese, per favore|Sin mayonesa, por favor;Che cosa c'è in questo piatto?|¿Qué lleva este plato?;È troppo salato|Está demasiado salado`));
-DATA.pt.dic.push(...P({cocina:`guardanapo|guar-da-NA-pu|servilleta;maionese|mai-o-NE-zi|mayonesa;colher|cu-LHER|cuchara;garfo|GAR-fu|tenedor;faca|FA-ca|cuchillo;prato|PRA-tu|plato;copo|CO-pu|vaso;frigideira|fri-ji-DEI-ra|sartén;panela|pa-NE-la|olla;azeite|a-ZEI-ti|aceite;vinagre|vi-NA-gri|vinagre;pimenta|pi-MEN-ta|pimienta;farinha|fa-RI-nha|harina;manteiga|man-TEI-ga|mantequilla;cebola|se-BO-la|cebolla;alho|A-liu|ajo;ferver|fer-VER|hervir;fritar|fri-TAR|freír`}));
-DATA.pt.phr.push(...F(`Pode passar o sal, por favor?|¿Puede pasar la sal, por favor?;Um guardanapo, por favor|Una servilleta, por favor;Sem maionese, por favor|Sin mayonesa, por favor;O que leva este prato?|¿Qué lleva este plato?;Está demasiado salgado|Está demasiado salado`));
+
+
+
+
+
+
+
+
+
+
+
+
 
 try{state.nq=Math.max(5,Math.min(60,parseInt(localStorage.getItem('dl_nq'))||20))}catch(e){state.nq=20}
 const _gq=genQuiz;
@@ -1336,19 +516,19 @@ document.head.insertAdjacentHTML('beforeend','<style>.opt{position:relative}.nqr
 })();
 /* v17: salsas ampliadas (49 por idioma), pronunciación rusa en todos los tests, Números sin emoji, sin atajos */
 (function(){
-DATA.fr.dic.push(...P({salsas:`sauce|SOS|salsa;sauce tomate|SOS to-MAT|salsa de tomate;concentré de tomate|kon-san-TRE de to-MAT|concentrado de tomate;ketchup|ket-CHEP|kétchup;moutarde|mu-TARD|mostaza;moutarde de Dijon|mu-TARD de di-YON|mostaza de Dijon;sauce soja|SOS so-YA|salsa de soja;sauce piquante|SOS pi-KANT|salsa picante;sriracha|sri-RA-cha|sriracha;tabasco|ta-ba-SKO|tabasco;sauce barbecue|SOS bar-be-KIU|salsa barbacoa;aïoli|a-yo-LI|alioli;sauce à l'ail|SOS a LAY|salsa de ajo;sauce cocktail|SOS kok-TEL|salsa rosa;sauce tartare|SOS tar-TAR|salsa tártara;sauce César|SOS se-ZAR|salsa César;sauce au fromage|SOS o fro-MAJ|salsa de queso;sauce béchamel|SOS be-sha-MEL|bechamel;sauce bolognaise|SOS bo-lo-NYEZ|salsa boloñesa;pesto|pes-TO|pesto;guacamole|gua-ka-MOL|guacamole;sauce au yaourt|SOS o ya-UR|salsa de yogur;tzatziki|dzat-zi-KI|tzatziki;vinaigrette|vi-ne-GRET|aliño de ensalada;sauce au curry|SOS o ku-RI|salsa de curry;sauce teriyaki|SOS te-ri-ya-KI|salsa teriyaki;sauce Worcestershire|SOS vus-ter-SHIR|salsa Worcestershire;sauce aigre-douce|SOS e-gre-DUS|salsa agridulce;chimichurri|chi-mi-CHU-ri|chimichurri;sauce verte|SOS VERT|salsa verde;sauce aux champignons|SOS o shan-pi-NYON|salsa de champiñones;sauce au poivre|SOS o PUA-vr|salsa de pimienta;sauce hollandaise|SOS o-lan-DEZ|salsa holandesa;sauce aux canneberges|SOS o kan-BERJ|salsa de arándanos;sauce au chocolat|SOS o sho-ko-LA|salsa de chocolate;sirop|si-RO|sirope;sauce à la crème|SOS a la KREM|salsa de nata;sauce au vin rouge|SOS o van RUJ|salsa de vino tinto;sauce de poisson|SOS de pua-SON|salsa de pescado;sauce d'huître|SOS dui-TR|salsa de ostras;sauce cacahuète|SOS ka-ka-UET|salsa de cacahuete;wasabi|ua-sa-BI|wasabi;sauce au citron|SOS o si-TRON|salsa de limón;jus de viande|JU de VIAND|salsa de carne;vinaigre balsamique|vi-NE-gr bal-sa-MIK|vinagre balsámico;sauce chili douce|SOS shi-LI DUS|salsa de chile dulce;condiment|kon-di-MAN|condimento;épices|e-PIS|especias;sauce à tremper|SOS a tran-PE|salsa para mojar (dip)`}));
-DATA.fr.phr.push(...F(`Avez-vous de la sauce piquante ?|¿Tiene salsa picante?;La sauce à part, s'il vous plaît|La salsa aparte, por favor;Du ketchup et de la moutarde, s'il vous plaît|¿Me da kétchup y mostaza, por favor?;Sans sauce, s'il vous plaît|Sin salsa, por favor;Quelle sauce me conseillez-vous ?|¿Qué salsa me recomienda?`));
-DATA.ru.dic.push(...P({salsas:`соус|sóus|salsa;томатный соус|tamátnyy sóus|salsa de tomate;томатная паста|tamátnaya pásta|concentrado de tomate;кетчуп|kyétchup|kétchup;горчица|garchítsa|mostaza;дижонская горчица|dizhónskaya garchítsa|mostaza de Dijon;соевый соус|sóyevyy sóus|salsa de soja;острый соус|óstryy sóus|salsa picante;шрирача|shrirácha|sriracha;табаско|tabásko|tabasco;соус барбекю|sóus barbekyú|salsa barbacoa;айоли|ayóli|alioli;чесночный соус|chesnóchnyy sóus|salsa de ajo;розовый соус|rózovyy sóus|salsa rosa;соус тартар|sóus tartár|salsa tártara;соус цезарь|sóus tsézar'|salsa César;сырный соус|sýrnyy sóus|salsa de queso;соус бешамель|sóus beshamél'|bechamel;соус болоньезе|sóus balan'yéze|salsa boloñesa;песто|pésto|pesto;гуакамоле|guakamóle|guacamole;йогуртовый соус|yogúrtovyy sóus|salsa de yogur;цацики|tsátsiki|tzatziki;заправка для салата|zapráfka dlya saláta|aliño de ensalada;соус карри|sóus kárri|salsa de curry;соус терияки|sóus teriyáki|salsa teriyaki;вустерский соус|vústerskiy sóus|salsa Worcestershire;кисло-сладкий соус|kíslo-slátkiy sóus|salsa agridulce;чимичурри|chimichúrri|chimichurri;зелёный соус|zelyónyy sóus|salsa verde;грибной соус|gribnóy sóus|salsa de champiñones;перечный соус|pyérechnyy sóus|salsa de pimienta;голландский соус|galándskiy sóus|salsa holandesa;клюквенный соус|klyúkvennyy sóus|salsa de arándanos;шоколадный соус|shakaládnyy sóus|salsa de chocolate;сироп|siróp|sirope;сливочный соус|slívochnyy sóus|salsa de nata;соус из красного вина|sóus iz krásnava viná|salsa de vino tinto;рыбный соус|rýbnyy sóus|salsa de pescado;устричный соус|ústrichnyy sóus|salsa de ostras;арахисовый соус|arákhisovyy sóus|salsa de cacahuete;васаби|vasábi|wasabi;лимонный соус|limónnyy sóus|salsa de limón;мясной соус|myasnóy sóus|salsa de carne;бальзамический уксус|bal'zamícheskiy úksus|vinagre balsámico;сладкий соус чили|slátkiy sóus chíli|salsa de chile dulce;приправа|pripráva|condimento;специи|spyétsii|especias;соус для макания|sóus dlya makániya|salsa para mojar (dip)`}));
-DATA.ru.phr.push(...F(`У вас есть острый соус?|¿Tiene salsa picante?;Соус отдельно, пожалуйста|La salsa aparte, por favor;Кетчуп и горчицу, пожалуйста|¿Me da kétchup y mostaza, por favor?;Без соуса, пожалуйста|Sin salsa, por favor;Какой соус вы порекомендуете?|¿Qué salsa me recomienda?`));
-DATA.en.dic.push(...P({salsas:`sauce|SOS|salsa;tomato sauce|to-MEI-to SOS|salsa de tomate;tomato paste|to-MEI-to PEIST|concentrado de tomate;ketchup|KE-chap|kétchup;mustard|MAS-tard|mostaza;Dijon mustard|DI-yon MAS-tard|mostaza de Dijon;soy sauce|SOI SOS|salsa de soja;hot sauce|JOT SOS|salsa picante;sriracha|sri-RA-cha|sriracha;Tabasco|ta-BAS-co|tabasco;barbecue sauce|BAR-be-kiu SOS|salsa barbacoa;aioli|ai-O-li|alioli;garlic sauce|GAR-lik SOS|salsa de ajo;cocktail sauce|KOK-teil SOS|salsa rosa;tartar sauce|TAR-tar SOS|salsa tártara;Caesar dressing|SI-sar DRE-sing|salsa César;cheese sauce|CHIS SOS|salsa de queso;béchamel sauce|be-sha-MEL SOS|bechamel;bolognese sauce|bo-lo-NEIS SOS|salsa boloñesa;pesto|PES-to|pesto;guacamole|gua-ka-MO-li|guacamole;yogurt sauce|YO-gurt SOS|salsa de yogur;tzatziki|tsat-SI-ki|tzatziki;salad dressing|SA-lad DRE-sing|aliño de ensalada;curry sauce|CA-ri SOS|salsa de curry;teriyaki sauce|te-ri-YA-ki SOS|salsa teriyaki;Worcestershire sauce|US-ter-sher SOS|salsa Worcestershire;sweet and sour sauce|SUIT and SAUER SOS|salsa agridulce;chimichurri|chi-mi-CHU-ri|chimichurri;green sauce|GRIN SOS|salsa verde;mushroom sauce|MASH-rum SOS|salsa de champiñones;pepper sauce|PE-per SOS|salsa de pimienta;hollandaise sauce|JO-lan-deis SOS|salsa holandesa;cranberry sauce|CRAN-be-ri SOS|salsa de arándanos;chocolate sauce|CHOK-let SOS|salsa de chocolate;syrup|SI-rap|sirope;cream sauce|CRIM SOS|salsa de nata;red wine sauce|RED UAIN SOS|salsa de vino tinto;fish sauce|FISH SOS|salsa de pescado;oyster sauce|OIS-ter SOS|salsa de ostras;peanut sauce|PI-nat SOS|salsa de cacahuete;wasabi|ua-SA-bi|wasabi;lemon sauce|LE-mon SOS|salsa de limón;gravy|GREI-vi|salsa de carne;balsamic vinegar|bol-SA-mik VI-ne-gar|vinagre balsámico;sweet chili sauce|SUIT CHI-li SOS|salsa de chile dulce;condiment|KON-di-ment|condimento;spices|SPAI-ses|especias;dip|DIP|salsa para mojar (dip)`}));
-DATA.en.phr.push(...F(`Do you have any hot sauce?|¿Tiene salsa picante?;Sauce on the side, please|La salsa aparte, por favor;Could I have ketchup and mustard, please?|¿Me da kétchup y mostaza, por favor?;No sauce, please|Sin salsa, por favor;Which sauce do you recommend?|¿Qué salsa me recomienda?`));
-DATA.de.dic.push(...P({salsas:`Soße|SO-se|salsa;Tomatensoße|to-MA-ten-so-se|salsa de tomate;Tomatenmark|to-MA-ten-mark|concentrado de tomate;Ketchup|KE-chap|kétchup;Senf|SENF|mostaza;Dijon-Senf|di-YON-senf|mostaza de Dijon;Sojasoße|SO-ya-so-se|salsa de soja;scharfe Soße|SHAR-fe SO-se|salsa picante;Sriracha|sri-RA-cha|sriracha;Tabasco|ta-BAS-ko|tabasco;Barbecuesoße|BAR-be-kiu-so-se|salsa barbacoa;Aioli|ai-O-li|alioli;Knoblauchsoße|KNOP-lauj-so-se|salsa de ajo;Cocktailsoße|KOK-teil-so-se|salsa rosa;Tatarensoße|ta-TA-ren-so-se|salsa tártara;Caesar-Dressing|SE-sar-DRE-sing|salsa César;Käsesoße|KE-ze-so-se|salsa de queso;Béchamelsoße|be-sha-MEL-so-se|bechamel;Bolognese|bo-lo-NYE-ze|salsa boloñesa;Pesto|PES-to|pesto;Guacamole|gua-ka-MO-le|guacamole;Joghurtsoße|YO-gurt-so-se|salsa de yogur;Tsatsiki|tsat-SI-ki|tzatziki;Salatdressing|sa-LAT-dre-sing|aliño de ensalada;Currysoße|KA-ri-so-se|salsa de curry;Teriyakisoße|te-ri-YA-ki-so-se|salsa teriyaki;Worcestersoße|UUS-ter-so-se|salsa Worcestershire;süßsaure Soße|SÜS-sau-re SO-se|salsa agridulce;Chimichurri|chi-mi-CHU-ri|chimichurri;grüne Soße|GRÜ-ne SO-se|salsa verde;Champignonsoße|SHAM-pi-nyon-so-se|salsa de champiñones;Pfeffersoße|PFE-fer-so-se|salsa de pimienta;Sauce hollandaise|sos o-lan-DE-se|salsa holandesa;Cranberrysoße|KREN-be-ri-so-se|salsa de arándanos;Schokoladensoße|sho-ko-LA-den-so-se|salsa de chocolate;Sirup|SI-rup|sirope;Sahnesoße|SA-ne-so-se|salsa de nata;Rotweinsoße|ROT-vain-so-se|salsa de vino tinto;Fischsoße|FISH-so-se|salsa de pescado;Austernsoße|AUS-tern-so-se|salsa de ostras;Erdnusssoße|ERT-nus-so-se|salsa de cacahuete;Wasabi|va-SA-bi|wasabi;Zitronensoße|tsi-TRO-nen-so-se|salsa de limón;Bratensoße|BRA-ten-so-se|salsa de carne;Balsamicoessig|bal-SA-mi-ko-e-sich|vinagre balsámico;süße Chilisoße|SÜ-se SHI-li-so-se|salsa de chile dulce;Würzmittel|VÜRTS-mi-tel|condimento;Gewürze|ge-VÜR-tse|especias;Dip|DIP|salsa para mojar (dip)`}));
-DATA.de.phr.push(...F(`Haben Sie scharfe Soße?|¿Tiene salsa picante?;Die Soße bitte extra|La salsa aparte, por favor;Ketchup und Senf, bitte|¿Me da kétchup y mostaza, por favor?;Ohne Soße, bitte|Sin salsa, por favor;Welche Soße empfehlen Sie?|¿Qué salsa me recomienda?`));
-DATA.it.dic.push(...P({salsas:`salsa|SAL-sa|salsa;salsa di pomodoro|SAL-sa di po-mo-DO-ro|salsa de tomate;concentrato di pomodoro|con-cen-TRA-to di po-mo-DO-ro|concentrado de tomate;ketchup|KE-chap|kétchup;senape|SE-na-pe|mostaza;senape di Digione|SE-na-pe di di-YO-ne|mostaza de Dijon;salsa di soia|SAL-sa di SO-ia|salsa de soja;salsa piccante|SAL-sa pic-CAN-te|salsa picante;sriracha|sri-RA-cha|sriracha;tabasco|ta-BAS-co|tabasco;salsa barbecue|SAL-sa bar-be-KIU|salsa barbacoa;aioli|ai-O-li|alioli;salsa all'aglio|SAL-sa al-LA-llo|salsa de ajo;salsa cocktail|SAL-sa COK-teil|salsa rosa;salsa tartara|SAL-sa TAR-ta-ra|salsa tártara;salsa Caesar|SAL-sa SE-sar|salsa César;salsa al formaggio|SAL-sa al for-MAD-yo|salsa de queso;besciamella|be-sha-MEL-la|bechamel;ragù alla bolognese|ra-GU AL-la bo-lo-NYE-se|salsa boloñesa;pesto|PES-to|pesto;guacamole|gua-ka-MO-le|guacamole;salsa allo yogurt|SAL-sa AL-lo YO-gurt|salsa de yogur;tzatziki|tsat-SI-ki|tzatziki;condimento per l'insalata|con-di-MEN-to per lin-sa-LA-ta|aliño de ensalada;salsa al curry|SAL-sa al CUR-ri|salsa de curry;salsa teriyaki|SAL-sa te-ri-YA-ki|salsa teriyaki;salsa Worcestershire|SAL-sa US-ter-sher|salsa Worcestershire;salsa agrodolce|SAL-sa a-gro-DOL-che|salsa agridulce;chimichurri|chi-mi-CHU-ri|chimichurri;salsa verde|SAL-sa VER-de|salsa verde;salsa ai funghi|SAL-sa ai FUN-gui|salsa de champiñones;salsa al pepe|SAL-sa al PE-pe|salsa de pimienta;salsa olandese|SAL-sa o-lan-DE-se|salsa holandesa;salsa di mirtilli rossi|SAL-sa di mir-TIL-li ROS-si|salsa de arándanos;salsa al cioccolato|SAL-sa al chok-ko-LA-to|salsa de chocolate;sciroppo|shi-ROP-po|sirope;salsa alla panna|SAL-sa AL-la PAN-na|salsa de nata;salsa al vino rosso|SAL-sa al VI-no ROS-so|salsa de vino tinto;salsa di pesce|SAL-sa di PE-she|salsa de pescado;salsa di ostriche|SAL-sa di OS-tri-ke|salsa de ostras;salsa di arachidi|SAL-sa di a-RA-ki-di|salsa de cacahuete;wasabi|ua-SA-bi|wasabi;salsa al limone|SAL-sa al li-MO-ne|salsa de limón;sugo d'arrosto|SU-go dar-ROS-to|salsa de carne;aceto balsamico|a-CHE-to bal-SA-mi-co|vinagre balsámico;salsa chili dolce|SAL-sa CHI-li DOL-che|salsa de chile dulce;condimento|con-di-MEN-to|condimento;spezie|SPE-tsie|especias;salsa per intingere|SAL-sa per in-TIN-ye-re|salsa para mojar (dip)`}));
-DATA.it.phr.push(...F(`Avete la salsa piccante?|¿Tiene salsa picante?;La salsa a parte, per favore|La salsa aparte, por favor;Ketchup e senape, per favore|¿Me da kétchup y mostaza, por favor?;Senza salsa, per favore|Sin salsa, por favor;Quale salsa mi consiglia?|¿Qué salsa me recomienda?`));
-DATA.pt.dic.push(...P({salsas:`molho|MO-lhu|salsa;molho de tomate|MO-lhu di to-MA-ti|salsa de tomate;concentrado de tomate|con-sen-TRA-du di to-MA-ti|concentrado de tomate;ketchup|KE-tchup|kétchup;mostarda|mush-TAR-da|mostaza;mostarda de Dijon|mush-TAR-da di di-JON|mostaza de Dijon;molho de soja|MO-lhu di SO-ja|salsa de soja;molho picante|MO-lhu pi-CAN-ti|salsa picante;sriracha|sri-RA-tcha|sriracha;tabasco|ta-BAS-cu|tabasco;molho barbecue|MO-lhu bar-be-KIU|salsa barbacoa;aioli|ai-O-li|alioli;molho de alho|MO-lhu di A-liu|salsa de ajo;molho cocktail|MO-lhu COK-teil|salsa rosa;molho tártaro|MO-lhu TAR-ta-ru|salsa tártara;molho César|MO-lhu SE-zar|salsa César;molho de queijo|MO-lhu di KEI-ju|salsa de queso;molho bechamel|MO-lhu be-xa-MEL|bechamel;molho à bolonhesa|MO-lhu a bo-lo-NHE-za|salsa boloñesa;pesto|PES-tu|pesto;guacamole|gua-ca-MO-li|guacamole;molho de iogurte|MO-lhu di io-GUR-ti|salsa de yogur;tzatziki|tsat-SI-qui|tzatziki;molho para salada|MO-lhu PA-ra sa-LA-da|aliño de ensalada;molho de caril|MO-lhu di ca-RIL|salsa de curry;molho teriyaki|MO-lhu te-ri-IA-qui|salsa teriyaki;molho inglês|MO-lhu in-GLESH|salsa Worcestershire;molho agridoce|MO-lhu a-gri-DO-si|salsa agridulce;chimichurri|xi-mi-XU-ri|chimichurri;molho verde|MO-lhu VER-di|salsa verde;molho de cogumelos|MO-lhu di cu-gu-ME-lush|salsa de champiñones;molho de pimenta|MO-lhu di pi-MEN-ta|salsa de pimienta;molho holandês|MO-lhu o-lan-DESH|salsa holandesa;molho de arando|MO-lhu di a-RAN-du|salsa de arándanos;molho de chocolate|MO-lhu di xo-cu-LA-ti|salsa de chocolate;xarope|xa-RO-pi|sirope;molho de natas|MO-lhu di NA-tash|salsa de nata;molho de vinho tinto|MO-lhu di VI-nhu TIN-tu|salsa de vino tinto;molho de peixe|MO-lhu di PEI-xi|salsa de pescado;molho de ostras|MO-lhu di OSH-trash|salsa de ostras;molho de amendoim|MO-lhu di a-men-DO-im|salsa de cacahuete;wasabi|ua-SA-bi|wasabi;molho de limão|MO-lhu di li-MAUN|salsa de limón;molho de carne|MO-lhu di CAR-ni|salsa de carne;vinagre balsâmico|vi-NA-gri bal-SA-mi-cu|vinagre balsámico;molho chili doce|MO-lhu XI-li DO-si|salsa de chile dulce;condimento|con-di-MEN-tu|condimento;especiarias|ish-pe-si-A-ri-ash|especias;molho para mergulhar|MO-lhu PA-ra mer-gu-LHAR|salsa para mojar (dip)`}));
-DATA.pt.phr.push(...F(`Tem molho picante?|¿Tiene salsa picante?;O molho à parte, por favor|La salsa aparte, por favor;Ketchup e mostarda, por favor|¿Me da kétchup y mostaza, por favor?;Sem molho, por favor|Sin salsa, por favor;Que molho me recomenda?|¿Qué salsa me recomienda?`));
-const PHP={"Как дела?": "kak dyelá?", "Меня зовут...": "myenyá zavút...", "Как вас зовут?": "kak vas zavút?", "Я не понимаю": "ya nye panimáyu", "Я плохо говорю по-русски": "ya plókha gavaryú pa-rúski", "Повторите, пожалуйста": "paftarítye, pazhálusta", "Вы говорите по-английски?": "vy gavarítye pa-anglíyski?", "Где туалет?": "gdye tualyét?", "Где вокзал?": "gdye vagzál?", "Сколько это стоит?": "skól'ka éta stóit?", "Я хотел бы...": "ya khatyél by...", "Счёт, пожалуйста": "shchyot, pazhálusta", "Который час?": "katóryy chas?", "Вы можете мне помочь?": "vy mózhetye mnye pamóch'?", "Я не знаю": "ya nye znáyu", "До скорого": "da skórava", "Приятного аппетита": "priyátnava apyetíta", "Что это?": "shto éta?", "Сколько это?": "skól'ka éta?", "Я заблудился": "ya zablúdilsya", "Помогите!": "pamagítye!", "Вызовите скорую помощь!": "výzavitye skóruyu pómashch'!", "Откуда вы?": "atkúda vy?", "Я из Испании": "ya iz ispánii", "Сколько вам лет?": "skól'ka vam lyet?", "Очень приятно": "óchyen' priyátna", "До завтра": "da záftra", "Хорошего дня": "kharóshyeva dnya", "Спокойной ночи": "spakóynay nóchi", "У вас есть свободный номер?": "u vas yest' svabódnyy nómer?", "Я хочу заказать столик": "ya khachú zakazát' stólik", "Это слишком дорого": "éta slíshkam dóraga", "Можете сделать скидку?": "mózhetye zdyélat' skítku?", "Где можно купить билеты?": "gdye mózhna kupít' bilyéty?", "Во сколько отправляется поезд?": "va skól'ka atpravlyáyetsya póyest?", "У меня аллергия на...": "u myenyá allyergíya na...", "Мне нужен врач": "mnye núzhen vrach", "Я плохо себя чувствую": "ya plókha sebyá chústvuyu", "Поздравляю!": "pazdravlyáyu!", "С днём рождения!": "z dnyóm razhdyéniya!", "Удачи!": "udáchi!", "Это очень вкусно": "éta óchyen' fkúsna", "Мне это очень нравится": "mnye éta óchyen' nrávitsya", "Я согласен": "ya saglásyen", "Я не согласен": "ya nye saglásyen", "Не за что": "nye za shto", "С удовольствием": "s udavól'stviyem", "Как жаль": "kak zhal'", "Пошли!": "pashlí!", "Добро пожаловать": "dabró pazhálavat'", "Передайте соль, пожалуйста": "peredáytye sol', pazhálusta", "Салфетку, пожалуйста": "salfyétku, pazhálusta", "Без майонеза, пожалуйста": "byez mayanyéza, pazhálusta", "Что в этом блюде?": "shto v étam blyúdye?", "Слишком солёно": "slíshkam salyóna", "У вас есть острый соус?": "u vas yest' óstryy sóus?", "Соус отдельно, пожалуйста": "sóus atdyél'na, pazhálusta", "Кетчуп и горчицу, пожалуйста": "kyétchup i garchítsu, pazhálusta", "Без соуса, пожалуйста": "byez sóusa, pazhálusta", "Какой соус вы порекомендуете?": "kakóy sóus vy parekamyendúyetye?"};DATA.ru.phr.forEach(x=>{if(PHP[x.f])x.p=PHP[x.f]});
+
+
+
+
+
+
+
+
+
+
+
+
+const PHP={"Как дела?": "kak dyelá?", "Меня зовут...": "myenyá zavút...", "Как вас зовут?": "kak vas zavút?", "Я не понимаю": "ya nye panimáyu", "Я плохо говорю по-русски": "ya plókha gavaryú pa-rúski", "Повторите, пожалуйста": "paftarítye, pazhálusta", "Вы говорите по-английски?": "vy gavarítye pa-anglíyski?", "Где туалет?": "gdye tualyét?", "Где вокзал?": "gdye vagzál?", "Сколько это стоит?": "skól'ka éta stóit?", "Я хотел бы...": "ya khatyél by...", "Счёт, пожалуйста": "shchyot, pazhálusta", "Который час?": "katóryy chas?", "Вы можете мне помочь?": "vy mózhetye mnye pamóch'?", "Я не знаю": "ya nye znáyu", "До скорого": "da skórava", "Приятного аппетита": "priyátnava apyetíta", "Что это?": "shto éta?", "Сколько это?": "skól'ka éta?", "Я заблудился": "ya zablúdilsya", "Помогите!": "pamagítye!", "Вызовите скорую помощь!": "výzavitye skóruyu pómashch'!", "Откуда вы?": "atkúda vy?", "Я из Испании": "ya iz ispánii", "Сколько вам лет?": "skól'ka vam lyet?", "Очень приятно": "óchyen' priyátna", "До завтра": "da záftra", "Хорошего дня": "kharóshyeva dnya", "Спокойной ночи": "spakóynay nóchi", "У вас есть свободный номер?": "u vas yest' svabódnyy nómer?", "Я хочу заказать столик": "ya khachú zakazát' stólik", "Это слишком дорого": "éta slíshkam dóraga", "Можете сделать скидку?": "mózhetye zdyélat' skítku?", "Где можно купить билеты?": "gdye mózhna kupít' bilyéty?", "Во сколько отправляется поезд?": "va skól'ka atpravlyáyetsya póyest?", "У меня аллергия на...": "u myenyá allyergíya na...", "Мне нужен врач": "mnye núzhen vrach", "Я плохо себя чувствую": "ya plókha sebyá chústvuyu", "Поздравляю!": "pazdravlyáyu!", "С днём рождения!": "z dnyóm razhdyéniya!", "Удачи!": "udáchi!", "Это очень вкусно": "éta óchyen' fkúsna", "Мне это очень нравится": "mnye éta óchyen' nrávitsya", "Я согласен": "ya saglásyen", "Я не согласен": "ya nye saglásyen", "Не за что": "nye za shto", "С удовольствием": "s udavól'stviyem", "Как жаль": "kak zhal'", "Пошли!": "pashlí!", "Добро пожаловать": "dabró pazhálavat'", "Передайте соль, пожалуйста": "peredáytye sol', pazhálusta", "Салфетку, пожалуйста": "salfyétku, pazhálusta", "Без майонеза, пожалуйста": "byez mayanyéza, pazhálusta", "Что в этом блюде?": "shto v étam blyúdye?", "Слишком солёно": "slíshkam salyóna", "У вас есть острый соус?": "u vas yest' óstryy sóus?", "Соус отдельно, пожалуйста": "sóus atdyél'na, pazhálusta", "Кетчуп и горчицу, пожалуйста": "kyétchup i garchítsu, pazhálusta", "Без соуса, пожалуйста": "byez sóusa, pazhálusta", "Какой соус вы порекомендуете?": "kakóy sóus vy parekamyendúyetye?"};
 document.head.insertAdjacentHTML('beforeend','<style>.pr{font-weight:500;color:var(--text2);font-size:.8em;letter-spacing:0}.pr.pq{display:block;margin-top:8px;font-size:.72em}.opt .pr{display:block;margin-top:3px;font-size:.78em}.opt.correct .pr,.opt.wrong .pr{color:inherit;opacity:.85}.rs-l div b .pr{display:block}</style>');
 })();
 /* v18: voces, pronunciación rusa en listas, filtros de diccionario, test por categoría, avisos en página, etiquetas al día y sincronización */
@@ -1409,6 +589,7 @@ const _sg18=seg;seg=function(){const cs=cats().filter(([,n])=>n>=4);if(state.qca
  return _sg18()+`<div class="qcr"><label for="qcat">Categoría</label><select id="qcat" onchange="setQCat(this.value)" ${dis?'disabled title="No se aplica a frases ni a números"':''}><option value="">Todas</option>${cs.map(([c,n])=>`<option value="${esc(c)}" ${state.qcat===c?'selected':''}>${esc(catName(c))} (${n})</option>`).join('')}</select></div>`;};
 
 /* ---------- Envoltorio de render ---------- */
+const _rP=render;render=function(){if(state.tab!=='pro')return _rP();renderPro();};
 const _r18=render;render=function(){_r18();if(state.tab==='dic')drawCats();addRuPron();refreshDots();};
 window.addEventListener('storage',e=>{if(e.key&&/^dl_hard_/.test(e.key))refreshDots();});
 
@@ -1460,17 +641,17 @@ document.head.insertAdjacentHTML('beforeend','<style>'+
 (function(){
 const M=()=>!matchMedia('(prefers-reduced-motion:reduce)').matches;
 const SOFT='cubic-bezier(.3,1.22,.5,1)',OUT='cubic-bezier(.22,1,.36,1)';
-const ORDER=['dic','phr','key','num','fav','quiz'];
+const ORDER=['dic','phr','key','num','pro','fav','quiz'];
 const BOOK='<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.5C10.3 5.2 7.9 4.5 4.5 4.5v13c3.4 0 5.8.7 7.5 2 1.7-1.3 4.1-2 7.5-2v-13c-3.4 0-5.8.7-7.5 2z"/><path d="M12 6.5v13"/></svg>';
 
 /* ---------- Guía ---------- */
 const G=[
-['Qué es DailyLeng','<p>Una app para practicar a diario francés, ruso, inglés, alemán, italiano y portugués. Elige el idioma arriba y muévete por las pestañas:</p><ul><li><b>Diccionario</b>: unas 340 palabras por idioma con pronunciación, buscador y filtro por categoría.</li><li><b>Frases</b>: las frases más útiles del día a día.</li><li><b>Palabras clave</b>: lo imprescindible, con un ejemplo de uso.</li><li><b>Números</b>: del 1 al 100, con buscador.</li><li><b>★ Favs</b>: tus palabras favoritas y las que más te cuestan.</li><li><b>Test</b>: preguntas de opción múltiple.</li></ul><p>En el móvil también puedes deslizar el dedo a izquierda o derecha para cambiar de pestaña.</p>'],
+['Qué es DailyLeng','<p>Una app para practicar a diario francés, ruso, inglés, alemán, italiano y portugués. Elige el idioma arriba y muévete por las pestañas:</p><ul><li><b>Diccionario</b>: unas 740 palabras por idioma con pronunciación, buscador y filtro por categoría.</li><li><b>Frases</b>: las frases más útiles del día a día, con buscador.</li><li><b>Palabras clave</b>: más de 50 imprescindibles, cada una con un ejemplo de uso y con buscador.</li><li><b>Números</b>: del 1 al 100, con buscador.</li><li><b>Pronunciación</b>: di en voz alta una palabra, frase o número y la app comprueba si se te entiende.</li><li><b>★ Favs</b>: tus palabras favoritas y las que más te cuestan.</li><li><b>Test</b>: de elegir, de escribir o de escuchar.</li></ul><p>En el móvil también puedes deslizar el dedo a izquierda o derecha para cambiar de pestaña.</p>'],
 ['Cómo funciona el test','<ul><li>Pulsa <b>Opciones</b> para elegir nivel (Principiante: palabras clave · Intermedio: todo el diccionario · Avanzado: frases), número de preguntas (5 a 60) y categoría (por ejemplo, solo salsas o solo cocina).</li><li><b>★ Favs</b> hace el test solo con tus favoritas y <b>Números</b> solo con números.</li><li>Las palabras que fallas aparecen más a menudo en los siguientes tests (repaso espaciado). Cada palabra muestra una etiqueta: <i>Difícil</i>, <i>Medio</i> o <i>Dominada</i>.</li><li>Al terminar verás tu porcentaje, tu mejor marca y la lista «Para repasar». <b>Repetir falladas</b> vuelve a preguntarte solo esas.</li><li>En ruso, cada palabra en cirílico lleva debajo cómo se lee.</li></ul>'],
 ['Racha 🔥','<p>El contador junto al nombre sube un día cada vez que <b>terminas un test</b> en un día distinto al anterior. Si pasa un día entero sin completar ninguno, vuelve a empezar en 1.</p>'],
 ['Copia de seguridad y sincronización','<p><b>Automática.</b> Si abres DailyLeng desde su enlace con tu cuenta de Claude iniciada, tu progreso (racha, favoritas, dificultad de cada palabra y récords) se sincroniza solo entre todos tus dispositivos. Pulsa 💾 y comprueba que pone «☁ Sincronización automática activa».</p><p><b>Manual, paso a paso:</b></p><ol><li>Pulsa el botón <b>💾</b> (abajo a la derecha).</li><li>En el recuadro aparece tu progreso ya escrito.</li><li>Pulsa <b>Descargar .json</b> y confirma; se guarda un archivo <i>DailyLeng-progreso-fecha.json</i>. También puedes pulsar <b>Copiar</b> y guardar el texto en una nota o un correo.</li><li>Para restaurar, en el otro dispositivo pulsa 💾 → <b>Elegir archivo…</b> (o pega el texto y pulsa <b>Importar texto</b>).</li><li>La página se recarga sola. Los datos se <b>combinan</b>: no se borra nada (une favoritas, guarda la racha más reciente y el mejor récord).</li></ol><p>La voz elegida no se guarda porque depende de cada dispositivo. Borrar los datos del navegador borra el progreso local: haz una copia antes.</p>'],
 ['Usar la app en iPhone','<ol><li>Abre el enlace de DailyLeng en <b>Safari</b> con tu cuenta de Claude iniciada.</li><li>Pulsa <b>Compartir</b> → <b>Añadir a pantalla de inicio</b>. Tendrás un icono como si fuera una app.</li><li>Si no oyes nada: sube el volumen y desactiva el modo silencio.</li><li>Para voces mejores: Ajustes → Accesibilidad → Contenido leído → Voces, y descarga las voces «Mejorada» o «Premium» de cada idioma.</li></ol>'],
-['Usar la app en Android','<ol><li>Abre el enlace en <b>Google Chrome</b> con tu cuenta de Claude iniciada.</li><li>Menú <b>⋮</b> → <b>Añadir a pantalla de inicio</b> (o <b>Instalar aplicación</b>).</li><li>Para que las voces suenen bien: Ajustes → Sistema → Idiomas → <b>Salida de texto a voz</b> → motor <b>Servicios de voz de Google</b> → <b>Instalar datos de voz</b> y descarga cada idioma.</li><li>Si no se oye, revisa el volumen multimedia (no el del timbre).</li></ol><p>Los nombres de los menús pueden variar un poco según la marca del móvil.</p>'],
+['Usar la app en Android','<p>Hay dos formas. La primera no necesita cuenta de Claude.</p><p><b>1. Sin cuenta de Claude (versión de GitHub Pages)</b></p><ol><li>En el Android, abre la dirección de tu GitHub Pages con <b>Google Chrome</b> (por ejemplo <i>https://tuusuario.github.io/tu-repo/</i>).</li><li>Menú <b>⋮</b> → <b>Instalar aplicación</b> (o <b>Añadir a pantalla de inicio</b>).</li><li>Se crea un icono y la app se abre a pantalla completa, sin barra del navegador. Una vez cargada, funciona también sin conexión.</li><li>Cuando subas una versión nueva, aparecerá abajo «Hay una versión nueva · Actualizar».</li></ol><p>Diferencias con la versión de claude.ai:</p><ul><li><b>Progreso:</b> se guarda solo en ese móvil. Para pasarlo a otro dispositivo usa 💾 a mano.</li><li><b>Ejemplos:</b> salen los que ya vienen escritos; los generados por Claude solo se crean dentro de claude.ai.</li></ul><p><b>2. Con tu cuenta de Claude</b></p><ol><li>Abre el enlace de DailyLeng en <b>Google Chrome</b> con tu cuenta de Claude iniciada.</li><li>Menú <b>⋮</b> → <b>Añadir a pantalla de inicio</b>.</li><li>Así tienes sincronización automática y ejemplos generados.</li></ol><p><b>Voces</b></p><ol><li>Ajustes → Sistema → Idiomas → <b>Salida de texto a voz</b> → motor <b>Servicios de voz de Google</b> → <b>Instalar datos de voz</b> y descarga cada idioma.</li><li>Si no se oye, revisa el volumen multimedia (no el del timbre).</li></ol><p>En Android la app usa un modo más ligero (sin efectos de cristal) para ir más fluida. Los nombres de los menús pueden variar según la marca del móvil.</p>'],
 ['Usar la app en ordenador','<p>Funciona en cualquier navegador. Las voces más naturales están en <b>Microsoft Edge</b> (voces «Natural», gratis), seguidas de Google Chrome (voces «Google»). Dentro de la app de escritorio de Claude o en Firefox solo suelen estar las voces básicas del sistema, que suenan robóticas.</p>'],
 ['Cómo funcionan las voces','<p>DailyLeng lee en voz alta con las voces que ya tiene tu dispositivo: una página web no puede descargar voces ni usar servicios de voz externos. Por eso suena distinto en cada navegador. Con «Automática» se elige la mejor voz disponible para cada idioma; también puedes escoger otra en el desplegable. Si solo hay voces básicas, la app te lo avisa.</p>'],
 ['Dónde se guardan tus datos','<p>Tu progreso se guarda en este navegador y, si la sincronización está activa, en un espacio privado de tu cuenta de Claude que solo tú puedes leer. No se comparte con nadie.</p>']
@@ -1576,7 +757,7 @@ document.head.insertAdjacentHTML('beforeend','<style>'+
 '@media (hover:none){.dca{display:none}}'+
 '</style>');
 })();
-const V20D={"add":{"fr":[["passeport","pas-POR","pasaporte","viajes"],["valise","va-LIZ","maleta","viajes"],["bagages","ba-GAJ","equipaje","viajes"],["voyage","vua-YAJ","viaje","viajes"],["vol","VOL","vuelo","viajes"],["réservation","re-zer-va-SION","reserva","viajes"],["plan","PLAN","mapa","viajes"],["touriste","tu-RIST","turista","viajes"],["frontière","fron-TIER","frontera","viajes"],["sac à dos","sak a DO","mochila","viajes"],["carte d'embarquement","kart dan-bar-ke-MAN","tarjeta de embarque","viajes"],["voyager","vua-ya-YE","viajar","viajes"],["serveur","ser-VER","camarero","restaurante"],["menu du jour","me-NU du JUR","menú del día","restaurante"],["carte","KART","carta (menú)","restaurante"],["addition","a-di-SION","cuenta (para pagar)","restaurante"],["pourboire","pur-BUAR","propina","restaurante"],["entrée","an-TRE","entrante","restaurante"],["plat principal","pla pran-si-PAL","plato principal","restaurante"],["dessert","de-SER","postre","restaurante"],["boisson","bua-SON","bebida","restaurante"],["cuisinier","kui-zi-NIE","cocinero","restaurante"],["végétarien","ve-je-ta-RIAN","vegetariano","restaurante"],["commander","ko-man-DE","pedir (en un restaurante)","restaurante"],["infirmière","an-fir-MIER","enfermera","médico"],["douleur","du-LER","dolor","médico"],["fièvre","FIEVR","fiebre","médico"],["médicament","me-di-ka-MAN","medicamento","médico"],["ordonnance","or-do-NANS","receta médica","médico"],["rendez-vous médical","ran-de-VU me-di-KAL","cita médica","médico"],["allergie","a-ler-YI","alergia","médico"],["blessure","ble-SUR","herida","médico"],["rhume","RUM","resfriado","médico"],["toux","TU","tos","médico"],["urgences","ur-YANS","urgencias","médico"],["ambulance","an-bu-LANS","ambulancia","médico"],["chef","SHEF","jefe","trabajo"],["réunion","re-u-NION","reunión","trabajo"],["entreprise","an-tre-PRIZ","empresa","trabajo"],["salaire","sa-LER","sueldo","trabajo"],["collègue","ko-LEG","compañero de trabajo","trabajo"],["contrat","kon-TRA","contrato","trabajo"],["entretien d'embauche","an-tre-TIAN dan-BOSH","entrevista de trabajo","trabajo"],["horaire","o-RER","horario","trabajo"],["vacances","va-KANS","vacaciones","trabajo"],["CV","se-VE","currículum","trabajo"],["client","kli-AN","cliente","trabajo"],["projet","pro-YE","proyecto","trabajo"]],"ru":[["паспорт","páspart","pasaporte","viajes"],["чемодан","chemadán","maleta","viajes"],["багаж","bagázh","equipaje","viajes"],["путешествие","puteshéstviye","viaje","viajes"],["рейс","reys","vuelo","viajes"],["бронирование","bronírovaniye","reserva","viajes"],["карта","kárta","mapa","viajes"],["турист","turíst","turista","viajes"],["граница","granítsa","frontera","viajes"],["рюкзак","ryukzák","mochila","viajes"],["посадочный талон","pasádachnyy talón","tarjeta de embarque","viajes"],["путешествовать","puteshéstvavat'","viajar","viajes"],["официант","afitsiánt","camarero","restaurante"],["бизнес-ланч","bíznes-lanch","menú del día","restaurante"],["меню","menyú","carta (menú)","restaurante"],["счёт","shchyot","cuenta (para pagar)","restaurante"],["чаевые","chayevýye","propina","restaurante"],["закуска","zakúska","entrante","restaurante"],["основное блюдо","asnavnóye blyúda","plato principal","restaurante"],["десерт","desért","postre","restaurante"],["напиток","napítak","bebida","restaurante"],["повар","póvar","cocinero","restaurante"],["вегетарианский","vegetariánskiy","vegetariano","restaurante"],["заказывать","zakázyvat'","pedir (en un restaurante)","restaurante"],["медсестра","medsestrá","enfermera","médico"],["боль","bol'","dolor","médico"],["температура","temperatúra","fiebre","médico"],["лекарство","lekárstva","medicamento","médico"],["рецепт","retsépt","receta médica","médico"],["приём у врача","priyóm u vrachá","cita médica","médico"],["аллергия","allergíya","alergia","médico"],["рана","rána","herida","médico"],["простуда","prastúda","resfriado","médico"],["кашель","káshel'","tos","médico"],["отделение неотложной помощи","atdelyéniye neatlózhnay pómashchi","urgencias","médico"],["скорая помощь","skóraya pómashch'","ambulancia","médico"],["начальник","nachál'nik","jefe","trabajo"],["совещание","savyeshchániye","reunión","trabajo"],["компания","kampániya","empresa","trabajo"],["зарплата","zarpláta","sueldo","trabajo"],["коллега","kalléga","compañero de trabajo","trabajo"],["договор","dagavór","contrato","trabajo"],["собеседование","sabesyédavaniye","entrevista de trabajo","trabajo"],["график работы","gráfik rabóty","horario","trabajo"],["отпуск","ótpusk","vacaciones","trabajo"],["резюме","rezyumé","currículum","trabajo"],["клиент","kliyént","cliente","trabajo"],["проект","prayékt","proyecto","trabajo"]],"en":[["passport","PAS-port","pasaporte","viajes"],["suitcase","SUT-keis","maleta","viajes"],["luggage","LA-gich","equipaje","viajes"],["trip","TRIP","viaje","viajes"],["flight","FLAIT","vuelo","viajes"],["booking","BU-king","reserva","viajes"],["map","MAP","mapa","viajes"],["tourist","TU-rist","turista","viajes"],["border","BOR-der","frontera","viajes"],["backpack","BAK-pak","mochila","viajes"],["boarding pass","BOR-ding PAS","tarjeta de embarque","viajes"],["to travel","tu TRA-vel","viajar","viajes"],["waiter","UEI-ter","camarero","restaurante"],["set menu","SET ME-niu","menú del día","restaurante"],["menu","ME-niu","carta (menú)","restaurante"],["bill","BIL","cuenta (para pagar)","restaurante"],["tip","TIP","propina","restaurante"],["starter","STAR-ter","entrante","restaurante"],["main course","MEIN KORS","plato principal","restaurante"],["dessert","di-SERT","postre","restaurante"],["drink","DRINK","bebida","restaurante"],["cook","KUK","cocinero","restaurante"],["vegetarian","ve-ye-TE-rian","vegetariano","restaurante"],["to order","tu OR-der","pedir (en un restaurante)","restaurante"],["nurse","NERS","enfermera","médico"],["pain","PEIN","dolor","médico"],["fever","FI-ver","fiebre","médico"],["medicine","ME-di-sin","medicamento","médico"],["prescription","pres-KRIP-shon","receta médica","médico"],["appointment","a-POINT-ment","cita médica","médico"],["allergy","A-ler-yi","alergia","médico"],["wound","UUND","herida","médico"],["a cold","a KOULD","resfriado","médico"],["cough","KOF","tos","médico"],["emergency room","i-MER-yen-si RUM","urgencias","médico"],["ambulance","AM-biu-lans","ambulancia","médico"],["coworker","KOU-uer-ker","compañero de trabajo","trabajo"],["contract","KON-trakt","contrato","trabajo"],["job interview","YOB IN-ter-viu","entrevista de trabajo","trabajo"],["schedule","SKE-yul","horario","trabajo"],["holidays","JO-li-deis","vacaciones","trabajo"],["CV","si-VI","currículum","trabajo"],["client","KLAI-ent","cliente","trabajo"],["project","PRO-yekt","proyecto","trabajo"]],"de":[["Reisepass","RAI-ze-pas","pasaporte","viajes"],["Koffer","KO-fer","maleta","viajes"],["Gepäck","ge-PEK","equipaje","viajes"],["Reise","RAI-ze","viaje","viajes"],["Flug","FLUK","vuelo","viajes"],["Reservierung","re-zer-VI-rung","reserva","viajes"],["Landkarte","LANT-kar-te","mapa","viajes"],["Tourist","tu-RIST","turista","viajes"],["Grenze","GREN-tse","frontera","viajes"],["Rucksack","RUK-zak","mochila","viajes"],["Bordkarte","BORT-kar-te","tarjeta de embarque","viajes"],["reisen","RAI-zen","viajar","viajes"],["Kellner","KEL-ner","camarero","restaurante"],["Tagesmenü","TA-ges-me-nü","menú del día","restaurante"],["Speisekarte","SHPAI-ze-kar-te","carta (menú)","restaurante"],["Rechnung","REJ-nung","cuenta (para pagar)","restaurante"],["Trinkgeld","TRINK-gelt","propina","restaurante"],["Vorspeise","FOR-shpai-ze","entrante","restaurante"],["Hauptgericht","HAUPT-ge-rijt","plato principal","restaurante"],["Nachtisch","NAJ-tish","postre","restaurante"],["Getränk","ge-TRENK","bebida","restaurante"],["Koch","KOJ","cocinero","restaurante"],["vegetarisch","ve-ge-TA-rish","vegetariano","restaurante"],["bestellen","be-SHTE-len","pedir (en un restaurante)","restaurante"],["Krankenschwester","KRAN-ken-shves-ter","enfermera","médico"],["Schmerz","SHMERTS","dolor","médico"],["Fieber","FI-ber","fiebre","médico"],["Medikament","me-di-ka-MENT","medicamento","médico"],["Rezept","re-TSEPT","receta médica","médico"],["Arzttermin","ARTST-ter-min","cita médica","médico"],["Allergie","a-ler-GI","alergia","médico"],["Wunde","VUN-de","herida","médico"],["Erkältung","er-KEL-tung","resfriado","médico"],["Husten","JUS-ten","tos","médico"],["Notaufnahme","NOT-auf-na-me","urgencias","médico"],["Krankenwagen","KRAN-ken-va-gen","ambulancia","médico"],["Kollege","ko-LE-ge","compañero de trabajo","trabajo"],["Vertrag","fer-TRAK","contrato","trabajo"],["Vorstellungsgespräch","FOR-shte-lungs-ge-shprej","entrevista de trabajo","trabajo"],["Arbeitszeit","AR-baits-tsait","horario","trabajo"],["Urlaub","UR-laup","vacaciones","trabajo"],["Lebenslauf","LE-bens-lauf","currículum","trabajo"],["Kunde","KUN-de","cliente","trabajo"],["Projekt","pro-YEKT","proyecto","trabajo"]],"it":[["passaporto","pas-sa-POR-to","pasaporte","viajes"],["valigia","va-LI-ya","maleta","viajes"],["bagagli","ba-GA-lli","equipaje","viajes"],["viaggio","VIAD-yo","viaje","viajes"],["volo","VO-lo","vuelo","viajes"],["prenotazione","pre-no-ta-TSIO-ne","reserva","viajes"],["mappa","MAP-pa","mapa","viajes"],["turista","tu-RIS-ta","turista","viajes"],["confine","con-FI-ne","frontera","viajes"],["zaino","DZAI-no","mochila","viajes"],["carta d'imbarco","CAR-ta dim-BAR-co","tarjeta de embarque","viajes"],["viaggiare","viad-YA-re","viajar","viajes"],["cameriere","ca-me-RIE-re","camarero","restaurante"],["menù del giorno","me-NU del YOR-no","menú del día","restaurante"],["menù","me-NU","carta (menú)","restaurante"],["conto","CON-to","cuenta (para pagar)","restaurante"],["mancia","MAN-cha","propina","restaurante"],["antipasto","an-ti-PAS-to","entrante","restaurante"],["secondo piatto","se-CON-do PIAT-to","plato principal","restaurante"],["dolce","DOL-che","postre","restaurante"],["bevanda","be-VAN-da","bebida","restaurante"],["cuoco","CUO-co","cocinero","restaurante"],["vegetariano","ve-ye-ta-RIA-no","vegetariano","restaurante"],["ordinare","or-di-NA-re","pedir (en un restaurante)","restaurante"],["infermiera","in-fer-MIE-ra","enfermera","médico"],["dolore","do-LO-re","dolor","médico"],["febbre","FEB-bre","fiebre","médico"],["medicina","me-di-CHI-na","medicamento","médico"],["ricetta","ri-CHET-ta","receta médica","médico"],["appuntamento dal medico","ap-pun-ta-MEN-to dal ME-di-co","cita médica","médico"],["allergia","al-ler-YI-a","alergia","médico"],["ferita","fe-RI-ta","herida","médico"],["raffreddore","raf-fred-DO-re","resfriado","médico"],["tosse","TOS-se","tos","médico"],["pronto soccorso","PRON-to soc-COR-so","urgencias","médico"],["ambulanza","am-bu-LAN-tsa","ambulancia","médico"],["collega","col-LE-ga","compañero de trabajo","trabajo"],["contratto","con-TRAT-to","contrato","trabajo"],["colloquio di lavoro","col-LO-quio di la-VO-ro","entrevista de trabajo","trabajo"],["orario","o-RA-rio","horario","trabajo"],["ferie","FE-rie","vacaciones","trabajo"],["curriculum","cur-RI-cu-lum","currículum","trabajo"],["cliente","cli-EN-te","cliente","trabajo"],["progetto","pro-YET-to","proyecto","trabajo"]],"pt":[["passaporte","pas-sa-POR-ti","pasaporte","viajes"],["mala","MA-la","maleta","viajes"],["bagagem","ba-GA-jein","equipaje","viajes"],["viagem","VIA-jein","viaje","viajes"],["voo","VO-u","vuelo","viajes"],["reserva","re-ZER-va","reserva","viajes"],["mapa","MA-pa","mapa","viajes"],["turista","tu-RISH-ta","turista","viajes"],["fronteira","fron-TEI-ra","frontera","viajes"],["mochila","mu-XI-la","mochila","viajes"],["cartão de embarque","car-TAUN di en-BAR-ki","tarjeta de embarque","viajes"],["viajar","via-JAR","viajar","viajes"],["empregado de mesa","em-pre-GA-du di ME-za","camarero","restaurante"],["prato do dia","PRA-tu du DI-a","menú del día","restaurante"],["ementa","i-MEN-ta","carta (menú)","restaurante"],["conta","CON-ta","cuenta (para pagar)","restaurante"],["gorjeta","gur-JE-ta","propina","restaurante"],["entrada","en-TRA-da","entrante","restaurante"],["prato principal","PRA-tu prin-si-PAL","plato principal","restaurante"],["sobremesa","so-bre-ME-za","postre","restaurante"],["bebida","be-BI-da","bebida","restaurante"],["cozinheiro","cu-zi-NHEI-ru","cocinero","restaurante"],["vegetariano","ve-je-ta-RIA-nu","vegetariano","restaurante"],["pedir","pe-DIR","pedir (en un restaurante)","restaurante"],["enfermeira","en-fer-MEI-ra","enfermera","médico"],["dor","DOR","dolor","médico"],["febre","FE-bri","fiebre","médico"],["medicamento","me-di-ca-MEN-tu","medicamento","médico"],["receita","re-SEI-ta","receta médica","médico"],["consulta","con-SUL-ta","cita médica","médico"],["alergia","a-ler-JI-a","alergia","médico"],["ferida","fe-RI-da","herida","médico"],["constipação","cons-ti-pa-SAUN","resfriado","médico"],["tosse","TO-si","tos","médico"],["urgências","ur-JEN-sias","urgencias","médico"],["ambulância","am-bu-LAN-sia","ambulancia","médico"],["colega de trabalho","cu-LE-ga di tra-BA-lhu","compañero de trabajo","trabajo"],["contrato","con-TRA-tu","contrato","trabajo"],["entrevista de emprego","en-tre-VISH-ta di em-PRE-gu","entrevista de trabajo","trabajo"],["horário","o-RA-riu","horario","trabajo"],["férias","FE-rias","vacaciones","trabajo"],["currículo","cu-RRI-cu-lu","currículum","trabajo"],["cliente","cli-EN-ti","cliente","trabajo"],["projeto","pru-JE-tu","proyecto","trabajo"]]},"gen":{"fr":{"famille":"f","mère":"f","père":"m","frère":"m","sœur":"f","fils":"m","fille":"f","enfant":"mf","maison":"f","chambre":"f","cuisine":"f","porte":"f","fenêtre":"f","table":"f","salon":"m","jardin":"m","escalier":"m","lit":"m","canapé":"m","pain":"m","fromage":"m","eau":"f","vin":"m","lait":"m","viande":"f","poisson":"m","fruit":"m","légume":"m","œuf":"m","café":"m","thé":"m","gâteau":"m","soupe":"f","salade":"f","riz":"m","poulet":"m","bœuf":"m","chocolat":"m","miel":"m","pâtes":"pf","jour":"m","nuit":"f","semaine":"f","mois":"m","année":"f","matin":"m","après-midi":"m","soir":"m","printemps":"m","été":"m","automne":"m","hiver":"m","ville":"f","rue":"f","gare":"f","aéroport":"m","hôtel":"m","restaurant":"m","magasin":"m","école":"f","hôpital":"m","pharmacie":"f","banque":"f","église":"f","parc":"m","plage":"f","marché":"m","travail":"m","bureau":"m","argent":"m","livre":"m","ami":"m","ordinateur":"m","tête":"f","main":"f","œil":"m","bouche":"f","pied":"m","cœur":"m","bras":"m","jambe":"f","dos":"m","nez":"m","vêtement":"m","chemise":"f","pantalon":"m","chaussure":"f","robe":"f","chapeau":"m","veste":"f","jupe":"f","arbre":"m","fleur":"f","soleil":"m","lune":"f","montagne":"f","mer":"f","ciel":"m","pluie":"f","chien":"m","chat":"m","oiseau":"m","cheval":"m","vache":"f","lion":"m","ours":"m","souris":"f","voiture":"f","train":"m","avion":"m","bus":"m","bateau":"m","vélo":"m","taxi":"m","métro":"m","téléphone":"m","internet":"m","télévision":"f","email":"m","message":"m","écran":"m","orage":"m","lundi":"m","mardi":"m","mercredi":"m","jeudi":"m","vendredi":"m","samedi":"m","dimanche":"m","janvier":"m","février":"m","mars":"m","avril":"m","mai":"m","juin":"m","juillet":"m","août":"m","septembre":"m","octobre":"m","novembre":"m","décembre":"m","serviette":"f","mayonnaise":"f","cuillère":"f","fourchette":"f","couteau":"m","assiette":"f","verre":"m","poêle":"f","casserole":"f","huile":"f","vinaigre":"m","poivre":"m","farine":"f","beurre":"m","oignon":"m","ail":"m","sauce":"f","sauce tomate":"f","concentré de tomate":"m","ketchup":"m","moutarde":"f","moutarde de Dijon":"f","sauce soja":"f","sauce piquante":"f","tabasco":"m","sauce barbecue":"f","aïoli":"m","sauce à l'ail":"f","sauce cocktail":"f","sauce tartare":"f","sauce César":"f","sauce au fromage":"f","sauce béchamel":"f","sauce bolognaise":"f","pesto":"m","guacamole":"m","sauce au yaourt":"f","tzatziki":"m","vinaigrette":"f","sauce au curry":"f","sauce teriyaki":"f","sauce Worcestershire":"f","sauce aigre-douce":"f","chimichurri":"m","sauce verte":"f","sauce aux champignons":"f","sauce au poivre":"f","sauce hollandaise":"f","sauce aux canneberges":"f","sauce au chocolat":"f","sirop":"m","sauce à la crème":"f","sauce au vin rouge":"f","sauce de poisson":"f","sauce d'huître":"f","sauce cacahuète":"f","wasabi":"m","sauce au citron":"f","jus de viande":"m","vinaigre balsamique":"m","sauce chili douce":"f","condiment":"m","épices":"pf","sauce à tremper":"f","passeport":"m","valise":"f","bagages":"pm","voyage":"m","vol":"m","réservation":"f","plan":"m","touriste":"mf","frontière":"f","sac à dos":"m","carte d'embarquement":"f","serveur":"m","menu du jour":"m","carte":"f","addition":"f","pourboire":"m","entrée":"f","plat principal":"m","dessert":"m","boisson":"f","cuisinier":"m","infirmière":"f","douleur":"f","fièvre":"f","médicament":"m","ordonnance":"f","rendez-vous médical":"m","allergie":"f","blessure":"f","rhume":"m","toux":"f","urgences":"pf","ambulance":"f","chef":"m","réunion":"f","entreprise":"f","salaire":"m","collègue":"mf","contrat":"m","entretien d'embauche":"m","horaire":"m","vacances":"pf","CV":"m","client":"m","projet":"m"},"de":{"Mutter":"f","Vater":"m","Freund":"m","Wasser":"n","Brot":"n","Kaffee":"m","Haus":"n","Stadt":"f","Hund":"m","Katze":"f","Familie":"f","Bruder":"m","Schwester":"f","Sohn":"m","Tochter":"f","Eltern":"p","Kind":"n","Frau":"f","Mann":"m","Oma":"f","Opa":"m","Zimmer":"n","Küche":"f","Tür":"f","Fenster":"n","Tisch":"m","Bett":"n","Stuhl":"m","Badezimmer":"n","Garten":"m","Schlüssel":"m","Wand":"f","Milch":"f","Käse":"m","Fleisch":"n","Fisch":"m","Apfel":"m","Reis":"m","Ei":"n","Hähnchen":"n","Suppe":"f","Salat":"m","Zucker":"m","Salz":"n","Tee":"m","Bier":"n","Wein":"m","Frühstück":"n","Tag":"m","Nacht":"f","Woche":"f","Monat":"m","Jahr":"n","Stunde":"f","Zeit":"f","Schule":"f","Flughafen":"m","Krankenhaus":"n","Straße":"f","Geschäft":"n","Restaurant":"n","Hotel":"n","Park":"m","Bank":"f","Strand":"m","Land":"n","Büro":"n","Arbeit":"f","Chef":"m","Geld":"n","Besprechung":"f","Firma":"f","Gehalt":"n","Arzt":"m","Lehrer":"m","Student":"m","Beruf":"m","Kopf":"m","Auge":"n","Ohr":"n","Nase":"f","Mund":"m","Hand":"f","Arm":"m","Bein":"n","Fuß":"m","Herz":"n","Hemd":"n","Hose":"f","Kleid":"n","Schuhe":"p","Mantel":"m","Baum":"m","Blume":"f","Fluss":"m","Meer":"n","Berg":"m","Wald":"m","Himmel":"m","Vogel":"m","Pferd":"n","Kuh":"f","Schwein":"n","Hase":"m","Maus":"f","Auto":"n","Bus":"m","Zug":"m","Flugzeug":"n","Fahrrad":"n","Fahrkarte":"f","Taxi":"n","Schiff":"n","Computer":"m","Handy":"n","Internet":"n","Bildschirm":"m","Passwort":"n","E-Mail":"f","Nachricht":"f","Webseite":"f","Angst":"f","Liebe":"f","Wetter":"n","Regen":"m","Schnee":"m","Wind":"m","Wolke":"f","Montag":"m","Dienstag":"m","Mittwoch":"m","Donnerstag":"m","Freitag":"m","Samstag":"m","Sonntag":"m","Januar":"m","Februar":"m","März":"m","April":"m","Mai":"m","Juni":"m","Juli":"m","August":"m","September":"m","Oktober":"m","November":"m","Dezember":"m","Serviette":"f","Mayonnaise":"f","Löffel":"m","Gabel":"f","Messer":"n","Teller":"m","Pfanne":"f","Topf":"m","Öl":"n","Essig":"m","Pfeffer":"m","Mehl":"n","Butter":"f","Zwiebel":"f","Knoblauch":"m","Soße":"f","Tomatensoße":"f","Tomatenmark":"n","Ketchup":"m","Senf":"m","Dijon-Senf":"m","Sojasoße":"f","scharfe Soße":"f","Tabasco":"m","Barbecuesoße":"f","Aioli":"f","Knoblauchsoße":"f","Cocktailsoße":"f","Tatarensoße":"f","Caesar-Dressing":"n","Käsesoße":"f","Béchamelsoße":"f","Bolognese":"f","Pesto":"n","Guacamole":"f","Joghurtsoße":"f","Salatdressing":"n","Currysoße":"f","Teriyakisoße":"f","Worcestersoße":"f","süßsaure Soße":"f","grüne Soße":"f","Champignonsoße":"f","Pfeffersoße":"f","Sauce hollandaise":"f","Cranberrysoße":"f","Schokoladensoße":"f","Sirup":"m","Sahnesoße":"f","Rotweinsoße":"f","Fischsoße":"f","Austernsoße":"f","Erdnusssoße":"f","Wasabi":"m","Zitronensoße":"f","Bratensoße":"f","Balsamicoessig":"m","süße Chilisoße":"f","Würzmittel":"n","Gewürze":"p","Dip":"m","Reisepass":"m","Koffer":"m","Gepäck":"n","Reise":"f","Flug":"m","Reservierung":"f","Landkarte":"f","Tourist":"m","Grenze":"f","Rucksack":"m","Bordkarte":"f","Kellner":"m","Tagesmenü":"n","Speisekarte":"f","Rechnung":"f","Trinkgeld":"n","Vorspeise":"f","Hauptgericht":"n","Nachtisch":"m","Getränk":"n","Koch":"m","Krankenschwester":"f","Schmerz":"m","Fieber":"n","Medikament":"n","Rezept":"n","Arzttermin":"m","Allergie":"f","Wunde":"f","Erkältung":"f","Husten":"m","Notaufnahme":"f","Krankenwagen":"m","Kollege":"m","Vertrag":"m","Vorstellungsgespräch":"n","Arbeitszeit":"f","Urlaub":"m","Lebenslauf":"m","Kunde":"m","Projekt":"n"},"it":{"madre":"f","padre":"m","amico":"m","acqua":"f","pane":"m","caffè":"m","casa":"f","città":"f","cane":"m","gatto":"m","fratello":"m","sorella":"f","figlio":"m","figlia":"f","genitori":"pm","bambino":"m","moglie":"f","marito":"m","nonna":"f","nonno":"m","latte":"m","formaggio":"m","carne":"f","pesce":"m","mela":"f","riso":"m","uovo":"m","zucchero":"m","sale":"m","vino":"m","birra":"f","camera":"f","cucina":"f","porta":"f","finestra":"f","tavolo":"m","letto":"m","chiave":"f","giorno":"m","notte":"f","settimana":"f","anno":"m","scuola":"f","aeroporto":"m","ospedale":"m","strada":"f","negozio":"m","spiaggia":"f","lunedì":"m","martedì":"m","mercoledì":"m","giovedì":"m","venerdì":"m","sabato":"m","domenica":"f","gennaio":"m","febbraio":"m","marzo":"m","aprile":"m","maggio":"m","giugno":"m","luglio":"m","agosto":"m","settembre":"m","ottobre":"m","novembre":"m","dicembre":"m","lavoro":"m","capo":"m","soldi":"pm","riunione":"f","azienda":"f","stipendio":"m","medico":"m","insegnante":"mf","testa":"f","occhio":"m","orecchio":"m","naso":"m","bocca":"f","mano":"f","braccio":"m","gamba":"f","piede":"m","cuore":"m","camicia":"f","pantaloni":"pm","vestito":"m","scarpe":"pf","cappotto":"m","albero":"m","fiore":"m","fiume":"m","mare":"m","montagna":"f","bosco":"m","cielo":"m","luna":"f","uccello":"m","cavallo":"m","mucca":"f","maiale":"m","macchina":"f","autobus":"m","treno":"m","aereo":"m","bicicletta":"f","biglietto":"m","barca":"f","computer":"m","telefono":"m","schermo":"m","messaggio":"m","sito web":"m","paura":"f","amore":"m","tempo":"m","pioggia":"f","neve":"f","vento":"m","nuvola":"f","caldo":"m","freddo":"m","bagno":"m","giardino":"m","parete":"f","sedia":"f","parco":"m","banca":"f","ristorante":"m","hotel":"m","paese":"m","ufficio":"m","colazione":"f","cena":"f","minestra":"f","insalata":"f","pollo":"m","tè":"m","mattina":"f","sera":"f","ora":"f","mese":"m","tovagliolo":"m","maionese":"f","cucchiaio":"m","forchetta":"f","coltello":"m","piatto":"m","bicchiere":"m","padella":"f","pentola":"f","olio":"m","aceto":"m","pepe":"m","farina":"f","burro":"m","cipolla":"f","aglio":"m","salsa":"f","salsa di pomodoro":"f","concentrato di pomodoro":"m","ketchup":"m","senape":"f","senape di Digione":"f","salsa di soia":"f","salsa piccante":"f","tabasco":"m","salsa barbecue":"f","aioli":"m","salsa all'aglio":"f","salsa cocktail":"f","salsa tartara":"f","salsa Caesar":"f","salsa al formaggio":"f","besciamella":"f","ragù alla bolognese":"m","pesto":"m","guacamole":"m","salsa allo yogurt":"f","tzatziki":"m","condimento per l'insalata":"m","salsa al curry":"f","salsa teriyaki":"f","salsa Worcestershire":"f","salsa agrodolce":"f","chimichurri":"m","salsa verde":"f","salsa ai funghi":"f","salsa al pepe":"f","salsa olandese":"f","salsa di mirtilli rossi":"f","salsa al cioccolato":"f","sciroppo":"m","salsa alla panna":"f","salsa al vino rosso":"f","salsa di pesce":"f","salsa di ostriche":"f","salsa di arachidi":"f","wasabi":"m","salsa al limone":"f","sugo d'arrosto":"m","aceto balsamico":"m","salsa chili dolce":"f","condimento":"m","spezie":"pf","salsa per intingere":"f","passaporto":"m","valigia":"f","bagagli":"pm","viaggio":"m","volo":"m","prenotazione":"f","mappa":"f","turista":"mf","confine":"m","zaino":"m","carta d'imbarco":"f","cameriere":"m","menù del giorno":"m","menù":"m","conto":"m","mancia":"f","antipasto":"m","secondo piatto":"m","dolce":"m","bevanda":"f","cuoco":"m","infermiera":"f","dolore":"m","febbre":"f","medicina":"f","ricetta":"f","appuntamento dal medico":"m","allergia":"f","ferita":"f","raffreddore":"m","tosse":"f","pronto soccorso":"m","ambulanza":"f","collega":"mf","contratto":"m","colloquio di lavoro":"m","orario":"m","ferie":"pf","curriculum":"m","cliente":"m","progetto":"m"},"pt":{"mãe":"f","pai":"m","amigo":"m","água":"f","pão":"m","café":"m","casa":"f","cidade":"f","cão":"m","gato":"m","irmão":"m","irmã":"f","filho":"m","filha":"f","pais":"pm","criança":"f","esposa":"f","marido":"m","avó":"f","avô":"m","leite":"m","queijo":"m","carne":"f","peixe":"m","maçã":"f","arroz":"m","ovo":"m","açúcar":"m","sal":"m","vinho":"m","cerveja":"f","quarto":"m","cozinha":"f","porta":"f","janela":"f","mesa":"f","cama":"f","chave":"f","dia":"m","noite":"f","semana":"f","ano":"m","escola":"f","aeroporto":"m","hospital":"m","rua":"f","loja":"f","praia":"f","segunda-feira":"f","terça-feira":"f","quarta-feira":"f","quinta-feira":"f","sexta-feira":"f","sábado":"m","domingo":"m","janeiro":"m","fevereiro":"m","março":"m","abril":"m","maio":"m","junho":"m","julho":"m","agosto":"m","setembro":"m","outubro":"m","novembro":"m","dezembro":"m","trabalho":"m","chefe":"m","dinheiro":"m","reunião":"f","empresa":"f","salário":"m","médico":"m","professor":"m","cabeça":"f","olho":"m","orelha":"f","nariz":"m","boca":"f","mão":"f","braço":"m","perna":"f","pé":"m","coração":"m","camisa":"f","calças":"pf","vestido":"m","sapatos":"pm","casaco":"m","árvore":"f","flor":"f","rio":"m","mar":"m","montanha":"f","floresta":"f","céu":"m","lua":"f","pássaro":"m","cavalo":"m","vaca":"f","porco":"m","carro":"m","autocarro":"m","comboio":"m","avião":"m","bicicleta":"f","bilhete":"m","barco":"m","computador":"m","telemóvel":"m","ecrã":"m","mensagem":"f","site":"m","medo":"m","amor":"m","tempo":"m","chuva":"f","neve":"f","vento":"m","nuvem":"f","calor":"m","frio":"m","casa de banho":"f","jardim":"m","parede":"f","cadeira":"f","parque":"m","banco":"m","restaurante":"m","hotel":"m","país":"m","escritório":"m","pequeno-almoço":"m","jantar":"m","sopa":"f","salada":"f","frango":"m","chá":"m","manhã":"f","tarde":"f","hora":"f","mês":"m","guardanapo":"m","maionese":"f","colher":"f","garfo":"m","faca":"f","prato":"m","copo":"m","frigideira":"f","panela":"f","azeite":"m","vinagre":"m","pimenta":"f","farinha":"f","manteiga":"f","cebola":"f","alho":"m","molho":"m","molho de tomate":"m","concentrado de tomate":"m","ketchup":"m","mostarda":"f","mostarda de Dijon":"f","molho de soja":"m","molho picante":"m","tabasco":"m","molho barbecue":"m","aioli":"m","molho de alho":"m","molho cocktail":"m","molho tártaro":"m","molho César":"m","molho de queijo":"m","molho bechamel":"m","molho à bolonhesa":"m","pesto":"m","guacamole":"m","molho de iogurte":"m","tzatziki":"m","molho para salada":"m","molho de caril":"m","molho teriyaki":"m","molho inglês":"m","molho agridoce":"m","chimichurri":"m","molho verde":"m","molho de cogumelos":"m","molho de pimenta":"m","molho holandês":"m","molho de arando":"m","molho de chocolate":"m","xarope":"m","molho de natas":"m","molho de vinho tinto":"m","molho de peixe":"m","molho de ostras":"m","molho de amendoim":"m","wasabi":"m","molho de limão":"m","molho de carne":"m","vinagre balsâmico":"m","molho chili doce":"m","condimento":"m","especiarias":"pf","molho para mergulhar":"m","passaporte":"m","mala":"f","bagagem":"f","viagem":"f","voo":"m","reserva":"f","mapa":"m","turista":"mf","fronteira":"f","mochila":"f","cartão de embarque":"m","empregado de mesa":"m","prato do dia":"m","ementa":"f","conta":"f","gorjeta":"f","entrada":"f","prato principal":"m","sobremesa":"f","bebida":"f","cozinheiro":"m","enfermeira":"f","dor":"f","febre":"f","medicamento":"m","receita":"f","consulta":"f","alergia":"f","ferida":"f","constipação":"f","tosse":"f","urgências":"pf","ambulância":"f","colega de trabalho":"mf","contrato":"m","entrevista de emprego":"f","horário":"m","férias":"pf","currículo":"m","cliente":"m","projeto":"m","trem":"m","ônibus":"m","celular":"m","tela":"f","banheiro":"m","café da manhã":"m","cachorro":"m","garçom":"m","cardápio":"m","resfriado":"m","pronto-socorro":"m","molho de curry":"m","molho de creme de leite":"m"},"ru":{"семья":"f","мать":"f","отец":"m","брат":"m","сестра":"f","сын":"m","дочь":"f","ребёнок":"m","дом":"m","комната":"f","кухня":"f","дверь":"f","окно":"n","стол":"m","гостиная":"f","сад":"m","лестница":"f","кровать":"f","диван":"m","хлеб":"m","сыр":"m","вода":"f","вино":"n","молоко":"n","мясо":"n","рыба":"f","фрукт":"m","овощ":"m","яйцо":"n","кофе":"m","чай":"m","торт":"m","суп":"m","салат":"m","рис":"m","курица":"f","говядина":"f","шоколад":"m","мёд":"m","макароны":"p","день":"m","ночь":"f","неделя":"f","месяц":"m","год":"m","весна":"f","лето":"n","осень":"f","зима":"f","утро":"n","вечер":"m","полночь":"f","город":"m","улица":"f","вокзал":"m","аэропорт":"m","гостиница":"f","ресторан":"m","магазин":"m","школа":"f","больница":"f","аптека":"f","банк":"m","церковь":"f","парк":"m","пляж":"m","рынок":"m","работа":"f","офис":"m","деньги":"p","книга":"f","друг":"m","компьютер":"m","голова":"f","рука":"f","глаз":"m","рот":"m","нога":"f","сердце":"n","плечо":"n","спина":"f","нос":"m","ухо":"n","одежда":"f","рубашка":"f","брюки":"p","обувь":"f","платье":"n","шапка":"f","куртка":"f","юбка":"f","дерево":"n","цветок":"m","солнце":"n","луна":"f","гора":"f","море":"n","небо":"n","дождь":"m","собака":"f","кошка":"f","птица":"f","лошадь":"f","корова":"f","лев":"m","медведь":"m","мышь":"f","поезд":"m","самолёт":"m","автобус":"m","корабль":"m","велосипед":"m","такси":"n","метро":"n","грузовик":"m","телефон":"m","интернет":"m","телевизор":"m","имейл":"m","сообщение":"n","экран":"m","гроза":"f","понедельник":"m","вторник":"m","среда":"f","четверг":"m","пятница":"f","суббота":"f","воскресенье":"n","январь":"m","февраль":"m","март":"m","апрель":"m","май":"m","июнь":"m","июль":"m","август":"m","сентябрь":"m","октябрь":"m","ноябрь":"m","декабрь":"m","салфетка":"f","майонез":"m","ложка":"f","вилка":"f","нож":"m","тарелка":"f","стакан":"m","сковорода":"f","кастрюля":"f","растительное масло":"n","уксус":"m","перец":"m","мука":"f","сливочное масло":"n","лук":"m","чеснок":"m","соус":"m","томатный соус":"m","томатная паста":"f","кетчуп":"m","горчица":"f","дижонская горчица":"f","соевый соус":"m","острый соус":"m","шрирача":"f","соус барбекю":"m","чесночный соус":"m","розовый соус":"m","соус тартар":"m","соус цезарь":"m","сырный соус":"m","соус бешамель":"m","соус болоньезе":"m","йогуртовый соус":"m","заправка для салата":"f","соус карри":"m","соус терияки":"m","вустерский соус":"m","кисло-сладкий соус":"m","зелёный соус":"m","грибной соус":"m","перечный соус":"m","голландский соус":"m","клюквенный соус":"m","шоколадный соус":"m","сироп":"m","сливочный соус":"m","соус из красного вина":"m","рыбный соус":"m","устричный соус":"m","арахисовый соус":"m","лимонный соус":"m","мясной соус":"m","бальзамический уксус":"m","сладкий соус чили":"m","приправа":"f","специи":"p","соус для макания":"m","паспорт":"m","чемодан":"m","багаж":"m","путешествие":"n","рейс":"m","бронирование":"n","карта":"f","турист":"m","граница":"f","рюкзак":"m","посадочный талон":"m","официант":"m","бизнес-ланч":"m","меню":"n","счёт":"m","чаевые":"p","закуска":"f","основное блюдо":"n","десерт":"m","напиток":"m","повар":"m","медсестра":"f","боль":"f","температура":"f","лекарство":"n","рецепт":"m","приём у врача":"m","аллергия":"f","рана":"f","простуда":"f","кашель":"m","отделение неотложной помощи":"n","скорая помощь":"f","начальник":"m","совещание":"n","компания":"f","зарплата":"f","коллега":"mf","договор":"m","собеседование":"n","график работы":"m","отпуск":"m","резюме":"n","клиент":"m","проект":"m"}},"conj":{"fr":{"être":"je suis|tu es|il/elle est|nous sommes|vous êtes|ils/elles sont","avoir":"j'ai|tu as|il/elle a|nous avons|vous avez|ils/elles ont","aller":"je vais|tu vas|il/elle va|nous allons|vous allez|ils/elles vont","faire":"je fais|tu fais|il/elle fait|nous faisons|vous faites|ils/elles font","pouvoir":"je peux|tu peux|il/elle peut|nous pouvons|vous pouvez|ils/elles peuvent","vouloir":"je veux|tu veux|il/elle veut|nous voulons|vous voulez|ils/elles veulent","parler":"je parle|tu parles|il/elle parle|nous parlons|vous parlez|ils/elles parlent","manger":"je mange|tu manges|il/elle mange|nous mangeons|vous mangez|ils/elles mangent","venir":"je viens|tu viens|il/elle vient|nous venons|vous venez|ils/elles viennent","prendre":"je prends|tu prends|il/elle prend|nous prenons|vous prenez|ils/elles prennent"},"ru":{"делать":"я делаю|ты делаешь|он/она делает|мы делаем|вы делаете|они делают","говорить":"я говорю|ты говоришь|он/она говорит|мы говорим|вы говорите|они говорят","хотеть":"я хочу|ты хочешь|он/она хочет|мы хотим|вы хотите|они хотят","мочь":"я могу|ты можешь|он/она может|мы можем|вы можете|они могут","идти":"я иду|ты идёшь|он/она идёт|мы идём|вы идёте|они идут","есть":"я ем|ты ешь|он/она ест|мы едим|вы едите|они едят","пить":"я пью|ты пьёшь|он/она пьёт|мы пьём|вы пьёте|они пьют","знать":"я знаю|ты знаешь|он/она знает|мы знаем|вы знаете|они знают","читать":"я читаю|ты читаешь|он/она читает|мы читаем|вы читаете|они читают","работать":"я работаю|ты работаешь|он/она работает|мы работаем|вы работаете|они работают"},"en":{"to be":"I am|you are|he/she is|we are|you are|they are","to have":"I have|you have|he/she has|we have|you have|they have","to go":"I go|you go|he/she goes|we go|you go|they go","to do":"I do|you do|he/she does|we do|you do|they do","to want":"I want|you want|he/she wants|we want|you want|they want","to eat":"I eat|you eat|he/she eats|we eat|you eat|they eat","to speak":"I speak|you speak|he/she speaks|we speak|you speak|they speak","to like":"I like|you like|he/she likes|we like|you like|they like","to live":"I live|you live|he/she lives|we live|you live|they live","to work":"I work|you work|he/she works|we work|you work|they work"},"de":{"sein":"ich bin|du bist|er/sie ist|wir sind|ihr seid|sie/Sie sind","haben":"ich habe|du hast|er/sie hat|wir haben|ihr habt|sie/Sie haben","gehen":"ich gehe|du gehst|er/sie geht|wir gehen|ihr geht|sie/Sie gehen","kommen":"ich komme|du kommst|er/sie kommt|wir kommen|ihr kommt|sie/Sie kommen","machen":"ich mache|du machst|er/sie macht|wir machen|ihr macht|sie/Sie machen","essen":"ich esse|du isst|er/sie isst|wir essen|ihr esst|sie/Sie essen","sprechen":"ich spreche|du sprichst|er/sie spricht|wir sprechen|ihr sprecht|sie/Sie sprechen","wollen":"ich will|du willst|er/sie will|wir wollen|ihr wollt|sie/Sie wollen","wissen":"ich weiß|du weißt|er/sie weiß|wir wissen|ihr wisst|sie/Sie wissen","arbeiten":"ich arbeite|du arbeitest|er/sie arbeitet|wir arbeiten|ihr arbeitet|sie/Sie arbeiten"},"it":{"essere":"io sono|tu sei|lui/lei è|noi siamo|voi siete|loro sono","avere":"io ho|tu hai|lui/lei ha|noi abbiamo|voi avete|loro hanno","andare":"io vado|tu vai|lui/lei va|noi andiamo|voi andate|loro vanno","fare":"io faccio|tu fai|lui/lei fa|noi facciamo|voi fate|loro fanno","potere":"io posso|tu puoi|lui/lei può|noi possiamo|voi potete|loro possono","volere":"io voglio|tu vuoi|lui/lei vuole|noi vogliamo|voi volete|loro vogliono","parlare":"io parlo|tu parli|lui/lei parla|noi parliamo|voi parlate|loro parlano","mangiare":"io mangio|tu mangi|lui/lei mangia|noi mangiamo|voi mangiate|loro mangiano","venire":"io vengo|tu vieni|lui/lei viene|noi veniamo|voi venite|loro vengono","dormire":"io dormo|tu dormi|lui/lei dorme|noi dormiamo|voi dormite|loro dormono"},"pt":{"ser":"sou|és|é|somos|são|são","ter":"tenho|tens|tem|temos|têm|têm","ir":"vou|vais|vai|vamos|vão|vão","fazer":"faço|fazes|faz|fazemos|fazem|fazem","poder":"posso|podes|pode|podemos|podem|podem","querer":"quero|queres|quer|queremos|querem|querem","falar":"falo|falas|fala|falamos|falam|falam","comer":"como|comes|come|comemos|comem|comem","viver":"vivo|vives|vive|vivemos|vivem|vivem","trabalhar":"trabalho|trabalhas|trabalha|trabalhamos|trabalham|trabalham"}},"brw":{"comboio":["trem","TREIN","m"],"autocarro":["ônibus","O-ni-bus","m"],"telemóvel":["celular","se-lu-LAR","m"],"ecrã":["tela","TE-la","f"],"casa de banho":["banheiro","ba-NHEI-ru","m"],"pequeno-almoço":["café da manhã","ca-FE da ma-NHÃ","m"],"cão":["cachorro","ca-XO-hu","m"],"empregado de mesa":["garçom","gar-SOM","m"],"ementa":["cardápio","car-DA-piu","m"],"constipação":["resfriado","hes-fri-A-du","m"],"urgências":["pronto-socorro","PRON-tu so-CO-hu","m"],"molho de caril":["molho de curry","MO-lhu dji CU-hi","m"],"molho de natas":["molho de creme de leite","MO-lhu dji CRE-mi dji LEI-tchi","m"],"colega de trabalho":["colega de trabalho","co-LE-ga dji tra-BA-lhu","mf"],"entrevista de emprego":["entrevista de emprego","en-tre-VIS-ta dji em-PRE-gu","f"],"gorjeta":["gorjeta","gor-JE-ta","f"]},"brp":{"Como está?":"Como você está?","Chamo-me...":"Me chamo...","Fala inglês?":"Você fala inglês?","Prazer em conhecê-lo":"Muito prazer","Como se chama?":"Qual é o seu nome?","De onde é?":"De onde você é?","Quantos anos tem?":"Quantos anos você tem?","Gosto disto":"Gosto disso","Onde fica a casa de banho?":"Onde fica o banheiro?","Pode ajudar-me?":"Pode me ajudar?","O que é isto?":"O que é isso?","A ementa, por favor":"O cardápio, por favor","Vemo-nos amanhã":"A gente se vê amanhã","Está demasiado salgado":"Está salgado demais","Tem molho picante?":"Você tem molho picante?"}};
+const V20D={add:{},gen:{},conj:{},brw:{"comboio":["trem","TREIN","m"],"autocarro":["ônibus","O-ni-bus","m"],"telemóvel":["celular","se-lu-LAR","m"],"ecrã":["tela","TE-la","f"],"casa de banho":["banheiro","ba-NHEI-ru","m"],"pequeno-almoço":["café da manhã","ca-FE da ma-NHÃ","m"],"cão":["cachorro","ca-XO-hu","m"],"empregado de mesa":["garçom","gar-SOM","m"],"ementa":["cardápio","car-DA-piu","m"],"constipação":["resfriado","hes-fri-A-du","m"],"urgências":["pronto-socorro","PRON-tu so-CO-hu","m"],"molho de caril":["molho de curry","MO-lhu dji CU-hi","m"],"molho de natas":["molho de creme de leite","MO-lhu dji CRE-mi dji LEI-tchi","m"],"colega de trabalho":["colega de trabalho","co-LE-ga dji tra-BA-lhu","mf"],"entrevista de emprego":["entrevista de emprego","en-tre-VIS-ta dji em-PRE-gu","f"],"gorjeta":["gorjeta","gor-JE-ta","f"],"sumo":["suco","SU-ku","m"],"chávena":["xícara","SHI-ka-ra","f"],"talão":["nota fiscal","NO-ta fis-KAU","f"],"multibanco":["caixa eletrônico","KAI-sha e-le-TRO-ni-ku","m"],"esquadra":["delegacia","de-le-ga-SI-a","f"],"passeio":["calçada","kau-SA-da","f"],"câmara municipal":["prefeitura","pre-fei-TU-ra","f"],"equipa":["time","TSI-mi","m"],"ginásio":["academia","a-ka-de-MI-a","f"],"duche":["chuveiro","shu-VEI-ru","m"],"frigorífico":["geladeira","je-la-DEI-ra","f"],"candeeiro":["luminária","lu-mi-NA-ria","f"],"ananás":["abacaxi","a-ba-ka-SHI","m"],"pimento":["pimentão","pi-men-TÃU","m"],"ténis":["tênis","TE-nis","m"],"basquetebol":["basquete","bas-KE-tsi","m"],"trabalhos de casa":["lição de casa","li-SÃU dzi KA-za","f"],"em numerário":["em dinheiro","ein dji-ÑEI-ru"],"gajo":["cara","KA-ra","m"],"fixe":["legal","le-GAU"],"guito":["grana","GRA-na","f"],"chaço":["lata-velha","LA-ta VE-lha","f"],"parvo":["bobo","BO-bu"],"miúdo":["moleque","mo-LE-ki","m"],"engatar":["paquerar","pa-ke-RAR"],"bolas":["poxa","PO-sha"],"está bem":["tá bom","ta BOM"],"bulir":["ralar","ha-LAR"],"papar":["rangar","han-GAR"],"cocktail":["coquetel","ko-ke-TEU","m"],"saco":["sacola","sa-KO-la","f"],"polícia":["policial","po-li-si-AU","mf"],"chumbar":["reprovar","he-pro-VAR"],"parceiro":["mano","MA-nu","m"],"ter saudades":["sentir saudade","sen-TSIR sau-DA-dji"]},brp:{"Como está?":"Como você está?","Chamo-me...":"Me chamo...","Fala inglês?":"Você fala inglês?","Prazer em conhecê-lo":"Muito prazer","Como se chama?":"Qual é o seu nome?","De onde é?":"De onde você é?","Quantos anos tem?":"Quantos anos você tem?","Gosto disto":"Gosto disso","Onde fica a casa de banho?":"Onde fica o banheiro?","Pode ajudar-me?":"Pode me ajudar?","O que é isto?":"O que é isso?","A ementa, por favor":"O cardápio, por favor","Vemo-nos amanhã":"A gente se vê amanhã","Está demasiado salgado":"Está salgado demais","Tem molho picante?":"Você tem molho picante?","Então, como é?":"E aí, beleza?","Estou de rastos.":"Estou acabado.","Deixa-me em paz!":"Me deixa em paz!","Cala-te!":"Cala a boca!","Estás a gozar comigo?":"Tá zoando comigo?","Não me lixes!":"Tá de sacanagem!","És um idiota.":"Você é um idiota.","Amo-te.":"Te amo.","Gosto de ti.":"Gosto de você.","Queres tomar um copo comigo?":"Quer tomar alguma coisa comigo?","Dás-me o teu número?":"Me passa seu número?","Tenho saudades tuas.":"Estou com saudade de você.","Roubaram-me a carteira.":"Roubaram minha carteira.","Estou a morrer de fome!":"Estou morrendo de fome!","Que fixe!":"Que legal!","Estou a passar-me.":"Estou pirando.","Está um frio de rachar.":"Está um frio de lascar.","É canja.":"É moleza.","A sério?":"Sério?","Calma, não te preocupes.":"Calma, não se preocupe.","Não o suporto.":"Não suporto ele.","Tens lume?":"Tem isqueiro?","Diverte-te!":"Divirta-se!","O que há para o jantar?":"O que tem para o jantar?","Estou farto.":"Estou de saco cheio."}};window.__V20=V20D;for(const l in DATA){if(DATA[l]._gen){V20D.gen[l]=DATA[l]._gen;V20D.conj[l]=DATA[l]._conj;}}
 /* v20: test de escritura y escucha, ejemplos para todo el diccionario, categorías nuevas, conjugaciones, género, aviso de versión y portugués PT/BR */
 (function(){
 const D=V20D,M=()=>!matchMedia('(prefers-reduced-motion:reduce)').matches;
@@ -1588,7 +769,7 @@ const SPK='<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fi
 for(const l in D.add)DATA[l].dic.push(...D.add[l].map(([w,p,t,c])=>({w,p,t,c})));
 
 /* ---------- 2. Portugués de Portugal o de Brasil ---------- */
-const PTKEY=DATA.pt.key.slice();
+let PTKEY=DATA.pt.key.slice();window.__ptLoaded=function(){PTKEY=DATA.pt.key.slice();applyPtv(ptv());};
 function applyPtv(v){const L=DATA.pt,br=v==='BR';
  L.dic.forEach(e=>{const o=e._pt||(e._pt={w:e.w,p:e.p});const b=D.brw[o.w];if(br&&b){e.w=b[0];e.p=b[1];}else{e.w=o.w;e.p=o.p;}});
  L.phr.forEach(x=>{const o=x._pt||(x._pt={f:x.f,p:x.p});const b=D.brp[o.f];x.f=br&&b?b:o.f;});
@@ -1687,7 +868,7 @@ const _sg20=seg;seg=function(){const m=state.qmode||'c',lab={c:'Elegir',w:'Escri
  return s.replace('<span class="qos">',`<span class="qos">${lab[m]} · `);};
 
 /* ---------- 7. Aviso de versión nueva ---------- */
-const APP_V='20',pv=LS.get('dl_appv');if(pv&&pv!==APP_V)setTimeout(()=>toast('DailyLeng se ha actualizado: test de escritura y de escucha, conjugaciones, género, ejemplos y portugués de Brasil. Más detalles en la Guía.',7000),1200);LS.set('dl_appv',APP_V);
+const APP_V='23',pv=LS.get('dl_appv');if(pv&&pv!==APP_V)setTimeout(()=>toast('DailyLeng se ha actualizado: más de 740 palabras por idioma (todo el cuerpo humano y mucho más) y buscador en Frases y Palabras clave.',7000),1200);LS.set('dl_appv',APP_V);
 function showUpdate(reg){if(document.getElementById('updbar'))return;document.body.insertAdjacentHTML('beforeend','<div id="updbar" role="status"><span>Hay una versión nueva de DailyLeng.</span><button type="button" id="updgo">Actualizar</button><button type="button" id="updx" aria-label="Más tarde">Más tarde</button></div>');const b=document.getElementById('updbar');if(M())b.animate([{transform:'translate(-50%,30px)',opacity:0},{transform:'translate(-50%,0)',opacity:1}],{duration:480,easing:'cubic-bezier(.3,1.22,.5,1)'});
  document.getElementById('updx').onclick=()=>b.remove();document.getElementById('updgo').onclick=()=>{const w=reg.waiting;if(w){w.postMessage({type:'SKIP_WAITING'});}else location.reload();};}
 if('serviceWorker' in navigator&&document.querySelector('link[rel=manifest][href="manifest.webmanifest"]')){let reloading=false;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!reloading){reloading=true;location.reload();}});
@@ -1718,6 +899,156 @@ document.head.insertAdjacentHTML('beforeend','<style>'+
 '#ptv{display:flex;width:max-content;margin:10px auto 0}'+
 '#updbar{position:fixed;left:50%;bottom:calc(76px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:85;display:flex;align-items:center;gap:12px;max-width:calc(100% - 32px);padding:10px 12px 10px 16px;border-radius:16px;background:var(--text);color:var(--bg);font-size:var(--fs-sm,13px);box-shadow:0 14px 34px rgba(0,0,0,.28)}#updbar button{border:0;border-radius:10px;padding:7px 12px;font:inherit;font-weight:600;cursor:pointer}#updgo{background:var(--accent);color:#fff}#updx{background:none;color:inherit;opacity:.7}'+
 '</style>');
+})();
+/* ---------- v21: rendimiento en Android y equipos modestos ---------- */
+(function(){
+ const R=document.documentElement,ua=navigator.userAgent||'',and=/Android/i.test(ua);
+ const mem=navigator.deviceMemory||8,cpu=navigator.hardwareConcurrency||8,save=!!(navigator.connection&&navigator.connection.saveData);
+ if(and)R.classList.add('android');
+ if(and||mem<=2||cpu<=2||save)R.classList.add('lite');
+ const lite=R.classList.contains('lite');
+ /* búsqueda del diccionario: espera a que dejes de teclear antes de redibujar */
+ let t;window.filterDicD=function(v){clearTimeout(t);t=setTimeout(()=>filterDic(v),lite?150:80);};
+ /* Chrome en Android a veces deja la voz bloqueada al volver a la app */
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden&&'speechSynthesis' in window){try{speechSynthesis.cancel();}catch(e){}}});
+ document.head.insertAdjacentHTML('beforeend','<style>'+
+ 'button,a,input,select,textarea,.row,.opt,label{touch-action:manipulation}'+
+ 'body{overscroll-behavior-x:none}'+
+ '.list .row{content-visibility:auto;contain-intrinsic-size:auto 64px}'+
+ ':root.lite{--glass:rgba(255,255,255,.96);--shadow:0 1px 3px rgba(0,0,0,.08)}'+
+ '@media (prefers-color-scheme:dark){:root.lite:not([data-theme="light"]){--glass:rgba(28,28,30,.97);--shadow:0 1px 3px rgba(0,0,0,.5)}}'+
+ ':root.lite[data-theme="dark"]{--glass:rgba(28,28,30,.97);--shadow:0 1px 3px rgba(0,0,0,.5)}'+
+ ':root.lite *,:root.lite *::before,:root.lite *::after{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}'+
+ ':root.lite #guide{background:rgba(0,0,0,.55)}'+
+ '</style>');
+})();
+/* ---------- v22: datos separados por idioma ---------- */
+function useLang(l){const x=window.__LD&&window.__LD[l],L=DATA[l];if(!x||!L||L.dic.length)return false;
+ L.dic=x.dic.map(a=>({w:a[0],p:a[1],t:a[2],c:a[3]}));
+ L.phr=x.phr.map(a=>a[2]?{f:a[0],t:a[1],p:a[2]}:{f:a[0],t:a[1]});
+ L.key=x.key.slice();L.ex=x.ex||'';delete L.exm;L._gen=x.gen||{};L._conj=x.conj||{};
+ if(window.__V20){window.__V20.gen[l]=L._gen;window.__V20.conj[l]=L._conj;}
+ if(l==='pt'&&window.__ptLoaded)window.__ptLoaded();
+ return true;}
+(function(){
+ const LS={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}}};
+ const pend={};
+ const inject=(l,q)=>new Promise((res,rej)=>{const s=document.createElement('script');s.src='data/'+l+'.js'+(q?'?v='+(window.__DV||''):'');s.async=true;
+  s.onload=()=>{useLang(l);DATA[l].dic.length?res():rej(new Error('vacío'));};s.onerror=()=>{s.remove();rej(new Error('red'));};document.head.appendChild(s);});
+ window.loadLang=function(l){if(DATA[l].dic.length)return Promise.resolve();if(window.__LD&&window.__LD[l]&&useLang(l))return Promise.resolve();
+  if(!pend[l])pend[l]=inject(l,true).catch(()=>inject(l,false)).catch(e=>{delete pend[l];throw e;});return pend[l];};
+ const _sl=setLang;
+ setLang=function(l){if(l!==state.lang)state.dq='';if(DATA[l].dic.length){LS.set('dl_lang',l);return _sl(l);}
+  const b=document.querySelector('#langs button[data-k="'+l+'"]');if(b)b.classList.add('loading');
+  const slow=setTimeout(()=>toast('Cargando '+DATA[l].name.toLowerCase()+'…'),450);
+  loadLang(l).then(()=>{clearTimeout(slow);if(b)b.classList.remove('loading');LS.set('dl_lang',l);_sl(l);})
+   .catch(()=>{clearTimeout(slow);if(b)b.classList.remove('loading');toast('No se ha podido cargar el '+DATA[l].name.toLowerCase()+'. Comprueba la conexión e inténtalo de nuevo.',5000);});};
+ /* si el idioma de inicio no llegó a cargarse (sin conexión o ruta distinta), se reintenta */
+ if(!DATA[state.lang].dic.length){const m=document.getElementById('main');if(m)m.innerHTML='<div class="empty">Cargando '+DATA[state.lang].name.toLowerCase()+'…</div>';
+  loadLang(state.lang).then(()=>{state.questions=[];renderLangs();render();})
+   .catch(()=>{if(m)m.innerHTML='<div class="empty">No se han podido cargar los datos del idioma. Comprueba la conexión y recarga la página.</div>';});}
+})();
+
+/* ---------- v22: pestaña Pronunciación ---------- */
+const PRO={mode:null,item:null,rec:null,last:''};
+function proMode(){if(!PRO.mode){let m=null;try{m=localStorage.getItem('dl_pmode')}catch(e){}PRO.mode=['w','p','n'].includes(m)?m:'w';}return PRO.mode;}
+function proEsc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function proPick(){const l=state.lang,L=DATA[l],m=proMode();let it=null;
+ for(let k=0;k<6;k++){
+  if(m==='n'){const n=1+Math.floor(Math.random()*100),w=numWord(l,n);it={w,say:w,n,t:String(n),p:l==='ru'?ruP(w):''};}
+  else if(m==='p'){const a=L.phr;if(!a.length)break;const x=a[Math.floor(Math.random()*a.length)];it={w:x.f,say:x.f,t:x.t,p:l==='ru'?(x.p||ruP(x.f)):''};}
+  else{const a=L.dic.filter(e=>e.c!=='números');if(!a.length)break;const e=a[Math.floor(Math.random()*a.length)];it={w:e.w,say:e.w,t:e.t,p:e.p||''};}
+  if(it&&it.w!==PRO.last)break;}
+ PRO.item=it;if(it)PRO.last=it.w;}
+function setProMode(m){PRO.mode=m;try{localStorage.setItem('dl_pmode',m)}catch(e){}proStop();proPick();renderPro();}
+function proNext(){proStop();proPick();renderPro();}
+function proStop(){if(PRO.rec){try{PRO.rec.abort()}catch(e){}PRO.rec=null;}}
+const MIC='<svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true"><path fill="currentColor" d="M12 14.5a3.5 3.5 0 0 0 3.5-3.5V5a3.5 3.5 0 1 0-7 0v6a3.5 3.5 0 0 0 3.5 3.5Zm6-3.5a1 1 0 1 0-2 0 4 4 0 0 1-8 0 1 1 0 1 0-2 0 6 6 0 0 0 5 5.91V19H8.5a1 1 0 1 0 0 2h7a1 1 0 1 0 0-2H13v-2.09A6 6 0 0 0 18 11Z"/></svg>';
+function renderPro(){const m=document.getElementById('main');if(!m)return;if(!PRO.item||PRO.lang!==state.lang){PRO.lang=state.lang;proPick();}
+ const it=PRO.item,md=proMode(),SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+ const seg='<div class="seg pseg" role="group" aria-label="Qué practicar">'+[['w','Palabras'],['p','Frases'],['n','Números']].map(([k,t])=>`<button type="button" class="${md===k?'on':''}" onclick="setProMode('${k}')">${t}</button>`).join('')+'</div>';
+ if(!it){m.innerHTML=seg+'<div class="empty">No hay nada que practicar en este idioma todavía.</div>';return;}
+ const big=md==='n'?`<div class="pw pnum">${it.n}</div><div class="pw2">${proEsc(it.w)}</div>`:`<div class="pw${md==='p'?' pphr':''}">${proEsc(it.w)}</div>`;
+ m.innerHTML=`${seg}
+ <div class="pcard">${big}${it.p?`<div class="pp">${proEsc(it.p)}</div>`:''}${md!=='n'?`<div class="ptr">${proEsc(it.t)}</div>`:''}
+  <button type="button" class="plisten" onclick="speak(PRO.item.say,this)">🔊 Escuchar</button>
+  <button type="button" class="mic" id="micb" onclick="proListen()" aria-label="Pulsa y di la ${md==='p'?'frase':md==='n'?'cifra':'palabra'}">${MIC}</button>
+  <div class="pstat" id="pstat" aria-live="polite">${SR?'Pulsa el micrófono y dilo en voz alta.':'Este navegador no reconoce la voz. Usa Chrome o Edge (ordenador o Android) o Safari (iPhone).'}</div>
+  <div class="pres" id="pres"></div></div>
+ <div class="pfoot"><button type="button" class="pnext" onclick="proNext()">Siguiente →</button></div>`;}
+function proNorm(s){return String(s).toLowerCase().replace(/\([^)]*\)/g,' ').normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/ß/g,'ss').replace(/ё/g,'е')
+ .replace(/[¿?¡!.,;:"«»“”‘’'`´\-–—…]/g,' ').replace(/\s+/g,' ').trim()
+ .replace(/^(to|the|a|an|le|la|les|l|un|une|der|die|das|ein|eine|il|lo|gli|i|uno|una|o|os|as|um|uma|el|los|las)\s+/,'');}
+function proLev(a,b){const m=a.length,n=b.length;if(!m)return n;if(!n)return m;let p=Array.from({length:n+1},(_,j)=>j);for(let i=1;i<=m;i++){const c=[i];for(let j=1;j<=n;j++)c[j]=Math.min(p[j]+1,c[j-1]+1,p[j-1]+(a[i-1]===b[j-1]?0:1));p=c;}return p[n];}
+function proScore(alts){const it=PRO.item;const tg=String(it.say).split('/').map(proNorm).filter(Boolean);let best=0,heard=alts[0]||'';
+ for(const a of alts){const x=proNorm(a);if(!x)continue;
+  if(it.n!=null&&(x.split(' ').includes(String(it.n))||x.replace(/\s/g,'')===String(it.n)))return{s:2,h:a};
+  for(const y of tg){if(x===y||(' '+x+' ').includes(' '+y+' '))return{s:2,h:a};
+   const d=proLev(x,y),tol=y.length<=3?0:y.length<=7?1:y.length<=12?2:Math.ceil(y.length*.2);if(d<=tol&&best<1){best=1;heard=a;}}}
+ return{s:best,h:heard};}
+function proListen(){const SR=window.SpeechRecognition||window.webkitSpeechRecognition,st=document.getElementById('pstat'),res=document.getElementById('pres'),btn=document.getElementById('micb');
+ if(!SR){st.textContent='Este navegador no reconoce la voz. Usa Chrome o Edge (ordenador o Android) o Safari (iPhone).';return;}
+ if(PRO.rec){proStop();return;}
+ try{speechSynthesis.cancel()}catch(e){}
+ const r=new SR();PRO.rec=r;let got=false,err='';
+ r.lang=DATA[state.lang].tts;r.interimResults=true;r.maxAlternatives=5;r.continuous=false;
+ res.className='pres';res.textContent='';
+ r.onstart=()=>{btn.classList.add('on');st.textContent='Te escucho…';};
+ r.onresult=e=>{const R=e.results[e.results.length-1];const alts=[...R].map(a=>a.transcript);st.textContent='«'+alts[0]+'»';
+  if(!R.isFinal)return;got=true;const v=proScore(alts);
+  const h=proEsc(v.h);res.className='pres '+(v.s===2?'ok':v.s===1?'almost':'bad');
+  res.innerHTML=v.s===2?`<b>¡Bien dicho!</b> Se ha entendido «${h}».`:v.s===1?`<b>Casi.</b> Se ha entendido «${h}». Repítelo un poco más claro.`:`<b>No se ha entendido.</b> Ha sonado como «${h}». Escúchalo con 🔊 y prueba otra vez.`;
+  st.textContent=v.s?'Pulsa «Siguiente» o vuelve a intentarlo.':'Pulsa el micrófono para intentarlo de nuevo.';};
+ r.onerror=e=>{err=e.error;const inFrame=window.top!==window.self;
+  const msg={'not-allowed':'No hay permiso para usar el micrófono. Actívalo para esta página en los ajustes del navegador.'+(inFrame?' Dentro de claude.ai el micrófono puede estar bloqueado: usa la app instalada desde GitHub Pages.':''),
+   'service-not-allowed':'El navegador no permite el reconocimiento de voz aquí.'+(inFrame?' Dentro de claude.ai puede estar bloqueado: usa la app instalada desde GitHub Pages.':' En iPhone, activa el dictado en Ajustes → General → Teclado.'),
+   'no-speech':'No te he oído. Acércate al micrófono y vuelve a intentarlo.','audio-capture':'No se encuentra ningún micrófono.',
+   'network':'El reconocimiento de voz necesita conexión a internet.','language-not-supported':'Este navegador no reconoce '+DATA[state.lang].name.toLowerCase()+'.'}[err];
+  if(msg)st.textContent=msg;};
+ r.onend=()=>{btn.classList.remove('on');if(PRO.rec===r)PRO.rec=null;if(!got&&!err)st.textContent='No te he oído. Pulsa el micrófono y habla un poco más alto.';};
+ try{r.start();}catch(e){PRO.rec=null;st.textContent='No se ha podido usar el micrófono.';}}
+(function(){
+ const _st=setTab;setTab=function(t){if(t!=='pro')proStop();return _st(t);};
+ const gb=document.querySelector('#guide .gbody');
+ if(gb)gb.insertAdjacentHTML('beforeend',[
+ ['Pronunciación 🎤','<ol><li>Abre la pestaña <b>Pronunciación</b> y elige <b>Palabras</b>, <b>Frases</b> o <b>Números</b>.</li><li>Pulsa <b>🔊 Escuchar</b> si quieres oírlo antes.</li><li>Pulsa el <b>micrófono</b> y dilo en voz alta. La app te dice si se ha entendido bien, casi o no.</li><li>Pulsa <b>Siguiente</b> para cambiar de palabra.</li></ol><p>Funciona en Chrome y Edge (ordenador y Android) y en Safari (iPhone, con el dictado activado en Ajustes → General → Teclado). Necesita conexión a internet. Dentro de claude.ai el micrófono puede estar bloqueado; en la app instalada desde GitHub Pages funciona sin problemas.</p>'],
+ ['Datos por idioma','<p>Cada idioma está en su propio archivo (<i>data/fr.js</i>, <i>data/ru.js</i>…). La app solo carga el que estás usando y recuerda el último idioma que elegiste. Al cambiar de idioma por primera vez tarda un instante en cargarlo.</p><p>En la app instalada (PWA) se guardan todos para poder usarla sin conexión.</p>']
+ ].map(([t,h])=>`<details><summary>${t}</summary><div class="gtxt">${h}</div></details>`).join(''));
+ document.head.insertAdjacentHTML('beforeend','<style>'+
+ '#langs button.loading{opacity:.55}'+
+ '.pseg{margin-top:var(--sp-2,10px)}'+
+ '.pcard{max-width:520px;margin:6px auto 0;padding:26px 20px 22px;border-radius:22px;background:var(--surface);border:1px solid var(--border);box-shadow:var(--shadow);text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px}'+
+ '.pcard .pw{font-size:clamp(26px,7vw,36px);font-weight:700;letter-spacing:-.02em;line-height:1.15;word-break:break-word}'+
+ '.pcard .pw.pphr{font-size:clamp(20px,5.4vw,26px);font-weight:600}.pcard .pw.pnum{font-size:44px}'+
+ '.pcard .pw2{font-size:17px;font-weight:600}.pcard .pp{font-size:15px;color:var(--accent)}.pcard .ptr{font-size:15px;color:var(--text2)}'+
+ '.plisten{margin-top:4px;border:1px solid var(--border);background:transparent;color:inherit;border-radius:999px;padding:7px 14px;font:inherit;font-size:14px;cursor:pointer}'+
+ '.mic{margin-top:10px;width:76px;height:76px;border-radius:50%;border:0;background:var(--accent);color:#fff;display:grid;place-items:center;cursor:pointer;box-shadow:0 8px 22px -8px color-mix(in srgb,var(--accent) 70%,transparent);transition:transform .18s var(--ease,ease),background .2s}'+
+ '.mic:active{transform:scale(.94)}.mic.on{background:#ff3b30;box-shadow:0 0 0 8px color-mix(in srgb,#ff3b30 22%,transparent)}'+
+ '.pstat{min-height:22px;font-size:14px;color:var(--text2);max-width:420px}'+
+ '.pres{font-size:15px;max-width:440px;line-height:1.45}.pres:empty{display:none}.pres{padding:10px 14px;border-radius:14px}'+
+ '.pres.ok{background:color-mix(in srgb,#34c759 16%,transparent)}.pres.almost{background:color-mix(in srgb,#ff9f0a 18%,transparent)}.pres.bad{background:color-mix(in srgb,#ff3b30 14%,transparent)}'+
+ '.pfoot{display:flex;justify-content:center;margin:14px 0 6px}.pnext{border:0;background:color-mix(in srgb,var(--text) 8%,transparent);color:inherit;border-radius:999px;padding:10px 18px;font:inherit;font-size:15px;font-weight:600;cursor:pointer}'+
+ '</style>');
+})();
+/* ---------- v23: buscador en Frases y Palabras clave ---------- */
+(function(){
+ const Q={phr:'',key:''};let qLang=state.lang,tm;
+ const nz=s=>String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/ё/g,'е').replace(/[¿?¡!.,;:"«»“”'’]/g,' ').replace(/\s+/g,' ').trim();
+ function apply(){const t=state.tab;if(t!=='phr'&&t!=='key')return;const m=document.getElementById('main'),L=m&&m.querySelector('.list');if(!L)return;
+  const q=nz(Q[t]);let n=0;const rows=L.querySelectorAll('.row');
+  rows.forEach(r=>{const ok=!q||nz([...r.querySelectorAll('.word,.pron,.rp,.tr,.ex')].map(x=>x.textContent).join(' ')).includes(q);r.classList.toggle('sqh',!ok);if(ok)n++;});
+  const c=m.querySelector('.count');if(c){if(c.dataset.base==null)c.dataset.base=c.textContent;c.textContent=q?n+' de '+c.dataset.base:c.dataset.base;}
+  let e=m.querySelector('.sq-empty');
+  if(q&&!n){if(!e){L.insertAdjacentHTML('afterend','<div class="empty sq-empty"></div>');e=m.querySelector('.sq-empty');}e.textContent='Sin resultados para «'+Q[t].trim()+'».';}
+  else if(e)e.remove();}
+ window.sqInput=function(v){Q[state.tab]=v;clearTimeout(tm);tm=setTimeout(apply,document.documentElement.classList.contains('lite')?150:90);};
+ function draw(){const t=state.tab;if(t!=='phr'&&t!=='key')return;if(qLang!==state.lang){qLang=state.lang;Q.phr='';Q.key='';}
+  const m=document.getElementById('main');if(!m||m.querySelector('input.sq'))return;
+  const nm=DATA[state.lang].name.toLowerCase(),ph=t==='phr'?'Buscar frase (en '+nm+' o en español)...':'Buscar palabra clave...';
+  m.insertAdjacentHTML('afterbegin','<input type="search" class="sq" placeholder="'+ph+'" aria-label="'+ph.replace('...','')+'" oninput="sqInput(this.value)">');
+  const i=m.querySelector('input.sq');i.value=Q[t];if(Q[t])apply();}
+ const _r=render;render=function(){_r();draw();};
+ document.head.insertAdjacentHTML('beforeend','<style>.list .row.sqh{display:none!important}</style>');
 })();
 window.addEventListener("resize",renderLangs);
 renderLangs();renderTabs();render();
