@@ -868,7 +868,7 @@ const _sg20=seg;seg=function(){const m=state.qmode||'c',lab={c:'Elegir',w:'Escri
  return s.replace('<span class="qos">',`<span class="qos">${lab[m]} · `);};
 
 /* ---------- 7. Aviso de versión nueva ---------- */
-const APP_V='23',pv=LS.get('dl_appv');if(pv&&pv!==APP_V)setTimeout(()=>toast('DailyLeng se ha actualizado: más de 740 palabras por idioma (todo el cuerpo humano y mucho más) y buscador en Frases y Palabras clave.',7000),1200);LS.set('dl_appv',APP_V);
+const APP_V='24',pv=LS.get('dl_appv');if(pv&&pv!==APP_V)setTimeout(()=>toast('DailyLeng se ha actualizado: la pestaña Pronunciación ahora pide el micrófono una sola vez, se queda escuchando y te entiende mejor.',7000),1200);LS.set('dl_appv',APP_V);
 function showUpdate(reg){if(document.getElementById('updbar'))return;document.body.insertAdjacentHTML('beforeend','<div id="updbar" role="status"><span>Hay una versión nueva de DailyLeng.</span><button type="button" id="updgo">Actualizar</button><button type="button" id="updx" aria-label="Más tarde">Más tarde</button></div>');const b=document.getElementById('updbar');if(M())b.animate([{transform:'translate(-50%,30px)',opacity:0},{transform:'translate(-50%,0)',opacity:1}],{duration:480,easing:'cubic-bezier(.3,1.22,.5,1)'});
  document.getElementById('updx').onclick=()=>b.remove();document.getElementById('updgo').onclick=()=>{const w=reg.waiting;if(w){w.postMessage({type:'SKIP_WAITING'});}else location.reload();};}
 if('serviceWorker' in navigator&&document.querySelector('link[rel=manifest][href="manifest.webmanifest"]')){let reloading=false;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!reloading){reloading=true;location.reload();}});
@@ -950,7 +950,7 @@ function useLang(l){const x=window.__LD&&window.__LD[l],L=DATA[l];if(!x||!L||L.d
 })();
 
 /* ---------- v22: pestaña Pronunciación ---------- */
-const PRO={mode:null,item:null,rec:null,last:''};
+const PRO={mode:null,item:null,rec:null,last:'',on:false,live:false,skip:0,words:0,muteUntil:0,lastTxt:'',lastAt:0,empty:0};
 function proMode(){if(!PRO.mode){let m=null;try{m=localStorage.getItem('dl_pmode')}catch(e){}PRO.mode=['w','p','n'].includes(m)?m:'w';}return PRO.mode;}
 function proEsc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function proPick(){const l=state.lang,L=DATA[l],m=proMode();let it=null;
@@ -960,20 +960,86 @@ function proPick(){const l=state.lang,L=DATA[l],m=proMode();let it=null;
   else{const a=L.dic.filter(e=>e.c!=='números');if(!a.length)break;const e=a[Math.floor(Math.random()*a.length)];it={w:e.w,say:e.w,t:e.t,p:e.p||''};}
   if(it&&it.w!==PRO.last)break;}
  PRO.item=it;if(it)PRO.last=it.w;}
-function setProMode(m){PRO.mode=m;try{localStorage.setItem('dl_pmode',m)}catch(e){}proStop();proPick();renderPro();}
-function proNext(){proStop();proPick();renderPro();}
-function proStop(){if(PRO.rec){try{PRO.rec.abort()}catch(e){}PRO.rec=null;}}
+/* Motor de reconocimiento (v24): una sola sesión continua que se queda escuchando.
+   - Un solo permiso por sesión: no se crea un reconocedor nuevo en cada palabra.
+   - Corrige con resultados provisionales y, si el navegador no marca el final (Safari), tras un silencio corto.
+   - Al acertar pasa sola a la siguiente; ignora el eco de 🔊 Escuchar. */
+function setProMode(m){PRO.mode=m;try{localStorage.setItem('dl_pmode',m)}catch(e){}clearTimeout(PRO.adv);proPick();proSkipNow();renderPro();}
+function proNext(){clearTimeout(PRO.adv);proPick();proSkipNow();renderPro();}
+function proSkipNow(){clearTimeout(PRO.timer);PRO.pend=null;PRO.skip=PRO.words;PRO.lastTxt='';PRO.muteUntil=Date.now()+300;}
+function proStop(msg){PRO.on=false;clearTimeout(PRO.timer);clearTimeout(PRO.adv);clearTimeout(PRO.rs);const r=PRO.rec;if(r){try{r.abort()}catch(e){}}
+ const b=document.getElementById('micb');if(b){b.classList.remove('on');b.setAttribute('aria-pressed','false');}
+ const st=document.getElementById('pstat');if(st&&msg)st.textContent=msg;}
+function proSt(t){const st=document.getElementById('pstat');if(st)st.textContent=t;}
+function proIdle(){return PRO.on?'Te escucho: dilo en voz alta. Cuando aciertes pasará sola a la siguiente.':'Pulsa el micrófono una vez y practica seguido: se queda escuchando.';}
+function proSay(b){PRO.muteUntil=Date.now()+60000;speak(PRO.item.say,b);const t0=Date.now();clearInterval(PRO.sayPoll);
+ PRO.sayPoll=setInterval(()=>{const sp='speechSynthesis' in window&&speechSynthesis.speaking;if((Date.now()-t0>900&&!sp)||Date.now()-t0>15000){clearInterval(PRO.sayPoll);PRO.muteUntil=Date.now()+700;}},200);}
+function proWins(txt){const w=txt.split(/\s+/).filter(Boolean),n=String(PRO.item.say).split(/\s+/).length,out=[txt];
+ for(let k=Math.max(1,n-1);k<=n+1;k++)if(w.length>k)out.push(w.slice(-k).join(' '));return out;}
+function proShow(v){const res=document.getElementById('pres');if(!res)return;const h=proEsc(v.h);res.className='pres '+(v.s===2?'ok':v.s===1?'almost':'bad');
+ res.innerHTML=v.s===2?`<b>¡Bien dicho!</b> Se ha entendido «${h}».`:v.s===1?`<b>Casi.</b> Se ha entendido «${h}». Repítelo un poco más claro.`:`<b>No se ha entendido.</b> Ha sonado como «${h}». Escúchalo con 🔊 y prueba otra vez.`;}
+function proFinish(v,txt,wc){clearTimeout(PRO.timer);PRO.pend=null;PRO.skip=wc;PRO.muteUntil=Date.now()+(v.s===2?1500:250);
+ const nt=proNorm(txt);if(nt&&nt===PRO.lastTxt&&Date.now()-PRO.lastAt<1500)return;PRO.lastTxt=nt;PRO.lastAt=Date.now();PRO.heard=true;
+ proShow(v);if(v.s===2){PRO.lastOk=nt;PRO.lastOkAt=Date.now();}
+ if(v.s===2&&PRO.on){proSt('¡Muy bien! Ahora la siguiente…');clearTimeout(PRO.adv);PRO.adv=setTimeout(()=>{if(PRO.on&&state.tab==='pro'){proPick();proSkipNow();renderPro();}},1500);}
+ else proSt(PRO.on?(v.s?'Pulsa «Siguiente» o repítelo.':'Te sigo escuchando: inténtalo otra vez.'):'Pulsa el micrófono para intentarlo de nuevo.');}
+function proHelp(){const ios=/iP(hone|ad|od)/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1),inFrame=window.top!==window.self;
+ return inFrame?'No llega tu voz. Dentro de claude.ai el micrófono suele estar bloqueado: usa la app instalada desde GitHub Pages.'
+  :ios?'No llega tu voz. En iPhone: activa Ajustes → General → Teclado → Activar dictado, comprueba que el micrófono de Safari esté permitido y que haya conexión.'
+  :'No llega tu voz. Comprueba que el micrófono esté permitido para esta página (icono junto a la dirección), que sea el micrófono correcto y que haya conexión.';}
+function proRec(){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR)return null;if(PRO.rec)return PRO.rec;
+ const r=new SR();PRO.rec=r;r.continuous=true;r.interimResults=true;r.maxAlternatives=3;
+ r.onstart=()=>{PRO.live=true;PRO.skip=0;PRO.words=0;PRO.heard=false;const b=document.getElementById('micb');if(b){b.classList.add('on');b.setAttribute('aria-pressed','true');}if(!document.querySelector('#pres.ok,#pres.bad,#pres.almost'))proSt(proIdle());};
+ r.onresult=e=>{if(!PRO.on||!PRO.item)return;const R=e.results,all=[];for(let i=0;i<R.length;i++)all.push(R[i][0].transcript);
+  const words=all.join(' ').split(/\s+/).filter(Boolean);PRO.words=words.length;PRO.empty=0;PRO.any=true;
+  const sp='speechSynthesis' in window&&speechSynthesis.speaking;
+  if(sp||Date.now()<PRO.muteUntil){PRO.skip=words.length;return;}
+  if(PRO.skip>words.length)PRO.skip=words.length;
+  const txt=words.slice(PRO.skip).join(' ');if(!txt)return;
+  /* Chrome en Android a veces repite la frase anterior ya corregida: se descarta */
+  if(PRO.lastOk&&proNorm(txt)===PRO.lastOk&&Date.now()-PRO.lastOkAt<4000){PRO.skip=words.length;return;}
+  const last=R[R.length-1];let cands=proWins(txt);
+  for(let j=0;j<last.length;j++)cands=cands.concat(proWins(last[j].transcript));
+  proSt('«'+txt+'»');
+  const v=proScore(cands);v.h=v.s?v.h:txt;
+  if(v.s===2||last.isFinal)return proFinish(v,txt,words.length);
+  clearTimeout(PRO.timer);PRO.pend={cands,txt,wc:words.length};PRO.timer=setTimeout(()=>{const p=PRO.pend;if(PRO.on&&p)proFinish(proScore(p.cands),p.txt,p.wc);},1300);};
+ r.onerror=e=>{PRO.err=e.error;const stop={'not-allowed':1,'service-not-allowed':1,'audio-capture':1,'language-not-supported':1,'network':1}[e.error];
+  if(!stop)return;const inFrame=window.top!==window.self;
+  const msg={'not-allowed':'No hay permiso para usar el micrófono. Permítelo para esta página en los ajustes del navegador.'+(inFrame?' Dentro de claude.ai suele estar bloqueado: usa la app instalada desde GitHub Pages.':''),
+   'service-not-allowed':'El navegador no permite el reconocimiento de voz aquí.'+(inFrame?' Dentro de claude.ai suele estar bloqueado: usa la app instalada desde GitHub Pages.':' En iPhone, activa el dictado en Ajustes → General → Teclado.'),
+   'audio-capture':'No se encuentra ningún micrófono.','network':'El reconocimiento de voz necesita conexión a internet.',
+   'language-not-supported':'Este navegador no reconoce '+DATA[state.lang].name.toLowerCase()+'.'}[e.error];
+  proStop(msg);};
+ r.onend=()=>{PRO.live=false;const err=PRO.err;PRO.err='';
+  /* Safari a veces cierra sin marcar el final: se corrige lo último que oyó */
+  if(PRO.pend&&PRO.on){const p=PRO.pend;proFinish(proScore(p.cands),p.txt,p.wc);}
+  if(!PRO.on){const b=document.getElementById('micb');if(b)b.classList.remove('on');return;}
+  if(!PRO.heard&&PRO.words===0){PRO.empty=(PRO.empty||0)+1;if(PRO.empty>=3)return proStop(PRO.any?'No te he oído en un rato y he apagado el micrófono. Púlsalo para seguir.':proHelp());}
+  /* el navegador cerró la sesión (silencio largo, Chrome en Android…): se reabre sola */
+  clearTimeout(PRO.rs);PRO.rs=setTimeout(()=>{if(!PRO.on)return;try{r.lang=DATA[state.lang].tts;r.start();}catch(x){proStop('Pulsa el micrófono para seguir.');}},err==='no-speech'?150:300);};
+ return r;}
+function proListen(){if(!(window.SpeechRecognition||window.webkitSpeechRecognition)){proSt('Este navegador no reconoce la voz. Usa Chrome o Edge (ordenador o Android) o Safari (iPhone).');return;}
+ if(PRO.on){proStop('Micrófono apagado. Púlsalo para seguir practicando.');return;}
+ try{speechSynthesis.cancel()}catch(e){}
+ const r=proRec();PRO.on=true;PRO.empty=0;PRO.any=false;PRO.pend=null;PRO.err='';PRO.skip=0;PRO.words=0;PRO.muteUntil=0;
+ const res=document.getElementById('pres');if(res){res.className='pres';res.textContent='';}
+ if(PRO.live){proSt(proIdle());return;}
+ try{r.lang=DATA[state.lang].tts;r.start();proSt('Abriendo el micrófono…');}
+ catch(e){/* una sesión anterior aún se está cerrando: se reintenta enseguida */setTimeout(()=>{if(!PRO.on)return;try{r.start();}catch(x){proStop('No se ha podido usar el micrófono. Vuelve a pulsarlo.');}},350);}}
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&PRO.on)proStop('Micrófono apagado al salir de la app.');});
 const MIC='<svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true"><path fill="currentColor" d="M12 14.5a3.5 3.5 0 0 0 3.5-3.5V5a3.5 3.5 0 1 0-7 0v6a3.5 3.5 0 0 0 3.5 3.5Zm6-3.5a1 1 0 1 0-2 0 4 4 0 0 1-8 0 1 1 0 1 0-2 0 6 6 0 0 0 5 5.91V19H8.5a1 1 0 1 0 0 2h7a1 1 0 1 0 0-2H13v-2.09A6 6 0 0 0 18 11Z"/></svg>';
-function renderPro(){const m=document.getElementById('main');if(!m)return;if(!PRO.item||PRO.lang!==state.lang){PRO.lang=state.lang;proPick();}
+function renderPro(){const m=document.getElementById('main');if(!m)return;if(!PRO.item||PRO.lang!==state.lang){PRO.lang=state.lang;proPick();proSkipNow();
+  if(PRO.on&&PRO.rec&&PRO.rec.lang!==DATA[state.lang].tts){try{PRO.rec.abort()}catch(e){}}}
  const it=PRO.item,md=proMode(),SR=window.SpeechRecognition||window.webkitSpeechRecognition;
  const seg='<div class="seg pseg" role="group" aria-label="Qué practicar">'+[['w','Palabras'],['p','Frases'],['n','Números']].map(([k,t])=>`<button type="button" class="${md===k?'on':''}" onclick="setProMode('${k}')">${t}</button>`).join('')+'</div>';
  if(!it){m.innerHTML=seg+'<div class="empty">No hay nada que practicar en este idioma todavía.</div>';return;}
  const big=md==='n'?`<div class="pw pnum">${it.n}</div><div class="pw2">${proEsc(it.w)}</div>`:`<div class="pw${md==='p'?' pphr':''}">${proEsc(it.w)}</div>`;
  m.innerHTML=`${seg}
  <div class="pcard">${big}${it.p?`<div class="pp">${proEsc(it.p)}</div>`:''}${md!=='n'?`<div class="ptr">${proEsc(it.t)}</div>`:''}
-  <button type="button" class="plisten" onclick="speak(PRO.item.say,this)">🔊 Escuchar</button>
-  <button type="button" class="mic" id="micb" onclick="proListen()" aria-label="Pulsa y di la ${md==='p'?'frase':md==='n'?'cifra':'palabra'}">${MIC}</button>
-  <div class="pstat" id="pstat" aria-live="polite">${SR?'Pulsa el micrófono y dilo en voz alta.':'Este navegador no reconoce la voz. Usa Chrome o Edge (ordenador o Android) o Safari (iPhone).'}</div>
+  <button type="button" class="plisten" onclick="proSay(this)">🔊 Escuchar</button>
+  <button type="button" class="mic${PRO.on?' on':''}" id="micb" onclick="proListen()" aria-pressed="${PRO.on}" aria-label="Micrófono: pulsa para empezar o parar">${MIC}</button>
+  <div class="pstat" id="pstat" aria-live="polite">${SR?proIdle():'Este navegador no reconoce la voz. Usa Chrome o Edge (ordenador o Android) o Safari (iPhone).'}</div>
   <div class="pres" id="pres"></div></div>
  <div class="pfoot"><button type="button" class="pnext" onclick="proNext()">Siguiente →</button></div>`;}
 function proNorm(s){return String(s).toLowerCase().replace(/\([^)]*\)/g,' ').normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/ß/g,'ss').replace(/ё/g,'е')
@@ -986,32 +1052,11 @@ function proScore(alts){const it=PRO.item;const tg=String(it.say).split('/').map
   for(const y of tg){if(x===y||(' '+x+' ').includes(' '+y+' '))return{s:2,h:a};
    const d=proLev(x,y),tol=y.length<=3?0:y.length<=7?1:y.length<=12?2:Math.ceil(y.length*.2);if(d<=tol&&best<1){best=1;heard=a;}}}
  return{s:best,h:heard};}
-function proListen(){const SR=window.SpeechRecognition||window.webkitSpeechRecognition,st=document.getElementById('pstat'),res=document.getElementById('pres'),btn=document.getElementById('micb');
- if(!SR){st.textContent='Este navegador no reconoce la voz. Usa Chrome o Edge (ordenador o Android) o Safari (iPhone).';return;}
- if(PRO.rec){proStop();return;}
- try{speechSynthesis.cancel()}catch(e){}
- const r=new SR();PRO.rec=r;let got=false,err='';
- r.lang=DATA[state.lang].tts;r.interimResults=true;r.maxAlternatives=5;r.continuous=false;
- res.className='pres';res.textContent='';
- r.onstart=()=>{btn.classList.add('on');st.textContent='Te escucho…';};
- r.onresult=e=>{const R=e.results[e.results.length-1];const alts=[...R].map(a=>a.transcript);st.textContent='«'+alts[0]+'»';
-  if(!R.isFinal)return;got=true;const v=proScore(alts);
-  const h=proEsc(v.h);res.className='pres '+(v.s===2?'ok':v.s===1?'almost':'bad');
-  res.innerHTML=v.s===2?`<b>¡Bien dicho!</b> Se ha entendido «${h}».`:v.s===1?`<b>Casi.</b> Se ha entendido «${h}». Repítelo un poco más claro.`:`<b>No se ha entendido.</b> Ha sonado como «${h}». Escúchalo con 🔊 y prueba otra vez.`;
-  st.textContent=v.s?'Pulsa «Siguiente» o vuelve a intentarlo.':'Pulsa el micrófono para intentarlo de nuevo.';};
- r.onerror=e=>{err=e.error;const inFrame=window.top!==window.self;
-  const msg={'not-allowed':'No hay permiso para usar el micrófono. Actívalo para esta página en los ajustes del navegador.'+(inFrame?' Dentro de claude.ai el micrófono puede estar bloqueado: usa la app instalada desde GitHub Pages.':''),
-   'service-not-allowed':'El navegador no permite el reconocimiento de voz aquí.'+(inFrame?' Dentro de claude.ai puede estar bloqueado: usa la app instalada desde GitHub Pages.':' En iPhone, activa el dictado en Ajustes → General → Teclado.'),
-   'no-speech':'No te he oído. Acércate al micrófono y vuelve a intentarlo.','audio-capture':'No se encuentra ningún micrófono.',
-   'network':'El reconocimiento de voz necesita conexión a internet.','language-not-supported':'Este navegador no reconoce '+DATA[state.lang].name.toLowerCase()+'.'}[err];
-  if(msg)st.textContent=msg;};
- r.onend=()=>{btn.classList.remove('on');if(PRO.rec===r)PRO.rec=null;if(!got&&!err)st.textContent='No te he oído. Pulsa el micrófono y habla un poco más alto.';};
- try{r.start();}catch(e){PRO.rec=null;st.textContent='No se ha podido usar el micrófono.';}}
 (function(){
  const _st=setTab;setTab=function(t){if(t!=='pro')proStop();return _st(t);};
  const gb=document.querySelector('#guide .gbody');
  if(gb)gb.insertAdjacentHTML('beforeend',[
- ['Pronunciación 🎤','<ol><li>Abre la pestaña <b>Pronunciación</b> y elige <b>Palabras</b>, <b>Frases</b> o <b>Números</b>.</li><li>Pulsa <b>🔊 Escuchar</b> si quieres oírlo antes.</li><li>Pulsa el <b>micrófono</b> y dilo en voz alta. La app te dice si se ha entendido bien, casi o no.</li><li>Pulsa <b>Siguiente</b> para cambiar de palabra.</li></ol><p>Funciona en Chrome y Edge (ordenador y Android) y en Safari (iPhone, con el dictado activado en Ajustes → General → Teclado). Necesita conexión a internet. Dentro de claude.ai el micrófono puede estar bloqueado; en la app instalada desde GitHub Pages funciona sin problemas.</p>'],
+ ['Pronunciación 🎤','<ol><li>Abre la pestaña <b>Pronunciación</b> y elige <b>Palabras</b>, <b>Frases</b> o <b>Números</b>.</li><li>Pulsa <b>🔊 Escuchar</b> si quieres oírlo antes.</li><li>Pulsa el <b>micrófono</b> una sola vez: se queda escuchando (se pone rojo). Di la palabra en voz alta y la app te dice si se ha entendido bien, casi o no.</li><li>Cuando aciertas pasa sola a la siguiente; si fallas, repítela sin tocar nada. <b>Siguiente</b> cambia de palabra cuando quieras.</li><li>Vuelve a pulsar el micrófono para apagarlo. Se apaga solo si sales de la pestaña o de la app.</li></ol><p><b>Para que no pida permiso cada vez</b>: en iPhone, en Safari pulsa <b>aA</b> en la barra de direcciones → <b>Ajustes del sitio web</b> → <b>Micrófono: Permitir</b>. En Chrome (Android u ordenador), pulsa el icono a la izquierda de la dirección → <b>Permisos</b> → <b>Micrófono: Permitir</b>.</p><p>Funciona en Chrome y Edge (ordenador y Android) y en Safari (iPhone, con el dictado activado en Ajustes → General → Teclado). Necesita conexión a internet. Dentro de claude.ai el micrófono puede estar bloqueado; en la app instalada desde GitHub Pages funciona sin problemas.</p>'],
  ['Datos por idioma','<p>Cada idioma está en su propio archivo (<i>data/fr.js</i>, <i>data/ru.js</i>…). La app solo carga el que estás usando y recuerda el último idioma que elegiste. Al cambiar de idioma por primera vez tarda un instante en cargarlo.</p><p>En la app instalada (PWA) se guardan todos para poder usarla sin conexión.</p>']
  ].map(([t,h])=>`<details><summary>${t}</summary><div class="gtxt">${h}</div></details>`).join(''));
  document.head.insertAdjacentHTML('beforeend','<style>'+
