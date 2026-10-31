@@ -1,5 +1,5 @@
 /* DailyLeng · Service Worker. Cambia V en cada versión nueva para que la app avise de la actualización. */
-const V='dailyleng-v25';
+const V='dailyleng-v26';
 const LANGS=['fr','ru','en','de','it','pt'];
 const FILES=['./','index.html','manifest.webmanifest','icon-192.png','icon-512.png'].concat(LANGS.map(l=>'data/'+l+'.js'));
 self.addEventListener('install',e=>{e.waitUntil(caches.open(V).then(c=>c.addAll(FILES.map(u=>new Request(u,{cache:'reload'})))));});
