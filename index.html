@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>DailyLeng</title>
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="apple-touch-icon" href="icon-192.png">
 <link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
 <style>
 :root{
   --bg:#f5f5f7;--surface:#ffffff;--text:#1d1d1f;--text2:#6e6e73;
@@ -133,7 +133,7 @@ input[type=search]:focus{outline:none;border-color:var(--accent);box-shadow:0 0 
 </header>
 <nav id="tabs"></nav>
 <main id="main"></main>
-<script>(function(){var k=["fr","ru","en","de","it","pt"],l="fr";try{var s=localStorage.getItem("dl_lang");if(k.indexOf(s)>-1)l=s}catch(e){}window.__L0=l;window.__DV="23";document.write('<script src="data/'+l+'.js?v=23" onerror="window.__LDERR=1"><\/script>');})();</script>
+<script>(function(){var k=["fr","ru","en","de","it","pt"],l="fr";try{var s=localStorage.getItem("dl_lang");if(k.indexOf(s)>-1)l=s}catch(e){}window.__L0=l;window.__DV="28";document.write('<script src="data/'+l+'.js?v=28" onerror="window.__LDERR=1"><\/script>');})();</script>
 <script>
 const DATA={fr:{name:"Francés",flag:"🇫🇷",tts:"fr-FR",dic:[],phr:[],key:[],ex:""},ru:{name:"Ruso",flag:"🇷🇺",tts:"ru-RU",dic:[],phr:[],key:[],ex:""},en:{name:"Inglés",flag:"🇬🇧",tts:"en-US",dic:[],phr:[],key:[],ex:""},de:{name:"Alemán",flag:"🇩🇪",tts:"de-DE",dic:[],phr:[],key:[],ex:""},it:{name:"Italiano",flag:"🇮🇹",tts:"it-IT",dic:[],phr:[],key:[],ex:""},pt:{name:"Portugués",flag:"🇵🇹",tts:"pt-PT",dic:[],phr:[],key:[],ex:""}};
 for(const l in DATA)useLang(l);
@@ -172,7 +172,7 @@ function render(){
   if(state.tab==="dic"){
     main.innerHTML=`<input type="search" placeholder="Buscar palabra..." oninput="filterDicD(this.value)">`+
       `<div class="count">${d.dic.length} palabras</div>`+
-      `<div class="list" id="diclist">`+d.dic.map(rowWord).join("")+`</div>`;
+      `<div class="list" id="diclist"></div>`;
   } else if(state.tab==="phr"){
     main.innerHTML=`<div class="count">${d.phr.length} frases</div><div class="list">`+d.phr.map(p=>
       `<div class="row"><div class="row-main"><div class="word">${p.f}</div><div class="tr">${p.t}</div></div></div>`
@@ -182,6 +182,8 @@ function render(){
       const e=d.dic.find(x=>x.w===w);
       return `<div class="row"><div class="row-main"><div><span class="word">${w}</span>`+(e?` <span class="pron">${e.p}</span>`:"")+`</div>`+(e?`<div class="tr">${e.t}</div>`:"")+`</div></div>`;
     }).join("")+`</div>`;
+  } else if(state.tab==="stats"){
+    renderStats();
   } else {
     renderQuiz();
   }
@@ -258,7 +260,7 @@ function renderLangs(){
 function renderTabs(){
   const n=document.getElementById("tabs");
   if(!n.firstChild){
-    n.innerHTML=[["dic","Diccionario"],["phr","Frases"],["key","Palabras clave"],["num","Números"],["pro","Pronunciación"],["fav","★ Favs"],["quiz","Test"]].map(t=>`<button data-t="${t[0]}" onclick="setTab('${t[0]}')">${t[1]}</button>`).join("");
+    n.innerHTML=[["dic","Diccionario"],["phr","Frases"],["key","Palabras clave"],["num","Números"],["pro","Pronunciación"],["fav","★ Favs"],["quiz","Test"],["stats","Progreso"]].map(t=>`<button data-t="${t[0]}" onclick="setTab('${t[0]}')">${t[1]}</button>`).join("");
   }
   n.querySelectorAll("button").forEach(b=>b.classList.toggle("active",b.dataset.t===state.tab));
 }
@@ -333,11 +335,7 @@ function answer(i,correct){
   }
   const p=document.querySelector(".prog i");
   if(p) p.style.width=(state.qi+1)/state.questions.length*100+"%";
-  setTimeout(()=>{
-    const qc=document.querySelector("#main .quiz-card");
-    anim(qc||document.getElementById("main"),[{opacity:1,transform:"none"},{opacity:0,transform:"translateX(-75%) rotate(-2deg)"}],{duration:300,easing:"cubic-bezier(.55,0,.8,.3)",fill:"forwards"});
-    setTimeout(()=>{state.qi++;renderQuiz();},motion?290:0);
-  },800);
+  dlNext(i===correct);
 }
 const P=o=>Object.entries(o).flatMap(([c,s])=>s.split(";").map(x=>{const[w,p,t]=x.split("|");return{w,p,t,c};}));
 const F=s=>s.split(";").map(x=>{const[f,t]=x.split("|");return{f,t};});
@@ -399,7 +397,7 @@ function setLevel(k){state.level=k;newQuiz();}
 function toggleFavOnly(){state.favOnly=!state.favOnly;newQuiz();}
 function startFav(){state.favOnly=true;state.level='i';setTab('quiz');}
 function retryMissed(){state.questions=state.missed;state.missed=[];state.qi=0;state.score=0;render();}
-function genQuiz(n){const L=DATA[state.lang],lv=state.level||'i',H=ld('dl_hard_'+state.lang,{}),Fv=ld('dl_fav_'+state.lang,[]);state.missed=[];let items,all;if(lv==='a'){items=L.phr.map(p=>({k:p.f,a:p.f,b:p.t}));all=L.phr.map(p=>({a:p.f,b:p.t}));}else{let pool=L.dic;if(lv==='b'){const k=pool.filter(e=>L.key.includes(e.w));if(k.length>=4)pool=k;}if(state.favOnly)pool=pool.filter(e=>Fv.includes(e.w));items=pool.map(e=>({k:e.w,a:e.w,b:e.t}));all=L.dic.map(e=>({a:e.w,b:e.t}));}return items.map(i=>({i,s:-Math.log(Math.random())/(1+3*(H[i.k]||0))})).sort((x,y)=>x.s-y.s).slice(0,n).map(x=>{const it=x.i,rev=Math.random()<.5,c=rev?it.a:it.b,dd=shuffle(all.filter(e=>(rev?e.a:e.b)!==c)).slice(0,3).map(e=>rev?e.a:e.b),o=shuffle([c,...dd]);return{q:rev?`¿Cómo se dice "${it.b}" en ${L.name.toLowerCase()}?`:`¿Qué significa "${it.a}"?`,o,a:o.indexOf(c),k:it.k};});}
+function genQuiz(n){const L=DATA[state.lang],lv=state.level||'i',H=ld('dl_hard_'+state.lang,{}),Fv=ld('dl_fav_'+state.lang,[]);state.missed=[];let items,all;if(lv==='a'){items=L.phr.map(p=>({k:p.f,a:p.f,b:p.t}));all=L.phr.map(p=>({a:p.f,b:p.t}));}else{let pool=L.dic;if(lv==='b'){const k=pool.filter(e=>L.key.includes(e.w));if(k.length>=4)pool=k;}if(state.favOnly)pool=pool.filter(e=>Fv.includes(e.w));items=pool.map(e=>({k:e.w,a:e.w,b:e.t}));all=L.dic.map(e=>({a:e.w,b:e.t}));}return items.map(i=>({i,s:-Math.log(Math.random())/(1+3*(H[i.k]||0))})).sort((x,y)=>x.s-y.s).slice(0,n).map(x=>{const it=x.i,rev=Math.random()<.5,c=rev?it.a:it.b,dd=dlDis(all,it,rev,c),o=shuffle([c,...dd]);return{q:rev?`¿Cómo se dice "${it.b}" en ${L.name.toLowerCase()}?`:`¿Qué significa "${it.a}"?`,o,a:o.indexOf(c),k:it.k};});}
 const _rq=renderQuiz;
 renderQuiz=function(){const m=document.getElementById('main');if(!state.questions.length)state.questions=genQuiz(20);if(!state.questions.length){m.innerHTML=seg()+'<div class="empty">No hay preguntas con este filtro. Marca ☆ palabras en el diccionario primero.</div>';return;}_rq();if(state.qi===0)m.insertAdjacentHTML('afterbegin',seg());else if(state.qi>=state.questions.length){const c=m.querySelector('.quiz-card'),n=state.missed.length;if(c&&n)c.insertAdjacentHTML('beforeend',`<button class="btn" style="margin-top:10px" onclick="retryMissed()">Repetir falladas (${n})</button>`);}};
 const _an=answer;
@@ -461,12 +459,12 @@ const _fv2=fillVoices;fillVoices=function(){_fv2();if(ios)return;const s=documen
 if('speechSynthesis' in window){speechSynthesis.onvoiceschanged=()=>fillVoices();[300,1200,3000].forEach(ms=>setTimeout(()=>fillVoices(),ms));}
 fillVoices();
 /* Copia de seguridad */
-const OK=/^(dl_(hard_|fav_)|dl_streak$|best_)/,J=s=>{try{return JSON.parse(s)}catch(e){return null}};
+const OK=/^(dl_(hard_|fav_|st_)|dl_streak$|best_)/,J=s=>{try{return JSON.parse(s)}catch(e){return null}};
 const mkExport=()=>{const d={};Object.keys(localStorage).filter(k=>OK.test(k)).forEach(k=>d[k]=localStorage.getItem(k));return JSON.stringify({app:'DailyLeng',version:1,exported:new Date().toISOString(),data:d},null,1)};
-const mergeIn=(k,nv)=>{const ov=localStorage.getItem(k);if(ov===null)return nv;const a=J(ov),b=J(nv);if(a==null||b==null)return nv;if(/^dl_hard_/.test(k)&&typeof a==='object'&&typeof b==='object'){const r={...a};for(const x in b)r[x]=Math.max(r[x]??0,b[x]);return JSON.stringify(r)}if(/^dl_fav_/.test(k)&&Array.isArray(a)&&Array.isArray(b))return JSON.stringify([...new Set([...a,...b])]);if(k==='dl_streak')return((b.last||'')>(a.last||'')||(b.last===a.last&&b.n>a.n))?nv:ov;if(/^best_/.test(k))return +b>+a?nv:ov;return nv};
+const mergeIn=(k,nv)=>{const ov=localStorage.getItem(k);if(ov===null)return nv;const a=J(ov),b=J(nv);if(a==null||b==null)return nv;if(/^dl_hard_/.test(k)&&typeof a==='object'&&typeof b==='object'){const r={...a};for(const x in b)r[x]=Math.max(r[x]??0,b[x]);return JSON.stringify(r)}if(/^dl_fav_/.test(k)&&Array.isArray(a)&&Array.isArray(b))return JSON.stringify([...new Set([...a,...b])]);if(k==='dl_streak')return((b.last||'')>(a.last||'')||(b.last===a.last&&b.n>a.n))?nv:ov;if(/^best_/.test(k))return +b>+a?nv:ov;if(/^dl_st_/.test(k)&&typeof a==='object'&&typeof b==='object')return JSON.stringify(dlStMerge(a,b));return nv};
 const imp=t=>{const o=J(t);if(!o||o.app!=='DailyLeng'||typeof o.data!=='object')return 'Archivo no válido: no es una copia de DailyLeng.';let n=0;for(const k in o.data){if(!OK.test(k)||typeof o.data[k]!=='string')continue;try{localStorage.setItem(k,mergeIn(k,o.data[k]));n++}catch(e){}}if(!n)return 'No se encontró progreso en el archivo.';setTimeout(()=>location.reload(),1000);return '✓ Progreso importado ('+n+' elementos). Recargando…'};
 document.head.insertAdjacentHTML('beforeend','<style>#pgb{position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:50;width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:var(--glass);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);color:inherit;font-size:20px;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.18)}#pgm{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.4);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);padding:16px}#pgm.on{display:flex}#pgm .bx{width:min(440px,100%);max-height:88vh;overflow:auto;background:var(--glass);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);border:1px solid var(--border);border-radius:22px;padding:18px;box-shadow:0 20px 60px rgba(0,0,0,.35)}#pgm textarea{width:100%;height:110px;border-radius:12px;border:1px solid var(--border);background:transparent;color:inherit;font:12px ui-monospace,monospace;padding:8px;box-sizing:border-box}#pgm button{margin:6px 6px 0 0;padding:8px 14px;border-radius:12px;border:1px solid var(--border);background:var(--glass);color:inherit;font:inherit;font-size:13px;cursor:pointer}#pgm p{font-size:12px;opacity:.7;margin:6px 0}</style>');
-document.body.insertAdjacentHTML('beforeend','<button id="pgb" aria-label="Copia de seguridad del progreso" title="Copia de seguridad">💾</button><div id="pgm"><div class="bx"><b style="font-size:17px">Copia de seguridad</b><p>Guarda tu progreso (falladas, favoritas, racha y mejores puntuaciones) para no perderlo si borras la caché o cambias de dispositivo. Para restaurarlo, pega aquí una copia o elige un archivo; se combina con lo que ya tengas.</p><textarea id="pgt" spellcheck="false"></textarea><div><button id="pgd">⬇ Descargar .json</button><button id="pgc">Copiar</button><button id="pgi">⬆ Importar texto</button><button id="pgf">Elegir archivo…</button><button id="pgx">Cerrar</button></div><input id="pgfi" type="file" accept=".json,application/json" hidden><p id="pgs"></p></div></div>');
+document.body.insertAdjacentHTML('beforeend','<button id="pgb" aria-label="Copia de seguridad del progreso" title="Copia de seguridad">💾</button><div id="pgm"><div class="bx"><b style="font-size:17px">Copia de seguridad</b><p>Guarda tu progreso (falladas, favoritas, racha, estadísticas y mejores puntuaciones) para no perderlo si borras la caché o cambias de dispositivo. Para restaurarlo, pega aquí una copia o elige un archivo; se combina con lo que ya tengas.</p><textarea id="pgt" spellcheck="false"></textarea><div><button id="pgd">⬇ Descargar .json</button><button id="pgc">Copiar</button><button id="pgi">⬆ Importar texto</button><button id="pgf">Elegir archivo…</button><button id="pgx">Cerrar</button></div><input id="pgfi" type="file" accept=".json,application/json" hidden><p id="pgs"></p></div></div>');
 const $=i=>document.getElementById(i),st=m=>{$('pgs').textContent=m};
 $('pgb').onclick=()=>{$('pgt').value=mkExport();st('');$('pgm').classList.add('on')};
 $('pgx').onclick=()=>$('pgm').classList.remove('on');
@@ -504,7 +502,7 @@ window.setNQ=v=>{state.nq=Math.max(5,Math.min(60,+v||20));try{localStorage.setIt
 const _sg=seg;seg=function(){let s=_sg();if(state.numOnly)s=s.replace(/class="on"/g,'class=""');s=s.slice(0,-6)+`<button class="${state.numOnly?'on':''}" onclick="toggleNum()">Números</button></div>`;const n=state.nq;return s+`<div class="nqr"><span>Preguntas</span><input type="range" min="5" max="60" step="5" value="${n}" aria-label="Número de preguntas" oninput="this.nextElementSibling.textContent=this.value" onchange="setNQ(this.value)"><b>${n}</b></div>`};
 
 function done(m,N){const L=state.lang,s=state.score,p=Math.round(s/N*100),miss=state.missed;let pb=NaN;try{pb=parseInt(localStorage.getItem('best_pct_'+L))}catch(e){}
-if(state._fq!==state.questions){state._fq=state.questions;state._rc=N>=10&&p>0&&(isNaN(pb)||p>pb);if(state._rc)try{localStorage.setItem('best_pct_'+L,p)}catch(e){}}
+if(state._fq!==state.questions){state._fq=state.questions;state._rc=!state._retry&&N>=10&&p>0&&(isNaN(pb)||p>pb);if(state._rc)try{localStorage.setItem('best_pct_'+L,p)}catch(e){}}
 const rec=state._rc,bp=rec?p:pb,col=p>=90?'#30d158':p>=70?'#0a84ff':p>=50?'#ff9f0a':'#ff453a',msg=p===100?'¡Perfecto!':p>=90?'¡Excelente!':p>=70?'Muy bien':p>=50?'Vas por buen camino':'Sigue practicando',C=2*Math.PI*54;
 m.innerHTML=`<div class="rs"><div class="rs-ring"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="54" class="rs-t"/><circle cx="60" cy="60" r="54" class="rs-b" style="stroke:${col};stroke-dasharray:${C};stroke-dashoffset:${C}" data-off="${C*(1-s/N)}"/></svg><div class="rs-c"><b id="rsn">0</b><span>%</span></div></div><h2>${msg}</h2><p class="rs-s">${s} de ${N} correctas${rec?' · <i>Nuevo récord</i>':''}</p><div class="rs-g"><div><b>${s}</b><span>Aciertos</span></div><div><b>${N-s}</b><span>Fallos</span></div><div><b>${isNaN(bp)?'—':bp+'%'}</b><span>Mejor</span></div></div>`+(miss.length?`<details class="rs-l"><summary>Para repasar (${miss.length})</summary>${miss.slice(0,40).map(q=>`<div><span>${q.q}</span><b>${q.o[q.a]}</b></div>`).join('')}</details>`:'')+`<button class="btn rs-p" onclick="setTab('quiz')">Nuevo test</button>`+(miss.length?`<button class="rs-2" onclick="retryMissed()">Repetir falladas (${miss.length})</button>`:'')+'</div>';
 anim(m,[{opacity:0,transform:'scale(.97)'},{opacity:1,transform:'none'}],{duration:480});
@@ -594,9 +592,9 @@ const _r18=render;render=function(){_r18();if(state.tab==='dic')drawCats();addRu
 window.addEventListener('storage',e=>{if(e.key&&/^dl_hard_/.test(e.key))refreshDots();});
 
 /* ---------- Sincronización automática entre dispositivos ---------- */
-const SK=/^(dl_(hard_|fav_|ex_)|dl_streak$|best_|dl_nq$|dl_ptv$|dl_qmode$)/;
+const SK=/^(dl_(hard_|fav_|ex_|st_)|dl_streak$|best_|dl_nq$|dl_ptv$|dl_qmode$)/;
 const snapLocal=()=>{const d={};try{Object.keys(localStorage).filter(k=>SK.test(k)).forEach(k=>d[k]=localStorage.getItem(k))}catch(e){}return d;};
-const mergeU=(k,ov,nv)=>{const a=J(ov),b=J(nv);if(a==null||b==null)return nv;if(/^dl_hard_/.test(k)&&typeof a==='object'&&typeof b==='object'){const r={...a};for(const x in b)r[x]=Math.max(r[x]??0,b[x]);return JSON.stringify(r)}if(/^dl_fav_/.test(k)&&Array.isArray(a)&&Array.isArray(b))return JSON.stringify([...new Set([...a,...b])]);if(k==='dl_streak')return((b.last||'')>(a.last||'')||(b.last===a.last&&b.n>a.n))?nv:ov;if(/^best_/.test(k))return +b>+a?nv:ov;return nv};
+const mergeU=(k,ov,nv)=>{const a=J(ov),b=J(nv);if(a==null||b==null)return nv;if(/^dl_hard_/.test(k)&&typeof a==='object'&&typeof b==='object'){const r={...a};for(const x in b)r[x]=Math.max(r[x]??0,b[x]);return JSON.stringify(r)}if(/^dl_fav_/.test(k)&&Array.isArray(a)&&Array.isArray(b))return JSON.stringify([...new Set([...a,...b])]);if(k==='dl_streak')return((b.last||'')>(a.last||'')||(b.last===a.last&&b.n>a.n))?nv:ov;if(/^best_/.test(k))return +b>+a?nv:ov;if(/^dl_st_/.test(k)&&typeof a==='object'&&typeof b==='object')return JSON.stringify(dlStMerge(a,b));return nv};
 let shadow=J(LS.get('dl_sync_shadow')),mt=J(LS.get('dl_sync_mt'))||{};
 let dev=LS.get('dl_dev');if(!dev){dev=Math.random().toString(36).slice(2,10);LS.set('dl_dev',dev);}
 const saveMeta=()=>{LS.set('dl_sync_shadow',JSON.stringify(shadow));LS.set('dl_sync_mt',JSON.stringify(mt));};
@@ -641,19 +639,19 @@ document.head.insertAdjacentHTML('beforeend','<style>'+
 (function(){
 const M=()=>!matchMedia('(prefers-reduced-motion:reduce)').matches;
 const SOFT='cubic-bezier(.3,1.22,.5,1)',OUT='cubic-bezier(.22,1,.36,1)';
-const ORDER=['dic','phr','key','num','pro','fav','quiz'];
+const ORDER=['dic','phr','key','num','pro','fav','quiz','stats'];
 const BOOK='<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.5C10.3 5.2 7.9 4.5 4.5 4.5v13c3.4 0 5.8.7 7.5 2 1.7-1.3 4.1-2 7.5-2v-13c-3.4 0-5.8.7-7.5 2z"/><path d="M12 6.5v13"/></svg>';
 
 /* ---------- Guía ---------- */
 const G=[
-['Qué es DailyLeng','<p>Una app para practicar a diario francés, ruso, inglés, alemán, italiano y portugués. Elige el idioma arriba y muévete por las pestañas:</p><ul><li><b>Diccionario</b>: unas 740 palabras por idioma con pronunciación, buscador y filtro por categoría.</li><li><b>Frases</b>: las frases más útiles del día a día, con buscador.</li><li><b>Palabras clave</b>: más de 50 imprescindibles, cada una con un ejemplo de uso y con buscador.</li><li><b>Números</b>: del 1 al 100, con buscador.</li><li><b>Pronunciación</b>: di en voz alta una palabra, frase o número y la app comprueba si se te entiende.</li><li><b>★ Favs</b>: tus palabras favoritas y las que más te cuestan.</li><li><b>Test</b>: de elegir, de escribir o de escuchar.</li></ul><p>En el móvil también puedes deslizar el dedo a izquierda o derecha para cambiar de pestaña.</p>'],
-['Cómo funciona el test','<ul><li>Pulsa <b>Opciones</b> para elegir nivel (Principiante: palabras clave · Intermedio: todo el diccionario · Avanzado: frases), número de preguntas (5 a 60) y categoría (por ejemplo, solo salsas o solo cocina).</li><li><b>★ Favs</b> hace el test solo con tus favoritas y <b>Números</b> solo con números.</li><li>Las palabras que fallas aparecen más a menudo en los siguientes tests (repaso espaciado). Cada palabra muestra una etiqueta: <i>Difícil</i>, <i>Medio</i> o <i>Dominada</i>.</li><li>Al terminar verás tu porcentaje, tu mejor marca y la lista «Para repasar». <b>Repetir falladas</b> vuelve a preguntarte solo esas.</li><li>En ruso, cada palabra en cirílico lleva debajo cómo se lee.</li></ul>'],
-['Racha 🔥','<p>El contador junto al nombre sube un día cada vez que <b>terminas un test</b> en un día distinto al anterior. Si pasa un día entero sin completar ninguno, vuelve a empezar en 1.</p>'],
-['Copia de seguridad y sincronización','<p><b>Automática.</b> Si abres DailyLeng desde su enlace con tu cuenta de Claude iniciada, tu progreso (racha, favoritas, dificultad de cada palabra y récords) se sincroniza solo entre todos tus dispositivos. Pulsa 💾 y comprueba que pone «☁ Sincronización automática activa».</p><p><b>Manual, paso a paso:</b></p><ol><li>Pulsa el botón <b>💾</b> (abajo a la derecha).</li><li>En el recuadro aparece tu progreso ya escrito.</li><li>Pulsa <b>Descargar .json</b> y confirma; se guarda un archivo <i>DailyLeng-progreso-fecha.json</i>. También puedes pulsar <b>Copiar</b> y guardar el texto en una nota o un correo.</li><li>Para restaurar, en el otro dispositivo pulsa 💾 → <b>Elegir archivo…</b> (o pega el texto y pulsa <b>Importar texto</b>).</li><li>La página se recarga sola. Los datos se <b>combinan</b>: no se borra nada (une favoritas, guarda la racha más reciente y el mejor récord).</li></ol><p>La voz elegida no se guarda porque depende de cada dispositivo. Borrar los datos del navegador borra el progreso local: haz una copia antes.</p>'],
+['Qué es DailyLeng','<p>Una app para practicar a diario francés, ruso, inglés, alemán, italiano y portugués. Elige el idioma arriba y muévete por las pestañas:</p><ul><li><b>Diccionario</b>: más de 1.600 palabras por idioma (también jerga y tacos del día a día) con pronunciación, buscador sin tildes y categorías por temas.</li><li><b>Frases</b>: las frases más útiles del día a día, con buscador.</li><li><b>Palabras clave</b>: más de 50 imprescindibles, cada una con un ejemplo de uso y con buscador.</li><li><b>Números</b>: del 1 al 100, con buscador.</li><li><b>Pronunciación</b>: di en voz alta una palabra, frase o número y la app comprueba si se te entiende.</li><li><b>★ Favs</b>: tus palabras favoritas y las que más te cuestan.</li><li><b>Test</b>: de elegir, de escribir, de escuchar o de emparejar contra reloj.</li><li><b>Progreso</b>: tus aciertos de cada día y las categorías que más fallas.</li></ul><p>En el móvil también puedes deslizar el dedo a izquierda o derecha para cambiar de pestaña.</p>'],
+['Cómo funciona el test','<ul><li>Pulsa <b>Opciones</b> para elegir nivel (Principiante: palabras clave · Intermedio: todo el diccionario · Avanzado: frases), número de preguntas (5 a 60) y categoría (por ejemplo, solo salsas o solo cocina).</li><li><b>★ Favs</b> hace el test solo con tus favoritas y <b>Números</b> solo con números.</li><li>Las palabras que fallas aparecen más a menudo en los siguientes tests (repaso espaciado). Cada palabra muestra una etiqueta: <i>Difícil</i>, <i>Medio</i> o <i>Dominada</i>.</li><li>Al terminar verás tu porcentaje, tu mejor marca y la lista «Para repasar». <b>Repetir falladas</b> vuelve a preguntarte solo esas.</li><li>Al acertar pasa enseguida a la siguiente; al fallar espera un poco para que veas la respuesta correcta. Toca la tarjeta (o pulsa Intro) para seguir antes. En <b>Ajustes ⚙</b> → <b>Paso entre preguntas</b> puedes elegir <i>Sin animación</i>.</li><li>Las opciones falsas nunca son sinónimos de la correcta.</li><li>En ruso, cada palabra en cirílico lleva debajo cómo se lee.</li></ul>'],
+['Racha 🔥','<p>El contador junto al nombre sube un día cada vez que <b>terminas un test</b> en un día distinto al anterior. Si pasa un día entero sin completar ninguno, vuelve a empezar en 1. Una partida de <b>Emparejar</b> con 5 parejas o más también cuenta. Toca el contador para abrir <b>Progreso</b>.</p>'],
+['Copia de seguridad y sincronización','<p><b>Automática.</b> Si abres DailyLeng desde su enlace con tu cuenta de Claude iniciada, tu progreso (racha, favoritas, dificultad de cada palabra, estadísticas y récords) se sincroniza solo entre todos tus dispositivos. Abre <b>Ajustes ⚙</b> y comprueba que pone «☁ Sincronización automática activa».</p><p><b>Manual, paso a paso:</b></p><ol><li>Abre <b>Ajustes ⚙</b> (arriba, junto a la guía) y baja hasta <b>Copia de seguridad</b>.</li><li>En el recuadro aparece tu progreso ya escrito.</li><li>Pulsa <b>Descargar .json</b> y confirma; se guarda un archivo <i>DailyLeng-progreso-fecha.json</i>. También puedes pulsar <b>Copiar</b> y guardar el texto en una nota o un correo.</li><li>Para restaurar, en el otro dispositivo abre <b>Ajustes ⚙</b> → <b>Elegir archivo…</b> (o pega el texto y pulsa <b>Importar texto</b>).</li><li>La página se recarga sola. Los datos se <b>combinan</b>: no se borra nada (une favoritas, guarda la racha más reciente y el mejor récord).</li></ol><p>La voz elegida no se guarda porque depende de cada dispositivo. Borrar los datos del navegador borra el progreso local: haz una copia antes.</p>'],
 ['Usar la app en iPhone','<ol><li>Abre el enlace de DailyLeng en <b>Safari</b> con tu cuenta de Claude iniciada.</li><li>Pulsa <b>Compartir</b> → <b>Añadir a pantalla de inicio</b>. Tendrás un icono como si fuera una app.</li><li>Si no oyes nada: sube el volumen y desactiva el modo silencio.</li><li>Para voces mejores: Ajustes → Accesibilidad → Contenido leído → Voces, y descarga las voces «Mejorada» o «Premium» de cada idioma.</li></ol>'],
-['Usar la app en Android','<p>Hay dos formas. La primera no necesita cuenta de Claude.</p><p><b>1. Sin cuenta de Claude (versión de GitHub Pages)</b></p><ol><li>En el Android, abre la dirección de tu GitHub Pages con <b>Google Chrome</b> (por ejemplo <i>https://tuusuario.github.io/tu-repo/</i>).</li><li>Menú <b>⋮</b> → <b>Instalar aplicación</b> (o <b>Añadir a pantalla de inicio</b>).</li><li>Se crea un icono y la app se abre a pantalla completa, sin barra del navegador. Una vez cargada, funciona también sin conexión.</li><li>Cuando subas una versión nueva, aparecerá abajo «Hay una versión nueva · Actualizar».</li></ol><p>Diferencias con la versión de claude.ai:</p><ul><li><b>Progreso:</b> se guarda solo en ese móvil. Para pasarlo a otro dispositivo usa 💾 a mano.</li><li><b>Ejemplos:</b> salen los que ya vienen escritos; los generados por Claude solo se crean dentro de claude.ai.</li></ul><p><b>2. Con tu cuenta de Claude</b></p><ol><li>Abre el enlace de DailyLeng en <b>Google Chrome</b> con tu cuenta de Claude iniciada.</li><li>Menú <b>⋮</b> → <b>Añadir a pantalla de inicio</b>.</li><li>Así tienes sincronización automática y ejemplos generados.</li></ol><p><b>Voces</b></p><ol><li>Ajustes → Sistema → Idiomas → <b>Salida de texto a voz</b> → motor <b>Servicios de voz de Google</b> → <b>Instalar datos de voz</b> y descarga cada idioma.</li><li>Si no se oye, revisa el volumen multimedia (no el del timbre).</li></ol><p>En Android la app usa un modo más ligero (sin efectos de cristal) para ir más fluida. Los nombres de los menús pueden variar según la marca del móvil.</p>'],
+['Usar la app en Android','<p>Hay dos formas. La primera no necesita cuenta de Claude.</p><p><b>1. Sin cuenta de Claude (versión de GitHub Pages)</b></p><ol><li>En el Android, abre la dirección de tu GitHub Pages con <b>Google Chrome</b> (por ejemplo <i>https://tuusuario.github.io/tu-repo/</i>).</li><li>Menú <b>⋮</b> → <b>Instalar aplicación</b> (o <b>Añadir a pantalla de inicio</b>).</li><li>Se crea un icono y la app se abre a pantalla completa, sin barra del navegador. Una vez cargada, funciona también sin conexión.</li><li>Cuando subas una versión nueva, aparecerá abajo «Hay una versión nueva · Actualizar».</li></ol><p>Diferencias con la versión de claude.ai:</p><ul><li><b>Progreso:</b> se guarda solo en ese móvil. Para pasarlo a otro dispositivo usa la copia de seguridad de <b>Ajustes ⚙</b>.</li><li><b>Ejemplos:</b> salen los que ya vienen escritos; los generados por Claude solo se crean dentro de claude.ai.</li></ul><p><b>2. Con tu cuenta de Claude</b></p><ol><li>Abre el enlace de DailyLeng en <b>Google Chrome</b> con tu cuenta de Claude iniciada.</li><li>Menú <b>⋮</b> → <b>Añadir a pantalla de inicio</b>.</li><li>Así tienes sincronización automática y ejemplos generados.</li></ol><p><b>Voces</b></p><ol><li>Ajustes → Sistema → Idiomas → <b>Salida de texto a voz</b> → motor <b>Servicios de voz de Google</b> → <b>Instalar datos de voz</b> y descarga cada idioma.</li><li>Si no se oye, revisa el volumen multimedia (no el del timbre).</li></ol><p>En Android la app usa un modo más ligero (sin efectos de cristal) para ir más fluida. Los nombres de los menús pueden variar según la marca del móvil.</p>'],
 ['Usar la app en ordenador','<p>Funciona en cualquier navegador. Las voces más naturales están en <b>Microsoft Edge</b> (voces «Natural», gratis), seguidas de Google Chrome (voces «Google»). Dentro de la app de escritorio de Claude o en Firefox solo suelen estar las voces básicas del sistema, que suenan robóticas.</p>'],
-['Cómo funcionan las voces','<p>DailyLeng lee en voz alta con las voces que ya tiene tu dispositivo: una página web no puede descargar voces ni usar servicios de voz externos. Por eso suena distinto en cada navegador. Con «Automática» se elige la mejor voz disponible para cada idioma; también puedes escoger otra en el desplegable. Si solo hay voces básicas, la app te lo avisa.</p>'],
+['Cómo funcionan las voces','<p>DailyLeng lee en voz alta con las voces que ya tiene tu dispositivo: una página web no puede descargar voces ni usar servicios de voz externos. Por eso suena distinto en cada navegador. Con «Automática» se elige la mejor voz disponible para cada idioma; también puedes escoger otra en <b>Ajustes ⚙</b> → <b>Voz</b>. Si solo hay voces básicas, la app te lo avisa allí.</p>'],
 ['Dónde se guardan tus datos','<p>Tu progreso se guarda en este navegador y, si la sincronización está activa, en un espacio privado de tu cuenta de Claude que solo tú puedes leer. No se comparte con nadie.</p>']
 ];
 const hr=document.querySelector('header'),lg=document.getElementById('langs');
@@ -684,7 +682,7 @@ main.addEventListener('touchstart',e=>{const t=e.target;ok=!(state.tab==='quiz'|
 main.addEventListener('touchend',e=>{if(!ok)return;const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;if(Math.abs(dx)>70&&Math.abs(dy)<Math.abs(dx)*.5&&Date.now()-st<600){const i=ORDER.indexOf(state.tab)+(dx<0?1:-1);if(i>=0&&i<ORDER.length)setTab(ORDER[i]);}},{passive:true});
 
 /* ---------- Test: siguiente tarjeta entra deslizándose ---------- */
-const _rq19=renderQuiz;renderQuiz=function(){_rq19();const m=document.getElementById('main'),N=state.questions.length;if(!M()||!N||state.qi===0||state.qi>=N)return;const c=m.querySelector('.quiz-card');if(!c)return;m.getAnimations().forEach(a=>a.cancel());c.animate([{opacity:0,transform:'translateX(70%) rotate(2deg)'},{opacity:1,transform:'none'}],{duration:560,easing:SOFT});};
+const _rq19=renderQuiz;renderQuiz=function(){_rq19();const m=document.getElementById('main'),N=state.questions.length;if(!M()||!N||state.qi===0||state.qi>=N)return;const c=m.querySelector('.quiz-card');if(!c)return;m.getAnimations().forEach(a=>a.cancel());if(state.qtr!=='i')c.animate([{opacity:0,transform:'translateX(26px)'},{opacity:1,transform:'none'}],{duration:200,easing:OUT});};
 
 /* ---------- Test: ajustes plegados en «Opciones» ---------- */
 state.qopen=false;
@@ -757,7 +755,7 @@ document.head.insertAdjacentHTML('beforeend','<style>'+
 '@media (hover:none){.dca{display:none}}'+
 '</style>');
 })();
-const V20D={add:{},gen:{},conj:{},brw:{"comboio":["trem","TREIN","m"],"autocarro":["ônibus","O-ni-bus","m"],"telemóvel":["celular","se-lu-LAR","m"],"ecrã":["tela","TE-la","f"],"casa de banho":["banheiro","ba-NHEI-ru","m"],"pequeno-almoço":["café da manhã","ca-FE da ma-NHÃ","m"],"cão":["cachorro","ca-XO-hu","m"],"empregado de mesa":["garçom","gar-SOM","m"],"ementa":["cardápio","car-DA-piu","m"],"constipação":["resfriado","hes-fri-A-du","m"],"urgências":["pronto-socorro","PRON-tu so-CO-hu","m"],"molho de caril":["molho de curry","MO-lhu dji CU-hi","m"],"molho de natas":["molho de creme de leite","MO-lhu dji CRE-mi dji LEI-tchi","m"],"colega de trabalho":["colega de trabalho","co-LE-ga dji tra-BA-lhu","mf"],"entrevista de emprego":["entrevista de emprego","en-tre-VIS-ta dji em-PRE-gu","f"],"gorjeta":["gorjeta","gor-JE-ta","f"],"sumo":["suco","SU-ku","m"],"chávena":["xícara","SHI-ka-ra","f"],"talão":["nota fiscal","NO-ta fis-KAU","f"],"multibanco":["caixa eletrônico","KAI-sha e-le-TRO-ni-ku","m"],"esquadra":["delegacia","de-le-ga-SI-a","f"],"passeio":["calçada","kau-SA-da","f"],"câmara municipal":["prefeitura","pre-fei-TU-ra","f"],"equipa":["time","TSI-mi","m"],"ginásio":["academia","a-ka-de-MI-a","f"],"duche":["chuveiro","shu-VEI-ru","m"],"frigorífico":["geladeira","je-la-DEI-ra","f"],"candeeiro":["luminária","lu-mi-NA-ria","f"],"ananás":["abacaxi","a-ba-ka-SHI","m"],"pimento":["pimentão","pi-men-TÃU","m"],"ténis":["tênis","TE-nis","m"],"basquetebol":["basquete","bas-KE-tsi","m"],"trabalhos de casa":["lição de casa","li-SÃU dzi KA-za","f"],"em numerário":["em dinheiro","ein dji-ÑEI-ru"],"gajo":["cara","KA-ra","m"],"fixe":["legal","le-GAU"],"guito":["grana","GRA-na","f"],"chaço":["lata-velha","LA-ta VE-lha","f"],"parvo":["bobo","BO-bu"],"miúdo":["moleque","mo-LE-ki","m"],"engatar":["paquerar","pa-ke-RAR"],"bolas":["poxa","PO-sha"],"está bem":["tá bom","ta BOM"],"bulir":["ralar","ha-LAR"],"papar":["rangar","han-GAR"],"cocktail":["coquetel","ko-ke-TEU","m"],"saco":["sacola","sa-KO-la","f"],"polícia":["policial","po-li-si-AU","mf"],"chumbar":["reprovar","he-pro-VAR"],"parceiro":["mano","MA-nu","m"],"ter saudades":["sentir saudade","sen-TSIR sau-DA-dji"]},brp:{"Como está?":"Como você está?","Chamo-me...":"Me chamo...","Fala inglês?":"Você fala inglês?","Prazer em conhecê-lo":"Muito prazer","Como se chama?":"Qual é o seu nome?","De onde é?":"De onde você é?","Quantos anos tem?":"Quantos anos você tem?","Gosto disto":"Gosto disso","Onde fica a casa de banho?":"Onde fica o banheiro?","Pode ajudar-me?":"Pode me ajudar?","O que é isto?":"O que é isso?","A ementa, por favor":"O cardápio, por favor","Vemo-nos amanhã":"A gente se vê amanhã","Está demasiado salgado":"Está salgado demais","Tem molho picante?":"Você tem molho picante?","Então, como é?":"E aí, beleza?","Estou de rastos.":"Estou acabado.","Deixa-me em paz!":"Me deixa em paz!","Cala-te!":"Cala a boca!","Estás a gozar comigo?":"Tá zoando comigo?","Não me lixes!":"Tá de sacanagem!","És um idiota.":"Você é um idiota.","Amo-te.":"Te amo.","Gosto de ti.":"Gosto de você.","Queres tomar um copo comigo?":"Quer tomar alguma coisa comigo?","Dás-me o teu número?":"Me passa seu número?","Tenho saudades tuas.":"Estou com saudade de você.","Roubaram-me a carteira.":"Roubaram minha carteira.","Estou a morrer de fome!":"Estou morrendo de fome!","Que fixe!":"Que legal!","Estou a passar-me.":"Estou pirando.","Está um frio de rachar.":"Está um frio de lascar.","É canja.":"É moleza.","A sério?":"Sério?","Calma, não te preocupes.":"Calma, não se preocupe.","Não o suporto.":"Não suporto ele.","Tens lume?":"Tem isqueiro?","Diverte-te!":"Divirta-se!","O que há para o jantar?":"O que tem para o jantar?","Estou farto.":"Estou de saco cheio."}};window.__V20=V20D;for(const l in DATA){if(DATA[l]._gen){V20D.gen[l]=DATA[l]._gen;V20D.conj[l]=DATA[l]._conj;}}
+const V20D={add:{},gen:{},conj:{},brw:{"comboio":["trem","TREIN","m"],"autocarro":["ônibus","O-ni-bus","m"],"telemóvel":["celular","se-lu-LAR","m"],"ecrã":["tela","TE-la","f"],"casa de banho":["banheiro","ba-NHEI-ru","m"],"pequeno-almoço":["café da manhã","ca-FE da ma-NHÃ","m"],"cão":["cachorro","ca-XO-hu","m"],"empregado de mesa":["garçom","gar-SOM","m"],"ementa":["cardápio","car-DA-piu","m"],"constipação":["resfriado","hes-fri-A-du","m"],"urgências":["pronto-socorro","PRON-tu so-CO-hu","m"],"molho de caril":["molho de curry","MO-lhu dji CU-hi","m"],"molho de natas":["molho de creme de leite","MO-lhu dji CRE-mi dji LEI-tchi","m"],"colega de trabalho":["colega de trabalho","co-LE-ga dji tra-BA-lhu","mf"],"entrevista de emprego":["entrevista de emprego","en-tre-VIS-ta dji em-PRE-gu","f"],"gorjeta":["gorjeta","gor-JE-ta","f"],"sumo":["suco","SU-ku","m"],"chávena":["xícara","SHI-ka-ra","f"],"talão":["nota fiscal","NO-ta fis-KAU","f"],"multibanco":["caixa eletrônico","KAI-sha e-le-TRO-ni-ku","m"],"esquadra":["delegacia","de-le-ga-SI-a","f"],"passeio":["calçada","kau-SA-da","f"],"câmara municipal":["prefeitura","pre-fei-TU-ra","f"],"equipa":["time","TSI-mi","m"],"ginásio":["academia","a-ka-de-MI-a","f"],"duche":["chuveiro","shu-VEI-ru","m"],"frigorífico":["geladeira","je-la-DEI-ra","f"],"candeeiro":["luminária","lu-mi-NA-ria","f"],"ananás":["abacaxi","a-ba-ka-SHI","m"],"pimento":["pimentão","pi-men-TÃU","m"],"ténis":["tênis","TE-nis","m"],"basquetebol":["basquete","bas-KE-tsi","m"],"trabalhos de casa":["lição de casa","li-SÃU dzi KA-za","f"],"em numerário":["em dinheiro","ein dji-ÑEI-ru"],"gajo":["cara","KA-ra","m"],"fixe":["legal","le-GAU"],"guito":["grana","GRA-na","f"],"chaço":["lata-velha","LA-ta VE-lha","f"],"parvo":["bobo","BO-bu"],"miúdo":["moleque","mo-LE-ki","m"],"engatar":["paquerar","pa-ke-RAR"],"bolas":["poxa","PO-sha"],"está bem":["tá bom","ta BOM"],"bulir":["ralar","ha-LAR"],"papar":["rangar","han-GAR"],"cocktail":["coquetel","ko-ke-TEU","m"],"saco":["sacola","sa-KO-la","f"],"polícia":["policial","po-li-si-AU","mf"],"chumbar":["reprovar","he-pro-VAR"],"parceiro":["mano","MA-nu","m"],"ter saudades":["sentir saudade","sen-TSIR sau-DA-dji"],"giro":["fofo","FO-fu"],"piroso":["brega","BRE-ga"],"maquilhagem":["maquiagem","ma-ki-A-zhein","f"],"cabrão":["desgraçado","dez-gra-SA-du","m"],"estou-me a cagar":["tô nem aí","to nein a-I"],"lixado":["puto da vida","PU-tu da VI-da"],"totó":["mané","ma-NE","m"],"betinho":["mauricinho","mau-ri-SI-ñu","m"],"cromo":["nerd","NER-dji","m"],"marrão":["cê-dê-efe","se-de-E-fi","mf"],"graxista":["puxa-saco","pu-sha-SA-ku","mf"],"coscuvilheiro":["fofoqueiro","fo-fo-KEI-ru","m"],"cravas":["aproveitador","a-pro-vei-ta-DOR","m"],"malta":["galera","ga-LE-ra","f"],"gaja":["mina","MI-na","f"],"estar-se nas tintas":["não estar nem aí","nãu es-TAR nein a-I"],"curte":["ficada","fi-KA-da","f"],"que cena":["que doideira","ki doi-DEI-ra"],"vá lá":["vamos lá","VA-mus LA"],"bazar":["vazar","va-ZAR"],"biscate":["bico","BI-ku","m"],"deixa-te disso":["para com isso","PA-ra kom I-su"],"foleiro":["cafona","ka-FO-na"],"é brutal":["é demais","e dji-MAIS"],"estar teso":["estar duro","es-TAR DU-ru"],"rasca":["mixuruca","mi-shu-RU-ka"],"porreiro":["gente boa","ZHEN-tchi BO-a"],"melga":["pentelho","pen-TE-liu"],"forreta":["pão-duro","pãu-DU-ru"],"maçador":["entediante","en-te-dji-AN-tchi"],"partido":["quebrado","ke-BRA-du"],"arranjar":["consertar","kon-ser-TAR"],"partir":["quebrar","ke-BRAR"],"tomar duche":["tomar banho","to-MAR BA-ñu"],"partilhar":["compartilhar","kom-par-tchi-LIAR"],"cave":["porão","po-RÃU","m"],"secretária":["escrivaninha","es-kri-va-NI-ña","f"],"lavatório":["pia","PI-a","f"],"sanita":["vaso sanitário","VA-zu sa-ni-TA-riu","m"],"lava-loiça":["pia da cozinha","PI-a da ko-ZI-ña","f"],"máquina de lavar loiça":["lava-louças","LA-va LOU-sas","f"],"ferro de engomar":["ferro de passar","FE-hu dji pa-SAR","m"],"ventoinha":["ventilador","ven-tchi-la-DOR","m"],"caixote do lixo":["lixeira","li-SHEI-ra","f"],"papel higiénico":["papel higiênico","pa-PEU i-ZHIE-ni-ku","m"],"pintainho":["pintinho","pin-TSI-ñu","m"],"piza":["pizza","PI-tsa","f"],"borrego":["cordeiro","kor-DEI-ru","m"],"natas":["creme de leite","KRE-mi dji LEI-tchi","m"],"compota":["geleia","zhe-LEI-a","f"],"rebuçado":["bala","BA-la","f"],"pastilha elástica":["chiclete","shi-KLE-tchi","m"],"queque":["bolinho","bo-LI-ñu","m"],"batatas fritas de pacote":["batata chips","ba-TA-ta SHIPS","f"],"curgete":["abobrinha","a-bo-BRI-ña","f"],"brócolos":["brócolis","BRO-ko-lis","pm"],"feijão-verde":["vagem","VA-zhein","f"],"penso":["band-aid","ben-DEI-dji","m"],"fazer comichão":["coçar","ko-SAR"],"talho":["açougue","a-SOU-gui","m"],"bomba de gasolina":["posto de gasolina","POS-tu dji ga-zo-LI-na","m"],"centro comercial":["shopping","SHO-pin","m"],"discoteca":["balada","ba-LA-da","f"],"pastelaria":["confeitaria","kon-fei-ta-RI-a","f"],"jardim zoológico":["zoológico","zo-o-LO-zhi-ku","m"],"rotunda":["rotatória","ho-ta-TO-ria","f"],"passadeira":["faixa de pedestres","FAI-sha dji pe-DES-tris","f"],"captura de ecrã":["captura de tela","kap-TU-ra dji TE-la","f"],"coluna":["caixa de som","KAI-sha dji SOM","f"],"utilizador":["usuário","u-zu-A-riu","m"],"soutien":["sutiã","su-tchi-Ã","m"],"roupa interior":["roupa íntima","HOU-pa IN-tchi-ma","f"],"sweatshirt":["moletom","mo-le-TOM","m"],"fato de treino":["agasalho","a-ga-ZA-liu","m"],"fato":["terno","TER-nu","m"],"fecho éclair":["zíper","ZI-per","m"],"videojogo":["videogame","vi-djio-GUEI-mi","m"],"guitarra":["violão","vio-LÃU","m"],"canalizador":["encanador","en-ka-na-DOR","m"],"reformado":["aposentado","a-po-zen-TA-du","m"],"empregado de bar":["barman","BAR-man","m"],"estafeta":["entregador","en-tre-ga-DOR","m"],"despedir":["demitir","de-mi-TSIR"],"tempo parcial":["meio período","MEI-u pe-RI-u-du","m"],"se calhar":["quem sabe","kein SA-bi"],"seguro de saúde":["plano de saúde","PLA-nu dji sa-U-dji","m"],"galão":["café com leite","ka-FE kom LEI-tchi","m"],"batido":["milk-shake","miu-ki SHEI-ki","m"],"elétrico":["bonde","BON-dji","m"],"carrinha":["van","VAN","f"],"trotinete":["patinete","pa-tchi-NE-tchi","m"],"ferry":["balsa","BAU-sa","f"],"portagem":["pedágio","pe-DA-zhiu","m"],"carta de condução":["carteira de motorista","kar-TEI-ra dji mo-to-RIS-ta","f"],"travar":["frear","fre-AR"],"furo":["pneu furado","PNEU fu-RA-du","m"],"no estrangeiro":["no exterior","nu es-te-ri-OR"],"saldos":["liquidação","li-ki-da-SÃU","f"],"encomenda":["pedido","pe-DJI-du","m"],"disciplina":["matéria","ma-TE-ria","f"],"apontamentos":["anotações","a-no-ta-SÕIS","pf"],"intervalo":["recreio","he-KREI-u","m"],"escola secundária":["ensino médio","en-SI-nu ME-djiu","m"],"marrar":["decorar","de-ko-RAR"],"golo":["gol","GOU","m"],"guarda-redes":["goleiro","go-LEI-ru","m"],"fazer desporto":["fazer esporte","fa-ZER es-POR-tchi"],"terramoto":["terremoto","te-he-MO-tu","m"],"gémeos":["gêmeos","ZHE-mi-us","pm"],"ovo estrelado":["ovo frito","O-vu FRI-tu","m"],"puré de batata":["purê de batata","pu-RE dji ba-TA-ta","m"],"esparguete":["espaguete","es-pa-GUE-tchi","m"],"carne picada":["carne moída","KAR-ni mo-I-da","f"],"tosta mista":["misto-quente","MIS-tu KEN-tchi","m"],"tomar o pequeno-almoço":["tomar café da manhã","to-MAR ka-FE da ma-ÑÃ"],"maquilhar-se":["maquiar-se","ma-ki-AR-si"],"estaladiço":["crocante","kro-KAN-tchi"],"berbequim":["furadeira","fu-ra-DEI-ra","f"],"fita-cola":["fita adesiva","FI-ta a-de-ZI-va","f"],"escadote":["escada de mão","es-KA-da dji MÃU","f"],"jeitoso":["bonitão","bo-ni-TÃU","m"],"que lata":["que cara de pau","ki KA-ra dji PAU"],"estalo":["tapa","TA-pa","m"],"lavar a loiça":["lavar a louça","la-VAR a LOU-sa"],"estar farto até à ponta dos cabelos":["estar de saco cheio","es-TAR dji SA-ku SHEI-u"],"parvalhão":["babaca","ba-BA-ka","mf"],"imperial":["chope","SHO-pi","m"],"crédito à habitação":["financiamento imobiliário","fi-nan-sia-MEN-tu i-mo-bi-li-A-riu","m"],"poupanças":["economias","e-ko-no-MI-as","pf"]},brp:{"Como está?":"Como você está?","Chamo-me...":"Me chamo...","Fala inglês?":"Você fala inglês?","Prazer em conhecê-lo":"Muito prazer","Como se chama?":"Qual é o seu nome?","De onde é?":"De onde você é?","Quantos anos tem?":"Quantos anos você tem?","Gosto disto":"Gosto disso","Onde fica a casa de banho?":"Onde fica o banheiro?","Pode ajudar-me?":"Pode me ajudar?","O que é isto?":"O que é isso?","A ementa, por favor":"O cardápio, por favor","Vemo-nos amanhã":"A gente se vê amanhã","Está demasiado salgado":"Está salgado demais","Tem molho picante?":"Você tem molho picante?","Então, como é?":"E aí, beleza?","Estou de rastos.":"Estou acabado.","Deixa-me em paz!":"Me deixa em paz!","Cala-te!":"Cala a boca!","Estás a gozar comigo?":"Tá zoando comigo?","Não me lixes!":"Tá de sacanagem!","És um idiota.":"Você é um idiota.","Amo-te.":"Te amo.","Gosto de ti.":"Gosto de você.","Queres tomar um copo comigo?":"Quer tomar alguma coisa comigo?","Dás-me o teu número?":"Me passa seu número?","Tenho saudades tuas.":"Estou com saudade de você.","Roubaram-me a carteira.":"Roubaram minha carteira.","Estou a morrer de fome!":"Estou morrendo de fome!","Que fixe!":"Que legal!","Estou a passar-me.":"Estou pirando.","Está um frio de rachar.":"Está um frio de lascar.","É canja.":"É moleza.","A sério?":"Sério?","Calma, não te preocupes.":"Calma, não se preocupe.","Não o suporto.":"Não suporto ele.","Tens lume?":"Tem isqueiro?","Diverte-te!":"Divirta-se!","O que há para o jantar?":"O que tem para o jantar?","Estou farto.":"Estou de saco cheio."}};window.__V20=V20D;for(const l in DATA){if(DATA[l]._gen){V20D.gen[l]=DATA[l]._gen;V20D.conj[l]=DATA[l]._conj;}}
 /* v20: test de escritura y escucha, ejemplos para todo el diccionario, categorías nuevas, conjugaciones, género, aviso de versión y portugués PT/BR */
 (function(){
 const D=V20D,M=()=>!matchMedia('(prefers-reduced-motion:reduce)').matches;
@@ -831,17 +829,17 @@ function v20rows(){const l=state.lang;if(!['dic','key','fav'].includes(state.tab
 const _d20=decorate;decorate=function(){_d20();v20rows();};
 
 /* ---------- 6. Tipos de test: elegir, escribir y escuchar ---------- */
-state.qmode=['c','w','l'].includes(LS.get('dl_qmode'))?LS.get('dl_qmode'):'c';
+state.qmode=['c','w','l','m'].includes(LS.get('dl_qmode'))?LS.get('dl_qmode'):'c';
 window.setQMode=function(m){state.qmode=m;LS.set('dl_qmode',m);newQuiz();};
 const pq=w=>state.lang==='ru'?`<span class="pr pq">Se lee: ${esc(ruP(w))}</span>`:'';
 const near=n=>{const s=new Set();while(s.size<3){const x=n+[1,-1,2,-2,10,-10,5,-5][Math.floor(Math.random()*8)];if(x>=1&&x<=100&&x!==n)s.add(x);}return [...s];};
-const _g20=genQuiz;genQuiz=function(n){const qs=_g20(n),m=state.qmode||'c';if(m==='c'||!qs.length)return qs;
+const _g20=genQuiz;genQuiz=function(n){const qs=_g20(n),m=state.qmode||'c';if(m==='c'||m==='m'||!qs.length)return qs;
  if(m==='l'&&!('speechSynthesis' in window)){toast('Tu navegador no puede leer en voz alta: se usa el test normal.');return qs;}
  const l=state.lang,L=DATA[l],nm=L.name.toLowerCase();
  if(state.numOnly)return qs.map(()=>{const x=1+Math.floor(Math.random()*100),w=numWord(l,x),c=String(x);if(m==='l'){const o=shuffle([c,...near(x).map(String)]);return{t:'l',say:w,q:`«${esc(w)}»${pq(w)}`,o,a:o.indexOf(c)};}return{t:'w',q:`Escribe en cifras: «${esc(w)}»${pq(w)}`,acc:[c],o:[c],a:0,lab:'Escribe el número'};});
  const A=(state.level||'i')==='a';
  return qs.map(q=>{if(!q.k)return q;const e=A?L.phr.find(x=>x.f===q.k):L.dic.find(x=>x.w===q.k);if(!e)return q;const w=A?e.f:e.w,t=e.t;
-  if(m==='l'){const all=A?L.phr:L.dic,same=all.filter(x=>x.t!==t&&(A||x.c===e.c)),pool=same.length>=3?same:all.filter(x=>x.t!==t),o=shuffle([t,...shuffle(pool).slice(0,3).map(x=>x.t)]);return{t:'l',say:w,q:`«${esc(w)}»${pq(w)}`,o,a:o.indexOf(t),k:q.k};}
+  if(m==='l'){const all=A?L.phr:L.dic,same=all.filter(x=>x.t!==t&&dlSynOK(x.t,t)&&(A||x.c===e.c)),s2=all.filter(x=>x.t!==t&&dlSynOK(x.t,t)),pool=same.length>=3?same:s2.length>=3?s2:all.filter(x=>x.t!==t),o=shuffle([t,...shuffle(pool).slice(0,3).map(x=>x.t)]);return{t:'l',say:w,q:`«${esc(w)}»${pq(w)}`,o,a:o.indexOf(t),k:q.k};}
   const rev=!A&&l!=='ru'&&Math.random()<.5;
   if(rev)return{t:'w',q:`Escribe en ${nm}: «${esc(t)}»`,acc:[w],o:[w],a:0,k:q.k,lab:'Escribe en '+nm};
   return{t:'w',q:`¿Qué significa «${esc(w)}»?${pq(w)}`,acc:t.split(/[,\/;]| o /).map(s=>s.trim()).filter(Boolean).concat([t]),o:[t],a:0,k:q.k,ph:A,lab:'Escribe en español'};});};
@@ -858,17 +856,17 @@ window.wSubmit=function(ev,skip){if(ev)ev.preventDefault();if(answered)return fa
  document.querySelectorAll('#main .wq button').forEach(b=>b.disabled=true);
  if(fb)fb.innerHTML=ok?(r===2?'<b class="wok">¡Correcto!</b>':`<b class="wok">Casi.</b> Se escribe: <b>${esc(q.o[0])}</b>`):`${skip?'':'<b class="wbad">No es correcto.</b> '}Respuesta: <b>${esc(q.o[0])}</b>`;
  const p=document.querySelector('.prog i');if(p)p.style.width=(state.qi+1)/state.questions.length*100+'%';
- setTimeout(()=>out(document.querySelector('#main .quiz-card'),()=>{state.qi++;renderQuiz();}),ok&&r===2?800:1700);return false;};
+ dlNext(ok&&r===2,true);return false;};
 const _an20=answer;answer=function(i,c){const q=state.questions[state.qi],was=answered;_an20(i,c);if(!was&&q&&q.t==='l'){const s=document.querySelector('#main .quiz-q .lq');if(s)s.innerHTML=q.q;}};
 const _rq20=renderQuiz;renderQuiz=function(){_rq20();const N=state.questions.length;if(!N||state.qi>=N)return;const q=state.questions[state.qi],card=document.querySelector('#main .quiz-card');if(!card||!q)return;
  if(q.t==='w'){card.querySelectorAll('.opt').forEach(b=>b.remove());card.insertAdjacentHTML('beforeend',`<form class="wq" onsubmit="return wSubmit(event)"><input id="wqi" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="done" aria-label="${esc(q.lab||'Respuesta')}" placeholder="${esc(q.lab||'Escribe la respuesta')}"><div class="wqb"><button type="button" class="wskip" onclick="wSubmit(null,true)">No lo sé</button><button type="submit" class="btn wgo">Comprobar</button></div></form><div class="wfb" aria-live="polite"></div>`);setTimeout(()=>{const i=document.getElementById('wqi');if(i&&matchMedia('(pointer:fine)').matches)i.focus({preventScroll:true});},60);}
- if(q.t==='l'){const qq=card.querySelector('.quiz-q');if(qq){qq.innerHTML=`<button type="button" class="lplay" aria-label="Escuchar otra vez">${SPK}</button><div class="lq">Escucha y elige qué significa</div>`;const b=qq.querySelector('.lplay');b.onclick=()=>speak(q.say,b);setTimeout(()=>{if(document.body.contains(b))speak(q.say,b);},380);}}};
-const _sg20=seg;seg=function(){const m=state.qmode||'c',lab={c:'Elegir',w:'Escribir',l:'Escuchar'};let s=_sg20();
- s=s.replace('<div class="qopi">',`<div class="qopi"><div class="qmr"><span>Tipo de test</span><div class="qms" role="group" aria-label="Tipo de test">${['c','w','l'].map(k=>`<button type="button" class="${m===k?'on':''}" onclick="setQMode('${k}')">${lab[k]}</button>`).join('')}</div></div>`);
+ if(q.t==='l'){const qq=card.querySelector('.quiz-q');if(qq){qq.innerHTML=`<button type="button" class="lplay" aria-label="Escuchar otra vez">${SPK}</button><div class="lq">Escucha y elige qué significa</div>`;const b=qq.querySelector('.lplay');b.onclick=()=>speak(q.say,b);setTimeout(()=>{if(document.body.contains(b))speak(q.say,b);},180);}}};
+const _sg20=seg;seg=function(){const m=state.qmode||'c',lab={c:'Elegir',w:'Escribir',l:'Escuchar',m:'Emparejar'};let s=_sg20();
+ s=s.replace('<div class="qopi">',`<div class="qopi"><div class="qmr"><span>Tipo de test</span><div class="qms" role="group" aria-label="Tipo de test">${['c','w','l','m'].map(k=>`<button type="button" class="${m===k?'on':''}" onclick="setQMode('${k}')">${lab[k]}</button>`).join('')}</div></div>`);
  return s.replace('<span class="qos">',`<span class="qos">${lab[m]} · `);};
 
 /* ---------- 7. Aviso de versión nueva ---------- */
-const APP_V='26',pv=LS.get('dl_appv');if(pv&&pv!==APP_V)setTimeout(()=>toast('DailyLeng se ha actualizado: Pronunciación corregida en iPhone. Espera a «Habla ahora» (botón rojo) antes de hablar.',7000),1200);LS.set('dl_appv',APP_V);
+const APP_V='28',pv=LS.get('dl_appv');if(pv&&pv!==APP_V)setTimeout(()=>toast('DailyLeng se ha actualizado: más de 1.600 palabras por idioma, Ajustes ⚙ arriba (voz, Portugal/Brasil, copia de seguridad), pestaña Progreso y el juego Emparejar.',7500),1200);LS.set('dl_appv',APP_V);
 function showUpdate(reg){if(document.getElementById('updbar'))return;document.body.insertAdjacentHTML('beforeend','<div id="updbar" role="status"><span>Hay una versión nueva de DailyLeng.</span><button type="button" id="updgo">Actualizar</button><button type="button" id="updx" aria-label="Más tarde">Más tarde</button></div>');const b=document.getElementById('updbar');if(M())b.animate([{transform:'translate(-50%,30px)',opacity:0},{transform:'translate(-50%,0)',opacity:1}],{duration:480,easing:'cubic-bezier(.3,1.22,.5,1)'});
  document.getElementById('updx').onclick=()=>b.remove();document.getElementById('updgo').onclick=()=>{const w=reg.waiting;if(w){w.postMessage({type:'SKIP_WAITING'});}else location.reload();};}
 if('serviceWorker' in navigator&&document.querySelector('link[rel=manifest][href="manifest.webmanifest"]')){let reloading=false;navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!reloading){reloading=true;location.reload();}});
@@ -877,9 +875,9 @@ if('serviceWorker' in navigator&&document.querySelector('link[rel=manifest][href
 /* ---------- 8. Guía: apartados nuevos ---------- */
 const gb=document.querySelector('#guide .gbody');
 if(gb)gb.insertAdjacentHTML('beforeend',[
-['Tipos de test','<ul><li><b>Elegir</b>: cuatro opciones, como siempre.</li><li><b>Escribir</b>: teclea la traducción y pulsa <b>Comprobar</b> (o Intro). No importan las tildes, las mayúsculas ni el artículo; si te falta una letra cuenta como «Casi» y se da por buena. <b>No lo sé</b> muestra la respuesta.</li><li><b>Escuchar</b>: suena la palabra (o frase) sin verla y eliges qué significa. Pulsa el altavoz para oírla otra vez. Al responder aparece escrita.</li></ul><p>El tipo se elige en <b>Opciones</b> y funciona con cualquier nivel, categoría, ★ Favs y Números.</p>'],
+['Tipos de test','<ul><li><b>Elegir</b>: cuatro opciones, como siempre.</li><li><b>Escribir</b>: teclea la traducción y pulsa <b>Comprobar</b> (o Intro). No importan las tildes, las mayúsculas ni el artículo; si te falta una letra cuenta como «Casi» y se da por buena. <b>No lo sé</b> muestra la respuesta.</li><li><b>Escuchar</b>: suena la palabra (o frase) sin verla y eliges qué significa. Pulsa el altavoz para oírla otra vez. Al responder aparece escrita.</li><li><b>Emparejar</b>: une palabras con su traducción contra reloj (60 segundos).</li></ul><p>El tipo se elige en <b>Opciones</b> y funciona con cualquier nivel, categoría, ★ Favs y Números.</p>'],
 ['Género, conjugaciones y ejemplos','<ul><li>Junto a cada sustantivo aparece su artículo: <i>le / la / l\'</i> en francés, <i>der / die / das</i> en alemán, <i>il / lo / la / l\'</i> en italiano, <i>o / a</i> en portugués y <i>м / ж / ср</i> en ruso. El inglés no tiene género. Color azul = masculino, rosa = femenino, verde = neutro.</li><li>Los verbos más usados tienen el botón <b>Conjugar</b> con el presente completo; toca una forma para oírla.</li><li><b>Ejemplo</b> muestra una frase de uso. Las de las palabras clave están escritas a mano; el resto las genera Claude la primera vez que pulsas y se guardan (y se sincronizan) para no volver a pedirlas. Revisa con criterio las generadas.</li></ul>'],
-['Portugués de Portugal o de Brasil','<p>Con el portugués activo aparece el selector <b>Portugal / Brasil</b>. Cambia las palabras que son distintas (comboio → trem, autocarro → ônibus, telemóvel → celular, casa de banho → banheiro, pequeno-almoço → café da manhã…), varias frases, los números 16, 17 y 19, las conjugaciones (tu → você) y la voz. El progreso de las palabras que cambian se guarda aparte.</p>'],
+['Portugués de Portugal o de Brasil','<p>En <b>Ajustes ⚙</b> → <b>Portugués</b> eliges <b>Portugal</b> o <b>Brasil</b>. Cambia las palabras que son distintas (comboio → trem, autocarro → ônibus, telemóvel → celular, casa de banho → banheiro, pequeno-almoço → café da manhã…), varias frases, los números 16, 17 y 19, las conjugaciones (tu → você) y la voz. El progreso de las palabras que cambian se guarda aparte.</p>'],
 ['Actualizaciones','<p>En claude.ai siempre se abre la última versión y verás un aviso con las novedades. Si instalaste el paquete PWA en tu propio servidor, aparece «Hay una versión nueva» con un botón <b>Actualizar</b> cuando subes archivos nuevos.</p>']
 ].map(([t,h])=>`<details><summary>${t}</summary><div class="gtxt">${h}</div></details>`).join(''));
 
@@ -1074,7 +1072,7 @@ function proListen(){if(!(window.SpeechRecognition||window.webkitSpeechRecogniti
   return;}
  /* intento nuevo */
  PRO.retried=false;PRO.t0=Date.now();
- PRO.log=['DailyLeng v26 · '+(proIOS()?'iPhone/iPad':'otro')+(navigator.standalone?' · app instalada':'')+' · '+DATA[state.lang].tts+' · «'+PRO.item.say+'»',navigator.userAgent];
+ PRO.log=['DailyLeng v28 · '+(proIOS()?'iPhone/iPad':'otro')+(navigator.standalone?' · app instalada':'')+' · '+DATA[state.lang].tts+' · «'+PRO.item.say+'»',navigator.userAgent];
  proLog('pulsado para empezar');
  const res=document.getElementById('pres');if(res){res.className='pres';res.textContent='';}proLive('');proDiag(false);
  proSetUI(PST.PREP,'Preparando el micrófono…');
@@ -1187,8 +1185,591 @@ function proScore(cands){const it=PRO.item,l=state.lang;let best={s:0,h:''};
  const _r=render;render=function(){_r();draw();};
  document.head.insertAdjacentHTML('beforeend','<style>.list .row.sqh{display:none!important}</style>');
 })();
+/* ---------- v27: test más ágil, categorías agrupadas por temas y distractores sin sinónimos ---------- */
+/* Distractores: no se ofrecen como opción falsa palabras cuyo significado comparte una palabra con el correcto
+   (p. ej. «rico (con dinero)» y «rico, sabroso»), porque las dos serían correctas. */
+const DLSTOP=new Set(['de','la','el','los','las','un','una','del','al','en','por','para','con','sin','que','se','su','lo','le','muy','mas','menos','como','vulgar','coloquial','informal','formal','suave','insulto','persona','cosa','algo','alguien','tambien','estar','ser','tener','hacer','dar','otro']);
+function dlTok(s){return String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/<[^>]*>/g,' ').split(/[^a-z]+/).filter(w=>w.length>2&&!DLSTOP.has(w));}
+function dlSynOK(a,b){if(a===b)return false;const A=new Set(dlTok(a));return !dlTok(b).some(w=>A.has(w));}
+function dlDis(all,it,rev,c){const txt=e=>rev?e.a:e.b,seen=new Set([c]),out=[];
+ const take=list=>{for(const e of list){if(out.length>=3)break;const t=txt(e);if(seen.has(t)||e.a===it.a)continue;seen.add(t);out.push(t);}};
+ take(shuffle(all.filter(e=>dlSynOK(e.b,it.b))));if(out.length<3)take(shuffle(all));return out;}
+
+/* Paso entre preguntas: rápido al acertar, un poco más al fallar (para ver la respuesta) y se puede saltar tocando */
+const DLT={t:0,fn:null,at:0};
+function dlInst(){return state.qtr==='i'||matchMedia('(prefers-reduced-motion:reduce)').matches;}
+function dlDelay(ok,w){const q=state.questions[state.qi]||{},inst=dlInst();
+ if(w||q.t==='w')return ok?(inst?350:480):1700;
+ let d=ok?(inst?220:340):(inst?900:1150);if(q.t==='l')d+=ok?380:250;return d;}
+function dlOut(after){const card=document.querySelector('#main .quiz-card');if(dlInst()||!card){after();return;}
+ try{card.animate([{opacity:1,transform:'none'},{opacity:0,transform:'translateX(-22px)'}],{duration:120,easing:'cubic-bezier(.4,0,1,1)',fill:'forwards'});}catch(e){}setTimeout(after,105);}
+function dlNext(ok,w){clearTimeout(DLT.t);const qs=state.questions,qi=state.qi,d=dlDelay(ok,w);DLT.at=performance.now();
+ DLT.fn=()=>{DLT.fn=null;clearTimeout(DLT.t);document.querySelectorAll('#main .qtap').forEach(x=>x.remove());
+  if(state.tab!=='quiz'||state.questions!==qs||state.qi!==qi)return;dlOut(()=>{if(state.questions!==qs||state.qi!==qi)return;state.qi++;renderQuiz();});};
+ DLT.t=setTimeout(()=>DLT.fn&&DLT.fn(),d);
+ if(d>=700){const c=document.querySelector('#main .quiz-card');if(c&&!c.querySelector('.qtap'))c.insertAdjacentHTML('beforeend',`<div class="qtap" aria-hidden="true">${matchMedia('(pointer:fine)').matches?'Clic o Intro para seguir':'Toca para seguir'}</div>`);}}
+function dlSkip(){if(DLT.fn&&performance.now()-DLT.at>140)DLT.fn();}
+(function(){
+ const LS={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}}};
+ const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+ const R=document.documentElement;
+ state.qtr=LS.get('dl_qtr')==='i'?'i':'r';R.classList.toggle('qinst',state.qtr==='i');
+
+ /* tocar la tarjeta o pulsar Intro, espacio o → para pasar ya a la siguiente */
+ document.addEventListener('click',e=>{if(!DLT.fn||state.tab!=='quiz')return;const t=e.target;if(!t.closest||!t.closest('#main')||t.closest('.qopts,.lplay,select,a,.rs'))return;dlSkip();});
+ document.addEventListener('keydown',e=>{if(!DLT.fn||state.tab!=='quiz'||e.repeat||e.altKey||e.ctrlKey||e.metaKey)return;if(e.key==='Enter'||e.key===' '||e.key==='ArrowRight'){const a=document.activeElement;if(a&&(a.tagName==='SELECT'||(a.tagName==='INPUT'&&!a.disabled)))return;e.preventDefault();dlSkip();}});
+ /* nada pendiente al salir del test o empezar otro */
+ const _st=setTab;setTab=function(t){clearTimeout(DLT.t);DLT.fn=null;return _st(t);};
+ const _nq=newQuiz;newQuiz=function(){clearTimeout(DLT.t);DLT.fn=null;return _nq();};
+
+ /* ---------- Categorías agrupadas por temas ---------- */
+ const GROUPS=[
+  ['Lo básico',['saludos','básico','pronombres','conectores','posición','frecuencia','números','verbos','adjetivos','colores']],
+  ['Personas',['familia','relaciones','personalidad','emociones']],
+  ['Cuerpo y salud',['cuerpo','aspecto','médico']],
+  ['Comida y bebida',['comida','frutas y verduras','bebidas','cocina','salsas','restaurante']],
+  ['Casa y cosas',['casa','hogar','ropa','tecnología','materiales','herramientas']],
+  ['Ciudad y viajes',['lugares','ciudad','transporte','viajes','compras','dinero']],
+  ['Trabajo y estudios',['trabajo','profesiones','estudios']],
+  ['Sociedad',['sociedad']],
+  ['Naturaleza y tiempo',['naturaleza','animales','clima','tiempo','días','meses']],
+  ['Ocio y deporte',['ocio','deportes']],
+  ['Coloquial',['coloquial','tacos e insultos']]];
+ const CN={'básico':'Básico','médico':'Salud','aspecto':'Aspecto físico','tacos e insultos':'Tacos e insultos','posición':'Posición y direcciones','frutas y verduras':'Frutas y verduras','tecnología':'Tecnología','días':'Días','números':'Números'};
+ const cnm=c=>CN[c]||(c.charAt(0).toUpperCase()+c.slice(1));
+ window.dlCatName=cnm;
+ function counts(withNum){const m=new Map();DATA[state.lang].dic.forEach(e=>m.set(e.c,(m.get(e.c)||0)+1));if(!withNum)m.delete('números');return m;}
+ function groups(withNum){const m=counts(withNum),used=new Set(),G=[];
+  GROUPS.forEach(([g,cs])=>{const it=cs.filter(c=>m.has(c)).map(c=>{used.add(c);return[c,m.get(c)];});if(it.length)G.push([g,it]);});
+  const rest=[...m.keys()].filter(c=>!used.has(c)).map(c=>[c,m.get(c)]);if(rest.length)G.push(['Otras',rest]);return G;}
+ const groupSet=g=>{const x=groups(true).find(([n])=>n===g);return new Set(x?x[1].map(([c])=>c):[]);};
+
+ /* filtro del diccionario por categoría o por tema (además del buscador) */
+ state.dgrp='';
+ filterDic=function(v){const d=DATA[state.lang],q=(v||'').toLowerCase().trim(),c=state.dgrp?'':(state.dcat||''),gs=state.dgrp?groupSet(state.dgrp):null;state.dq=v||'';
+  const f=d.dic.filter(e=>(gs?gs.has(e.c):!c||e.c===c)&&(!q||e.w.toLowerCase().includes(q)||e.t.toLowerCase().includes(q)||(e.p||'').toLowerCase().includes(q)));
+  const L=document.getElementById('diclist');if(!L)return;
+  const lab=state.dgrp||(c?cnm(c):'');
+  L.outerHTML=f.length?`<div class="list" id="diclist">${f.map(rowWord).join('')}</div>`:`<div class="empty" id="diclist">Sin resultados${lab?' en '+esc(lab):''}</div>`;
+  const n=document.querySelector('#main .count');if(n)n.textContent=(f.length===d.dic.length?d.dic.length:f.length+' de '+d.dic.length)+' palabras';
+  stagger();};
+ const rec=()=>{try{return JSON.parse(LS.get('dl_dcrec')||'[]')}catch(e){return[]}};
+ const pushRec=k=>{const r=rec().filter(x=>x!==k);r.unshift(k);LS.set('dl_dcrec',JSON.stringify(r.slice(0,6)));};
+ const GRID='<svg class="dcpi" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="6.5" height="6.5" rx="1.6"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.6"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.6"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.6"/></svg>';
+ const CHEV='<svg class="dcpc" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>';
+ const XI='<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+ function picker(){const G=groups(false),m=counts(false),tot=DATA[state.lang].dic.length,sel=state.dgrp?'':(state.dcat||''),sg=state.dgrp||'';
+  const gn=g=>{const x=G.find(([n])=>n===g);return x?x[1].reduce((s,y)=>s+y[1],0):0;};
+  const sum=sg?`${esc(sg)} · ${gn(sg)}`:sel?`${esc(cnm(sel))} · ${m.get(sel)||0}`:`Todas · ${tot}`;
+  const chip=(c,n)=>`<button type="button" class="dcc${sel===c?' on':''}" data-c="${esc(c)}">${esc(cnm(c))}<span>${n}</span></button>`;
+  const rs=rec().filter(k=>k!==(sg?'g:'+sg:'c:'+sel)).filter(k=>k.startsWith('g:')?G.some(([n])=>'g:'+n===k):m.has(k.slice(2))).slice(0,4);
+  const recH=!state.dcopen&&rs.length?`<div class="dcrec"><span>Recientes</span>${rs.map(k=>`<button type="button" class="dcr" data-k="${esc(k)}">${esc(k.startsWith('g:')?k.slice(2):cnm(k.slice(2)))}</button>`).join('')}</div>`:'';
+  return `<div id="dcp" class="${state.dcopen?'open':''}${sel||sg?' act':''}"><div class="dcph"><button type="button" class="dcpb" aria-expanded="${!!state.dcopen}" aria-controls="dcpp">${GRID}<span class="dcpl">Categorías</span><span class="dcps">${sum}</span>${CHEV}</button>${sel||sg?`<button type="button" class="dcpx" aria-label="Quitar el filtro y ver todas" title="Ver todas">${XI}</button>`:''}</div>${recH}<div class="dcpp" id="dcpp"><div class="dcppw"><div class="dcppi"><button type="button" class="dcall${!sel&&!sg?' on':''}">Todas las palabras <span>${tot}</span></button>${G.map(([g,it])=>`<section class="dcg"><div class="dcgh"><span>${esc(g)}</span><button type="button" class="dcgb${sg===g?' on':''}" data-g="${esc(g)}">Todo el tema · ${it.reduce((s,y)=>s+y[1],0)}</button></div><div class="dcgc">${it.map(([c,n])=>chip(c,n)).join('')}</div></section>`).join('')}</div></div></div></div>`;}
+ function drawPicker(focus){const m=document.getElementById('main');if(state.tab!=='dic'||!m)return;
+  const old=m.querySelector('.dcw')||document.getElementById('dcats');if(old)old.remove();
+  const cur=document.getElementById('dcp'),i=m.querySelector('input[type=search]');
+  if(cur)cur.outerHTML=picker();else if(i)i.insertAdjacentHTML('afterend',picker());else return;
+  const p=document.getElementById('dcp');p.addEventListener('click',onPick);
+  if(focus){const b=p.querySelector(focus);if(b)b.focus({preventScroll:true});}}
+ function apply(){const i=document.querySelector('#main input[type=search]');filterDic(i?i.value:'');}
+ function choose(kind,val){if(kind==='g'){state.dgrp=val;state.dcat='';pushRec('g:'+val);}else if(kind==='c'){state.dgrp='';state.dcat=val;pushRec('c:'+val);}else{state.dgrp='';state.dcat='';}
+  state.dcopen=false;drawPicker('.dcpb');apply();
+  const p=document.getElementById('dcp');if(p){const r=p.getBoundingClientRect();if(r.top<70)scrollBy({top:r.top-80,behavior:dlInst()?'auto':'smooth'});}}
+ function onPick(e){const b=e.target.closest('button');if(!b)return;e.stopPropagation();
+  if(b.classList.contains('dcpb')){state.dcopen=!state.dcopen;const p=document.getElementById('dcp');p.classList.toggle('open',state.dcopen);b.setAttribute('aria-expanded',state.dcopen);const r=p.querySelector('.dcrec');if(r)r.hidden=state.dcopen;return;}
+  if(b.classList.contains('dcpx')||b.classList.contains('dcall'))return choose('');
+  if(b.dataset.g)return choose('g',b.dataset.g);
+  if(b.dataset.c)return choose('c',b.dataset.c);
+  if(b.dataset.k){const k=b.dataset.k;return choose(k[0],k.slice(2));}}
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&state.dcopen&&state.tab==='dic'){state.dcopen=false;drawPicker('.dcpb');}});
+ window.setDCat=function(c){choose(c?'c':'',c);};
+ let lastLang=state.lang;
+ const _r=render;render=function(){if(state.lang!==lastLang){lastLang=state.lang;if(state.dgrp&&!groups(false).some(([n])=>n===state.dgrp))state.dgrp='';}
+  _r();if(state.tab==='dic'){if(state.dcui!=='rows')drawPicker();if(state.dgrp)apply();}};
+
+ /* ---------- Test: categoría o tema completo, con el desplegable agrupado ---------- */
+ state.qgrp='';
+ window.setQCat=function(c){if(c&&c.startsWith('g:')){state.qgrp=c.slice(2);state.qcat='';}else{state.qgrp='';state.qcat=c||'';}state.numOnly=false;newQuiz();};
+ const _g=genQuiz;genQuiz=function(n){const g=state.qgrp,L=DATA[state.lang];if(!g||state.numOnly||(state.level||'i')==='a')return _g(n);
+  const gs=groupSet(g),full=L.dic,sub=full.filter(e=>gs.has(e.c));if(sub.length<4)return _g(n);L.dic=sub;try{return _g(n)}finally{L.dic=full}};
+ function groupSelect(){const s=document.getElementById('qcat');if(!s||s.dataset.g27)return;s.dataset.g27='1';
+  const val=state.qgrp?'g:'+state.qgrp:(state.qcat||'');
+  s.innerHTML='<option value="">Todas</option>'+groups(true).map(([g,it])=>{const ok=it.filter(([,n])=>n>=4);if(!ok.length)return '';
+   return `<optgroup label="${esc(g)}"><option value="g:${esc(g)}">Todo el tema (${ok.reduce((a,x)=>a+x[1],0)})</option>${ok.map(([c,n])=>`<option value="${esc(c)}">${esc(cnm(c))} (${n})</option>`).join('')}</optgroup>`;}).join('');
+  s.value=val;if(s.value!==val)s.value='';}
+ window.setQTr=function(m){state.qtr=m==='i'?'i':'r';LS.set('dl_qtr',state.qtr);R.classList.toggle('qinst',state.qtr==='i');document.querySelectorAll('#main .qtrr button').forEach(b=>b.classList.toggle('on',b.dataset.m===state.qtr));};
+ function optsExtra(){const qi=document.querySelector('#main .qopi');if(!qi||qi.querySelector('.qtrr'))return;
+  const row=`<div class="qmr qtrr"><span>Paso entre preguntas</span><div class="qms" role="group" aria-label="Paso entre preguntas"><button type="button" data-m="r" class="${state.qtr!=='i'?'on':''}" onclick="setQTr('r')">Rápido</button><button type="button" data-m="i" class="${state.qtr==='i'?'on':''}" onclick="setQTr('i')">Sin animación</button></div></div>`;
+  const mr=qi.querySelector('.qmr');if(mr)mr.insertAdjacentHTML('afterend',row);else qi.insertAdjacentHTML('afterbegin',row);
+  const qs=document.querySelector('#main .qos');
+  if(qs){if(state.qgrp&&!state.numOnly&&(state.level||'i')!=='a')qs.textContent+=' · '+state.qgrp;else if(state.qcat&&!state.numOnly&&(state.level||'i')!=='a')qs.textContent=qs.textContent.replace(/ · [^·]+$/,' · '+cnm(state.qcat));}}
+ const _rq=renderQuiz;renderQuiz=function(){_rq();if(state.tab!=='quiz')return;groupSelect();optsExtra();};
+
+ window.__dlG={groups,groupSet,counts,cnm,picker:drawPicker};
+ /* ---------- Guía ---------- */
+ const gb=document.querySelector('#guide .gbody');
+ if(gb)gb.insertAdjacentHTML('beforeend',`<details><summary>Categorías por temas</summary><div class="gtxt"><p>En el <b>Diccionario</b>, debajo del buscador hay dos filas: arriba los <b>temas</b> (Lo básico, Personas, Cuerpo y salud, Comida y bebida, Casa y cosas, Ciudad y viajes, Trabajo y estudios, Sociedad, Naturaleza y tiempo, Ocio y deporte, Coloquial) y, al tocar uno, debajo aparecen sus <b>categorías</b>.</p><ul><li>Toca un tema para ver el tema entero, o una de sus categorías para ver solo esas palabras. <b>Todas</b> quita el filtro.</li><li>Las filas se desplazan de lado con el dedo, con la rueda del ratón o con las flechas de los extremos.</li><li>El buscador funciona dentro del filtro elegido.</li><li>Si prefieres el panel desplegable con todas las categorías a la vista (y <b>Recientes</b>), elígelo en <b>Ajustes ⚙</b> → <b>Diccionario</b> → <b>Categorías</b> → <b>Panel</b>.</li><li>En el test, el desplegable <b>Categoría</b> de <b>Opciones</b> está agrupado igual y permite hacer el test de un tema completo.</li></ul><p>En <b>Coloquial</b> están la jerga y los <b>tacos e insultos</b> más usados en el día a día, marcados como <i>vulgar</i> o <i>muy vulgar</i>: úsalos sabiendo dónde y con quién.</p></div></details>`);
+
+ /* ---------- Estilos ---------- */
+ document.head.insertAdjacentHTML('beforeend','<style>'+
+ /* test más ágil */
+ '@media (prefers-reduced-motion:no-preference){.quiz-card .opt{animation-duration:.24s!important}.quiz-card .opt:nth-of-type(2){animation-delay:.025s!important}.quiz-card .opt:nth-of-type(3){animation-delay:.05s!important}.quiz-card .opt:nth-of-type(4){animation-delay:.075s!important}.prog i{transition-duration:.3s!important}}'+
+ 'html.qinst .quiz-card .opt{animation:none!important}html.qinst .prog i{transition:none!important}'+
+ '.qtap{margin-top:12px;font-size:var(--fs-xs,12px);color:var(--text2);text-align:center;letter-spacing:.02em;animation:qtapin .3s .25s both}@keyframes qtapin{from{opacity:0}}html.qinst .qtap{animation:none}'+
+ '.quiz-card{cursor:default}'+
+ /* selector de categorías */
+ '#dcp{margin:var(--sp-1,6px) 0 0;border:1px solid var(--border);border-radius:16px;background:var(--surface);overflow:hidden}'+
+ '.dcph{display:flex;align-items:stretch}.dcpb{flex:1;min-width:0;display:flex;align-items:center;gap:10px;padding:11px 14px;border:0;background:none;color:var(--text);font:inherit;cursor:pointer;text-align:left}'+
+ '.dcpi{flex-shrink:0;color:var(--accent)}.dcpl{font-weight:600;font-size:var(--fs-base,15px)}.dcps{flex:1;min-width:0;text-align:right;color:var(--text2);font-size:var(--fs-sm,13px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}'+
+ '#dcp.act .dcps{color:var(--accent);font-weight:600}.dcpc{flex-shrink:0;color:var(--text2);transition:transform .4s cubic-bezier(.3,1.22,.5,1)}#dcp.open .dcpc{transform:rotate(180deg)}'+
+ '.dcpx{flex-shrink:0;width:44px;border:0;border-left:1px solid var(--border);background:none;color:var(--text2);display:grid;place-items:center;cursor:pointer}.dcpx:hover{color:var(--accent)}'+
+ '.dcpb:focus-visible,.dcpx:focus-visible,#dcp .dcc:focus-visible,#dcp .dcgb:focus-visible,#dcp .dcall:focus-visible,#dcp .dcr:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}'+
+ '.dcrec{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:0 14px 11px;font-size:var(--fs-xs,12px);color:var(--text2)}.dcrec>span{margin-right:2px}'+
+ '.dcr{border:1px solid var(--border);background:transparent;color:var(--text);border-radius:999px;padding:4px 10px;font:inherit;font-size:var(--fs-xs,12px);cursor:pointer}'+
+ '.dcpp{display:grid;grid-template-rows:0fr;transition:grid-template-rows .32s cubic-bezier(.22,1,.36,1)}#dcp.open .dcpp{grid-template-rows:1fr}.dcppw{overflow:hidden;min-height:0}'+
+ '.dcppi{padding:4px 14px 14px;display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px 18px;border-top:1px solid var(--border)}'+
+ '.dcall{grid-column:1/-1;justify-self:start;margin-top:10px;border:1px solid var(--border);background:transparent;color:var(--text);border-radius:999px;padding:6px 12px;font:inherit;font-size:var(--fs-sm,13px);font-weight:600;cursor:pointer}'+
+ '.dcall span,.dcc span{margin-left:5px;color:var(--text2);font-size:11px;font-weight:500}'+
+ '.dcgh{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:7px}.dcgh>span{font-size:var(--fs-xs,12px);font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text2)}'+
+ '.dcgb{border:0;background:none;color:var(--accent);font:inherit;font-size:var(--fs-xs,12px);font-weight:600;cursor:pointer;padding:2px 0;white-space:nowrap}'+
+ '.dcgc{display:flex;flex-wrap:wrap;gap:6px}.dcc{border:1px solid var(--border);background:var(--bg);color:var(--text);border-radius:999px;padding:6px 11px;font:inherit;font-size:var(--fs-sm,13px);cursor:pointer;transition:background .2s,border-color .2s,color .2s}'+
+ '@media (hover:hover){.dcc:hover,.dcall:hover,.dcr:hover{border-color:var(--accent)}}'+
+ '.dcc.on,.dcall.on,.dcgb.on.dcgb{background:var(--accent);border-color:var(--accent);color:#fff}.dcc.on span,.dcall.on span{color:rgba(255,255,255,.8)}.dcgb.on{border-radius:999px;padding:2px 8px}'+
+ '@media (prefers-reduced-motion:reduce){.dcpp,.dcpc{transition:none!important}}'+
+ '</style>');
+})();
+/* ---------- v28: Ajustes ⚙, diccionario compacto y virtual, categorías en dos filas, Progreso, Emparejar y precarga ---------- */
+/* Estadísticas de un mismo dispositivo en dos copias (importación o sincronización): se queda el máximo de cada dato */
+function dlStMerge(a,b){const r={v:1,d:{},c:{},g:{}},mx=(x,y)=>[Math.max(+(x&&x[0])||0,+(y&&y[0])||0),Math.max(+(x&&x[1])||0,+(y&&y[1])||0)];
+ for(const S of [a,b]){if(!S||typeof S!=='object')continue;
+  for(const day in S.d||{}){const D=r.d[day]||(r.d[day]={});for(const l in S.d[day])D[l]=mx(D[l],S.d[day][l]);}
+  for(const l in S.c||{}){const C=r.c[l]||(r.c[l]={});for(const k in S.c[l])C[k]=mx(C[k],S.c[l][k]);}
+  for(const l in S.g||{}){const x=r.g[l]||[0,0,0],y=S.g[l]||[];r.g[l]=[Math.max(x[0],+y[0]||0),Math.max(x[1],+y[1]||0),Math.max(x[2],+y[2]||0)];}}
+ return r;}
+(function(){
+const LS={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}}};
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const M=()=>!matchMedia('(prefers-reduced-motion:reduce)').matches;
+const R=document.documentElement,$=id=>document.getElementById(id),G=()=>window.__dlG;
+const nf=n=>{n=Math.round(+n||0);return Math.abs(n)<10000?String(n):n.toLocaleString('es-ES');};
+const nz=s=>String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/ё/g,'е');
+const SOFT='cubic-bezier(.3,1.22,.5,1)',OUT='cubic-bezier(.22,1,.36,1)';
+
+/* ===== 0a. Test más rápido de generar: las palabras de cada traducción se calculan una vez y se reutilizan,
+   y las opciones falsas se eligen al azar comprobando solo unas pocas (antes se revisaba el diccionario entero por pregunta) ===== */
+const DLTC=new Map(),DLTS=new Map();
+dlTok=function(s){s=String(s);let r=DLTC.get(s);if(!r){r=s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/<[^>]*>/g,' ').split(/[^a-z]+/).filter(w=>w.length>2&&!DLSTOP.has(w));if(DLTC.size>40000)DLTC.clear();DLTC.set(s,r);}return r;};
+const tset=s=>{let r=DLTS.get(s);if(!r){r=new Set(dlTok(s));if(DLTS.size>40000)DLTS.clear();DLTS.set(s,r);}return r;};
+dlSynOK=function(a,b){if(a===b)return false;const A=tset(String(a));return !dlTok(b).some(w=>A.has(w));};
+dlDis=function(all,it,rev,c){const txt=e=>rev?e.a:e.b,seen=new Set([c]),out=[],n=all.length;
+ const take=(e,syn)=>{const t=txt(e);if(seen.has(t)||e.a===it.a||(syn&&!dlSynOK(e.b,it.b)))return;seen.add(t);out.push(t);};
+ for(let k=0;k<90&&out.length<3&&n;k++)take(all[Math.floor(Math.random()*n)],true);
+ if(out.length<3)for(const e of shuffle(all)){if(out.length>=3)break;take(e,true);}
+ if(out.length<3)for(const e of shuffle(all)){if(out.length>=3)break;take(e,false);}
+ return out;};
+
+/* ===== 0. Índice palabra → entrada del idioma activo ===== */
+let DM={l:'',n:-1,m:null};
+function dmap(){const d=DATA[state.lang].dic;if(DM.l!==state.lang||DM.n!==d.length||!DM.m)DM={l:state.lang,n:d.length,m:new Map(d.map(e=>[e.w,e]))};return DM.m;}
+const _sp=window.setPtv;window.setPtv=function(v){DM.m=null;if(DATA.pt)DATA.pt.dic.forEach(e=>{delete e._n;});return _sp(v);};
+
+/* ===== 1. Ajustes (engranaje) ===== */
+state.dview=LS.get('dl_dview')==='d'?'d':'c';R.classList.toggle('dcmp',state.dview==='c');
+state.dcui=LS.get('dl_dcui')==='panel'?'panel':'rows';
+const GEAR='<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1.03 1.56V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1.11-1.56 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.56-1.03H3a2 2 0 1 1 0-4h.09a1.7 1.7 0 0 0 1.56-1.11 1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34H9a1.7 1.7 0 0 0 1.03-1.56V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1.03 1.56 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87V9a1.7 1.7 0 0 0 1.56 1.03H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.56 1.03z"/></svg>';
+const seg3=(id,lab,opts)=>`<div class="qms sseg" id="${id}" role="group" aria-label="${lab}">${opts.map(([v,t])=>`<button type="button" data-v="${v}">${t}</button>`).join('')}</div>`;
+const gbtn=$('guideb');if(gbtn&&!$('setb'))gbtn.insertAdjacentHTML('afterend',`<button id="setb" type="button" aria-label="Ajustes" title="Ajustes">${GEAR}</button>`);
+document.body.insertAdjacentHTML('beforeend',`<div id="settings" role="dialog" aria-modal="true" aria-labelledby="seth" hidden><div class="gsheet"><div class="ghead"><span class="gic">${GEAR}</span><h2 id="seth">Ajustes</h2><button type="button" id="setx">Cerrar</button></div><div class="gbody sbody">
+<section class="sgrp"><h3>Voz <span id="svl"></span></h3><div class="scard" id="svoice"></div><p class="snote">La voz se elige para el idioma activo. Para elegir la de otro idioma, cámbialo arriba y vuelve aquí.</p></section>
+<section class="sgrp"><h3>Portugués</h3><div class="scard"><div class="srow"><span>Variante</span>${seg3('sptv','Variante del portugués',[['PT','🇵🇹 Portugal'],['BR','🇧🇷 Brasil']])}</div></div></section>
+<section class="sgrp"><h3>Diccionario</h3><div class="scard"><div class="srow"><span>Filas</span>${seg3('sview','Filas del diccionario',[['c','Compactas'],['d','Detalladas']])}</div><div class="srow"><span>Categorías</span>${seg3('scui','Categorías del diccionario',[['rows','Filas de temas'],['panel','Panel']])}</div></div><p class="snote">En las filas compactas, toca una palabra para ver su categoría, el ejemplo y la conjugación.</p></section>
+<section class="sgrp"><h3>Test</h3><div class="scard"><div class="srow"><span>Paso entre preguntas</span>${seg3('sqtr','Paso entre preguntas',[['r','Rápido'],['i','Sin animación']])}</div></div></section>
+<section class="sgrp"><h3>Copia de seguridad y sincronización</h3><div class="scard sbk" id="sbk"></div></section>
+<section class="sgrp"><h3>Carga de idiomas</h3><div class="scard"><p class="sp" id="spre"></p></div></section>
+</div></div></div>`);
+function adopt(){const sv=$('svoice');if(!sv)return;['vsel','vhint','vhint2','vhint3'].forEach(id=>{const e=$(id);if(e&&e.parentNode!==sv)sv.appendChild(e);});}
+adopt();
+const bx=document.querySelector('#pgm .bx');if(bx)$('sbk').appendChild(bx);
+const ST_EL=$('settings'),SS=ST_EL.querySelector('.gsheet');
+function mark(id,v){const g=$(id);if(g)g.querySelectorAll('button').forEach(b=>{const on=b.dataset.v===v;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on);});}
+function fillSet(full){const L=$('svl');if(L)L.textContent='· '+DATA[state.lang].name;
+ if(full){try{fillVoices()}catch(e){}adopt();const pg=$('pgb');if(pg&&typeof pg.onclick==='function'){try{pg.onclick()}catch(e){}const m=$('pgm');if(m)m.classList.remove('on');}}
+ mark('sptv',LS.get('dl_ptv')==='BR'?'BR':'PT');mark('sview',state.dview);mark('scui',state.dcui);mark('sqtr',state.qtr==='i'?'i':'r');
+ const p=$('spre');if(p)p.innerHTML=preText();}
+let setFrom=null;
+function openSet(){setFrom=document.activeElement;fillSet(true);ST_EL.hidden=false;if(M()){ST_EL.animate([{opacity:0},{opacity:1}],{duration:240,easing:OUT});SS.animate([{transform:'translateY(40px) scale(.97)',opacity:0},{transform:'none',opacity:1}],{duration:460,easing:SOFT});}$('setx').focus({preventScroll:true});}
+function closeSet(){if(ST_EL.hidden)return;const back=()=>{const b=setFrom&&setFrom.isConnected?setFrom:$('setb');if(b)try{b.focus({preventScroll:true})}catch(e){}};
+ if(!M()){ST_EL.hidden=true;back();return;}
+ SS.animate([{transform:'none',opacity:1},{transform:'translateY(30px) scale(.98)',opacity:0}],{duration:200,easing:'ease-in',fill:'forwards'});const a=ST_EL.animate([{opacity:1},{opacity:0}],{duration:220,fill:'forwards'});a.onfinish=()=>{ST_EL.hidden=true;ST_EL.getAnimations().forEach(x=>x.cancel());SS.getAnimations().forEach(x=>x.cancel());back();};}
+window.openSettings=openSet;
+$('setb').onclick=openSet;$('setx').onclick=closeSet;
+ST_EL.addEventListener('click',e=>{if(e.target===ST_EL){closeSet();return;}const b=e.target.closest('.sseg button');if(!b)return;const id=b.parentNode.id,v=b.dataset.v;
+ if(id==='sptv')setPtv(v);else if(id==='sview')setDView(v);else if(id==='scui')setDCui(v);else if(id==='sqtr')setQTr(v);fillSet(false);});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!ST_EL.hidden)closeSet();});
+window.setDView=function(v){state.dview=v==='d'?'d':'c';LS.set('dl_dview',state.dview);R.classList.toggle('dcmp',state.dview==='c');VL.est=state.dview==='c'?50:86;if(state.tab==='dic'){const i=document.querySelector('#main input[type=search]');filterDic(i?i.value:'');}};
+window.setDCui=function(v){state.dcui=v==='panel'?'panel':'rows';LS.set('dl_dcui',state.dcui);if(state.tab==='dic')render();};
+
+/* ===== 2. Diccionario: lista virtual (solo se dibujan las filas que están cerca de la pantalla) ===== */
+const VL={el:null,items:[],h:new Float32Array(0),est:state.dview==='c'?50:86,s:0,e:0,rows:new Map(),open:new Set(),raf:0,top:null,bot:null,lq:undefined,w:innerWidth};
+const NEAR=200;
+function rowHTML(e,i,n){return rowWord(e).replace('<div class="row">',`<div class="row${VL.open.has(e.w)?' open':''}${i===n-1?' vlast':''}" data-i="${i}">`);}
+function vlMount(L,items,lab,anim){VL.el=L;VL.items=items;VL.h=new Float32Array(items.length);VL.rows=new Map();VL.s=VL.e=0;VL.top=VL.bot=null;
+ if(!items.length){L.className='empty';L.innerHTML='Sin resultados'+(lab?' en '+esc(lab):'');return;}
+ L.className='list vlist';L.innerHTML='<div class="vsp" aria-hidden="true"></div><div class="vsp" aria-hidden="true"></div>';VL.top=L.firstChild;VL.bot=L.lastChild;
+ vlUpdate(true);
+ if(anim&&M()&&!R.classList.contains('lite')){const vh=innerHeight||800;let k=0;for(let i=VL.s;i<VL.e&&k<14;i++){const r=VL.rows.get(i);if(!r)continue;const t=r.getBoundingClientRect().top;if(t>vh)break;if(t<-80)continue;r.classList.add('in');r.style.animationDelay=(k++*22)+'ms';}}}
+function vlUpdate(force){const L=VL.el,n=VL.items.length;if(!L||!VL.top||!L.isConnected||!n)return;
+ const vh=innerHeight||800;
+ /* si lo dibujado aún cubre la pantalla con margen, no se toca nada */
+ if(!force&&VL.rows.size){const f=VL.rows.get(VL.s),l=VL.rows.get(VL.e-1);if(f&&l){const ft=VL.s===0?-1e9:f.getBoundingClientRect().top,lb=VL.e>=n?1e9:l.getBoundingClientRect().bottom;if(ft<=-NEAR&&lb>=vh+NEAR)return;}}
+ const H=VL.h,hh=i=>H[i]||VL.est,BIG=Math.max(700,vh*1.1),top0=-L.getBoundingClientRect().top;
+ const y0=top0-BIG,y1=top0+vh+BIG;
+ let s=0,acc=0;while(s<n-1&&acc+hh(s)<y0){acc+=hh(s);s++;}
+ let e=s,a2=acc;while(e<n&&a2<y1){a2+=hh(e);e++;}if(e<=s)e=Math.min(n,s+1);
+ if(!force&&s===VL.s&&e===VL.e)return;
+ /* referencia: la primera fila visible que sigue dibujada, para compensar si cambian alturas por encima */
+ let ai=-1,aTop=0;for(let i=Math.max(s,VL.s);i<Math.min(e,VL.e);i++){const r=VL.rows.get(i);if(!r)continue;const b=r.getBoundingClientRect();if(b.bottom>0){ai=i;aTop=b.top;break;}}
+ const gone=[];for(const [i,r] of VL.rows)if(i<s||i>=e)gone.push([i,r]);
+ for(const [i,r] of gone){const h=r.offsetHeight;if(h)H[i]=h;}
+ for(const [i,r] of gone){r.remove();VL.rows.delete(i);}
+ let lo=Infinity,hi=-1;for(const i of VL.rows.keys()){if(i<lo)lo=i;if(i>hi)hi=i;}
+ /* las filas que entran por arriba sin altura conocida obligan a medir; si ya se conocían, no hace falta (sin trabajo extra al hacer scroll) */
+ let unk=false;
+ const mk=(a,b,head)=>{if(a>=b)return null;let html='';for(let i=a;i<b;i++){if(head&&!H[i])unk=true;html+=rowHTML(VL.items[i],i,n);}const t=document.createElement('template');t.innerHTML=html;[...t.content.children].forEach((el,k)=>VL.rows.set(a+k,el));return t.content;};
+ if(hi<0){const f=mk(s,e,true);if(f)VL.top.after(f);}
+ else{const hd=mk(s,lo,true),tl=mk(hi+1,e,false);if(hd)VL.top.after(hd);if(tl)VL.bot.before(tl);}
+ VL.s=s;VL.e=e;
+ decorate();
+ const exact=force||unk;
+ if(exact)for(const [i,r] of VL.rows){const h=r.offsetHeight;if(h)H[i]=h;}
+ let sum=0,cnt=0;for(let i=0;i<n;i++){const h=H[i];if(h){sum+=h;cnt++;}}if(cnt)VL.est=sum/cnt;
+ let tp=0,bt=0;for(let i=0;i<s;i++)tp+=H[i]||VL.est;for(let i=e;i<n;i++)bt+=H[i]||VL.est;
+ VL.top.style.height=tp+'px';VL.bot.style.height=bt+'px';
+ if(exact&&ai>=0){const r=VL.rows.get(ai);if(r){const d=r.getBoundingClientRect().top-aTop;if(Math.abs(d)>.5)scrollBy(0,d);}}}
+const vlTick=()=>{if(VL.raf||state.tab!=='dic'||!VL.el||!VL.el.isConnected)return;VL.raf=requestAnimationFrame(()=>{VL.raf=0;vlUpdate(false);});};
+addEventListener('scroll',vlTick,{passive:true});
+addEventListener('resize',()=>{if(innerWidth!==VL.w){VL.w=innerWidth;if(VL.el&&VL.el.isConnected&&VL.items.length){VL.h=new Float32Array(VL.items.length);vlUpdate(true);}}else vlTick();});
+/* filas compactas: tocar una palabra la despliega (categoría, ejemplo, conjugación) */
+document.addEventListener('click',e=>{if(state.tab!=='dic'||state.dview!=='c')return;const r=e.target.closest('#diclist .row');if(!r||e.target.closest('button,a,input,select,.cj,.ex'))return;
+ const it=VL.items[+r.dataset.i];if(!it)return;const on=!r.classList.contains('open');r.classList.toggle('open',on);if(on)VL.open.add(it.w);else VL.open.delete(it.w);});
+/* buscador sin tildes ni mayúsculas, dentro del tema o la categoría elegidos */
+filterDic=function(v){const d=DATA[state.lang],raw=v||'',q=nz(raw.trim()),g=G(),c=state.dgrp?'':(state.dcat||''),gs=state.dgrp&&g?g.groupSet(state.dgrp):null;state.dq=raw;
+ const f=d.dic.filter(e=>(gs?gs.has(e.c):!c||e.c===c)&&(!q||(e._n||(e._n=nz(e.w+' \u0001 '+e.t+' \u0001 '+(e.p||'')))).includes(q)));
+ const L=$('diclist');if(!L)return;
+ const n=document.querySelector('#main .count');if(n)n.textContent=(f.length===d.dic.length?nf(d.dic.length):nf(f.length)+' de '+nf(d.dic.length))+' palabras';
+ const anim=VL.lq===undefined||VL.lq===raw;VL.lq=raw;
+ vlMount(L,f,state.dgrp||(c&&g?g.cnm(c):c),anim);};
+
+/* ===== 3. Categorías en dos filas: temas arriba y, debajo, las categorías del tema elegido ===== */
+state.dthm='';
+function themeOf(c){const g=G();if(!g||!c)return '';const x=g.groups(true).find(([,it])=>it.some(([k])=>k===c));return x?x[0]:'';}
+const ARR=d=>`<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="${d<0?'M15 6l-6 6 6 6':'M9 6l6 6-6 6'}"/></svg>`;
+function hscroll(c){if(c.dataset.hs)return;c.dataset.hs='1';const w=document.createElement('div');w.className='hsw';c.parentNode.insertBefore(w,c);w.appendChild(c);
+ w.insertAdjacentHTML('afterbegin',`<button type="button" class="hsa l" tabindex="-1" aria-hidden="true">${ARR(-1)}</button>`);w.insertAdjacentHTML('beforeend',`<button type="button" class="hsa r" tabindex="-1" aria-hidden="true">${ARR(1)}</button>`);
+ const ed=()=>{const mx=c.scrollWidth-c.clientWidth;w.classList.toggle('l',c.scrollLeft>4);w.classList.toggle('r',c.scrollLeft<mx-4);};c._ed=ed;
+ w.querySelector('.hsa.l').onclick=()=>c.scrollBy({left:-c.clientWidth*.7,behavior:M()?'smooth':'auto'});
+ w.querySelector('.hsa.r').onclick=()=>c.scrollBy({left:c.clientWidth*.7,behavior:M()?'smooth':'auto'});
+ c.addEventListener('scroll',ed,{passive:true});
+ c.addEventListener('wheel',e=>{if(Math.abs(e.deltaY)>Math.abs(e.deltaX)&&c.scrollWidth>c.clientWidth+2){c.scrollLeft+=e.deltaY;e.preventDefault();}},{passive:false});
+ let down=false,sx=0,sl=0,moved=0;
+ c.addEventListener('pointerdown',e=>{moved=0;if(e.pointerType!=='mouse'||e.button!==0)return;down=true;sx=e.clientX;sl=c.scrollLeft;});
+ c.addEventListener('pointermove',e=>{if(!down)return;const dx=e.clientX-sx;moved=Math.max(moved,Math.abs(dx));if(moved>4){c.classList.add('drag');c.scrollLeft=sl-dx;}});
+ const up=()=>{down=false;c.classList.remove('drag');};c.addEventListener('pointerup',up);c.addEventListener('pointerleave',up);
+ c.addEventListener('click',e=>{if(moved>6){e.stopPropagation();e.preventDefault();moved=0;}},true);
+ requestAnimationFrame(ed);}
+addEventListener('resize',()=>document.querySelectorAll('.dch').forEach(c=>c._ed&&c._ed()));
+function centerOn(c,smooth){const b=c.querySelector('.on');if(!b)return;const cr=c.getBoundingClientRect(),br=b.getBoundingClientRect();const dx=(br.left+br.width/2)-(cr.left+cr.width/2);if(Math.abs(dx)>2)c.scrollBy({left:dx,behavior:smooth&&M()?'smooth':'auto'});}
+function chipsHTML(){const g=G();if(!g)return '';const Gs=g.groups(false),tot=DATA[state.lang].dic.length,sum=it=>it.reduce((s,y)=>s+y[1],0);
+ const act=state.dgrp||themeOf(state.dcat)||state.dthm||'',sel=state.dgrp?'':(state.dcat||''),A=Gs.find(([n])=>n===act);
+ const r1=`<div class="dch" id="dct" role="toolbar" aria-label="Temas"><button type="button" class="dcc${!act?' on':''}" data-t="" aria-pressed="${!act}">Todas<span>${nf(tot)}</span></button>${Gs.map(([n,it])=>`<button type="button" class="dcc${act===n?' on':''}" data-t="${esc(n)}" aria-pressed="${act===n}">${esc(n)}<span>${nf(sum(it))}</span></button>`).join('')}</div>`;
+ const r2=A?`<div class="dch dcs" id="dcs" role="toolbar" aria-label="Categorías de ${esc(act)}"><button type="button" class="dcc${state.dgrp===act?' on':''}" data-g="${esc(act)}" aria-pressed="${state.dgrp===act}">Todo el tema<span>${nf(sum(A[1]))}</span></button>${A[1].map(([c,n])=>`<button type="button" class="dcc${sel===c?' on':''}" data-c="${esc(c)}" aria-pressed="${sel===c}">${esc(g.cnm(c))}<span>${nf(n)}</span></button>`).join('')}</div>`:'';
+ return `<div id="dcr">${r1}${r2}</div>`;}
+function drawChips(smooth){const m=$('main');if(!m||state.tab!=='dic'||state.dcui!=='rows')return;
+ const p=$('dcp');if(p)p.remove();const old=m.querySelector('.dcw')||$('dcats');if(old)old.remove();
+ const prev=$('dcr'),t0=prev&&prev.querySelector('#dct'),sl=t0?t0.scrollLeft:0,had2=!!(prev&&prev.querySelector('#dcs'));
+ const i=m.querySelector('input[type=search]');if(!i)return;
+ if(prev)prev.outerHTML=chipsHTML();else i.insertAdjacentHTML('afterend',chipsHTML());
+ const w=$('dcr');if(!w)return;w.querySelectorAll('.dch').forEach(hscroll);
+ const t=$('dct');if(t){t.scrollLeft=sl;centerOn(t,smooth);}const s2=$('dcs');if(s2)centerOn(s2,false);
+ if(smooth&&M()&&s2&&!had2)s2.animate([{opacity:0,transform:'translateY(-6px)'},{opacity:1,transform:'none'}],{duration:240,easing:OUT});}
+document.addEventListener('click',e=>{const b=e.target.closest('#dcr .dcc');if(!b)return;
+ if(b.dataset.t!==undefined){const t=b.dataset.t;if(!t||(state.dgrp===t&&!state.dcat)){state.dgrp='';state.dcat='';state.dthm='';}else{state.dgrp=t;state.dcat='';state.dthm=t;}}
+ else if(b.dataset.g!==undefined){state.dgrp=b.dataset.g;state.dcat='';state.dthm=b.dataset.g;}
+ else if(b.dataset.c!==undefined){state.dcat=b.dataset.c;state.dgrp='';state.dthm=themeOf(b.dataset.c);}
+ drawChips(true);const i=document.querySelector('#main input[type=search]');filterDic(i?i.value:'');});
+
+/* ===== 4. Estadísticas: aciertos por día y por categoría (una clave por dispositivo, así la sincronización solo suma) ===== */
+const DEV=LS.get('dl_dev')||'local',SKEY='dl_st_'+DEV;
+/* en memoria solo se guarda lo nuevo desde el último guardado: al guardar se suma a lo que haya en el almacenamiento,
+   así no se pisa una importación, la sincronización ni otra pestaña abierta */
+const stRead=()=>{try{const o=JSON.parse(LS.get(SKEY));if(o&&typeof o==='object')return Object.assign({v:1,d:{},c:{},g:{}},o)}catch(e){}return {v:1,d:{},c:{},g:{}};};
+let PD={},PC={},PG={},pend=0,stT=0;
+function stSave(){clearTimeout(stT);if(!pend)return;const S=stRead();
+ for(const day in PD){const D=S.d[day]||(S.d[day]={});for(const l in PD[day]){const a=D[l]||(D[l]=[0,0]),p=PD[day][l];a[0]=(+a[0]||0)+p[0];a[1]=(+a[1]||0)+p[1];}}
+ for(const l in PC){const C=S.c[l]||(S.c[l]={});for(const k in PC[l]){const b=C[k]||(C[k]=[0,0]),p=PC[l][k];b[0]=(+b[0]||0)+p[0];b[1]=(+b[1]||0)+p[1];}}
+ for(const l in PG){const g=S.g[l]||(S.g[l]=[0,0,0]),p=PG[l];g[0]=Math.max(+g[0]||0,p[0]);g[1]=(+g[1]||0)+p[1];g[2]=(+g[2]||0)+p[2];}
+ const ks=Object.keys(S.d).sort();if(ks.length>200)ks.slice(0,ks.length-200).forEach(k=>delete S.d[k]);
+ LS.set(SKEY,JSON.stringify(S));PD={};PC={};PG={};pend=0;}
+function stSoon(){clearTimeout(stT);stT=setTimeout(stSave,400);}
+addEventListener('pagehide',stSave);document.addEventListener('visibilitychange',()=>{if(document.hidden)stSave();});
+function stRecord(l,cat,ok){const day=dayS(0),D=PD[day]||(PD[day]={}),a=D[l]||(D[l]=[0,0]);a[1]++;if(ok)a[0]++;
+ if(cat){const C=PC[l]||(PC[l]={}),b=C[cat]||(C[cat]=[0,0]);b[1]++;if(ok)b[0]++;}pend++;stSoon();}
+function stGame(l,pairs){const g=PG[l]||(PG[l]=[0,0,0]);g[0]=Math.max(g[0],pairs);g[1]++;g[2]+=pairs;pend++;stSave();}
+function qCat(q){if(!q)return '';if(state.numOnly)return 'números';if((state.level||'i')==='a')return 'frases';if(!q.k)return '';const e=dmap().get(q.k);return e?e.c:'';}
+const _an28=answer;answer=function(i,c){const was=answered,q=state.questions[state.qi],s0=state.score;_an28(i,c);if(!was&&answered&&q&&state.tab==='quiz')stRecord(state.lang,qCat(q),state.score>s0);};
+const _ws28=window.wSubmit;window.wSubmit=function(ev,skip){const was=answered,q=state.questions[state.qi],s0=state.score,r=_ws28(ev,skip);if(!was&&answered&&q)stRecord(state.lang,qCat(q),state.score>s0);return r;};
+function stAll(){const acc={d:{},c:{},g:{}},add=S=>{if(!S||typeof S!=='object')return;
+  for(const day in S.d||{}){const D=acc.d[day]||(acc.d[day]={});for(const l in S.d[day]){const v=S.d[day][l]||[],o=D[l]||(D[l]=[0,0]);o[0]+=+v[0]||0;o[1]+=+v[1]||0;}}
+  for(const l in S.c||{}){const C=acc.c[l]||(acc.c[l]={});for(const k in S.c[l]){const v=S.c[l][k]||[],o=C[k]||(C[k]=[0,0]);o[0]+=+v[0]||0;o[1]+=+v[1]||0;}}
+  for(const l in S.g||{}){const v=S.g[l]||[],o=acc.g[l]||(acc.g[l]=[0,0,0]);o[0]=Math.max(o[0],+v[0]||0);o[1]+=+v[1]||0;o[2]+=+v[2]||0;}};
+ stSave();try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(/^dl_st_/.test(k)){try{add(JSON.parse(localStorage.getItem(k)))}catch(e){}}}}catch(e){}
+ return acc;}
+const catLabel=k=>k==='frases'?'Frases':k==='números'?'Números':(window.dlCatName?window.dlCatName(k):k);
+const WD=['dom','lun','mar','mié','jue','vie','sáb'],MO=['ene','feb','mar','abr','may','jun','jul','ago','sept','oct','nov','dic'];
+const dateOf=k=>{const d=new Date();d.setDate(d.getDate()-k);return d;};
+const dayLab=k=>{const d=dateOf(k);return (k===0?'Hoy, ':k===1?'Ayer, ':'')+WD[d.getDay()]+' '+d.getDate()+' '+MO[d.getMonth()];};
+function niceAxis(v){v=Math.max(1,v);const raw=v/4,p=Math.pow(10,Math.floor(Math.log10(raw))),f=raw/p,step=Math.max(1,(f<=1?1:f<=2?2:f<=5?5:10)*p);return{step,max:Math.ceil(v/step)*step};}
+function segPath(x,y,w,h,r){r=Math.max(0,Math.min(r,h,w/2));const f=n=>n.toFixed(1);return r?`M${f(x)} ${f(y+h)}V${f(y+r)}Q${f(x)} ${f(y)} ${f(x+r)} ${f(y)}H${f(x+w-r)}Q${f(x+w)} ${f(y)} ${f(x+w)} ${f(y+r)}V${f(y+h)}Z`:`M${f(x)} ${f(y+h)}V${f(y)}H${f(x+w)}V${f(y+h)}Z`;}
+const CH={days:[]};
+/* barras apiladas de 14 días: aciertos abajo (color de acento), fallos arriba, 2 px de separación y esquinas de 4 px solo arriba */
+function chartSVG(days,W){const Hh=176,P={l:30,r:6,t:12,b:26},ax=niceAxis(Math.max(...days.map(d=>d.t))),pw=W-P.l-P.r,ph=Hh-P.t-P.b,cw=pw/days.length,bw=Math.min(24,Math.max(6,cw*.6)),y=v=>P.t+ph*(1-v/ax.max),y0=P.t+ph;
+ let s='';for(let v=0;v<=ax.max;v+=ax.step){const yy=y(v).toFixed(1);s+=`<line class="stg${v===0?' stg0':''}" x1="${P.l}" x2="${W-P.r}" y1="${yy}" y2="${yy}"/><text class="stl" x="${P.l-7}" y="${(+yy+3.5).toFixed(1)}" text-anchor="end">${nf(v)}</text>`;}
+ days.forEach((d,i)=>{const cx=P.l+i*cw+cw/2,x=cx-bw/2;let b='';
+  if(d.t){const yt=y(d.t),yo=y(d.ok);
+   if(d.ok)b+=`<path class="stok" d="${segPath(x,yo,bw,y0-yo,d.t===d.ok?4:0)}"/>`;
+   if(d.t>d.ok){if(d.ok){const kh=Math.max(2,yo-yt-2);b+=`<path class="stko" d="${segPath(x,yo-2-kh,bw,kh,4)}"/>`;}else b+=`<path class="stko" d="${segPath(x,yt,bw,y0-yt,4)}"/>`;}}
+  const lab=dayLab(d.k)+': '+(d.t?`${d.ok} ${d.ok===1?'acierto':'aciertos'} y ${d.t-d.ok} ${d.t-d.ok===1?'fallo':'fallos'}`:'sin respuestas');
+  s+=`<g class="stcol" data-i="${i}" tabindex="${d.k===0?0:-1}" role="img" aria-label="${esc(lab)}"><rect class="sthit" x="${(P.l+i*cw).toFixed(1)}" y="${P.t-6}" width="${cw.toFixed(1)}" height="${ph+P.b+4}" rx="7"/>${b}<text class="stl${d.k===0?' stl0':''}" x="${cx.toFixed(1)}" y="${Hh-8}" text-anchor="middle">${d.k===0?'hoy':dateOf(d.k).getDate()}</text></g>`;});
+ return `<svg class="stsvg" width="${W}" height="${Hh}" viewBox="0 0 ${W} ${Hh}" role="group" aria-label="Aciertos y fallos de cada día. Usa las flechas para recorrer los días.">${s}</svg><div class="sttip" hidden></div>`;}
+function tipShow(col){const w=col.closest('.stchart'),tip=w&&w.querySelector('.sttip'),d=CH.days[+col.dataset.i];if(!tip||!d)return;
+ w.querySelectorAll('.stcol.on').forEach(x=>{if(x!==col)x.classList.remove('on')});col.classList.add('on');
+ tip.textContent='';const add=(cls,txt)=>{const e=document.createElement('div');e.className=cls;e.textContent=txt;tip.appendChild(e);return e;};
+ add('stth',dayLab(d.k));
+ if(d.t){[['ok',d.ok,d.ok===1?'acierto':'aciertos'],['ko',d.t-d.ok,d.t-d.ok===1?'fallo':'fallos']].forEach(([c,v,t])=>{const r=add('sttr','');const k=document.createElement('i');k.className='stk '+c;const b=document.createElement('b');b.textContent=nf(v);const sp=document.createElement('span');sp.textContent=t;r.append(k,b,sp);});add('sttp',Math.round(d.ok/d.t*100)+' % de aciertos');}
+ else add('sttp','Sin respuestas');
+ tip.hidden=false;const wr=w.getBoundingClientRect(),bar=col.querySelector('.stko')||col.querySelector('.stok'),cr=(bar||col.querySelector('.sthit')).getBoundingClientRect(),tw=tip.offsetWidth,th=tip.offsetHeight;
+ let top=(bar?cr.top:wr.top+wr.height*.55)-wr.top-th-8,left,tx='-50%';
+ if(top<-4){top=Math.max(0,(bar?cr.top:wr.top+wr.height*.4)-wr.top-th/3);const ls=cr.left-wr.left-8;if(ls-tw>=0){left=ls;tx='-100%';}else{left=cr.right-wr.left+8;tx='0';}}
+ else{left=cr.left+cr.width/2-wr.left;left=Math.max(tw/2+2,Math.min(wr.width-tw/2-2,left));}
+ tip.style.transform='translateX('+tx+')';tip.style.left=left+'px';tip.style.top=top+'px';}
+function tipHide(w){const t=w&&w.querySelector('.sttip');if(t)t.hidden=true;if(w)w.querySelectorAll('.stcol.on').forEach(x=>x.classList.remove('on'));}
+document.addEventListener('pointerover',e=>{const c=e.target.closest&&e.target.closest('.stcol');if(c&&e.pointerType!=='touch')tipShow(c);});
+document.addEventListener('pointerout',e=>{const c=e.target.closest&&e.target.closest('.stcol');if(!c||e.pointerType==='touch')return;const to=e.relatedTarget;if(to&&c.contains(to))return;tipHide(c.closest('.stchart'));});
+document.addEventListener('focusin',e=>{const c=e.target.closest&&e.target.closest('.stcol');if(c)tipShow(c);});
+document.addEventListener('focusout',e=>{const c=e.target.closest&&e.target.closest('.stcol');if(c&&!(e.relatedTarget&&e.relatedTarget.closest&&e.relatedTarget.closest('.stcol')))tipHide(c.closest('.stchart'));});
+document.addEventListener('keydown',e=>{const c=e.target.closest&&e.target.closest('.stcol');if(!c||!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;e.preventDefault();
+ const all=[...c.parentNode.querySelectorAll('.stcol')],i=all.indexOf(c),j=e.key==='Home'?0:e.key==='End'?all.length-1:Math.max(0,Math.min(all.length-1,i+(e.key==='ArrowLeft'?-1:1)));
+ all.forEach((x,k)=>x.setAttribute('tabindex',k===j?0:-1));all[j].focus();});
+const pct=(a,b)=>b?Math.round(a/b*100)+' %':'—';
+let stW=0,stRT=0;
+window.renderStats=function(){const m=$('main');if(!m)return;stSave();const A=stAll(),sc=state.stScope||'l',L=state.lang,inS=l=>sc==='a'||l===L,lname=DATA[L].name.toLowerCase();
+ const days=[];for(let k=13;k>=0;k--){const D=A.d[dayS(k)]||{};let ok=0,t=0;for(const l in D)if(inS(l)){ok+=D[l][0];t+=D[l][1];}days.push({ok,t,k});}
+ CH.days=days;
+ const today=days[13],w7=days.slice(7).reduce((a,x)=>({ok:a.ok+x.ok,t:a.t+x.t}),{ok:0,t:0}),t14=days.reduce((a,x)=>a+x.t,0);
+ let allT=0,allOk=0;for(const ds in A.d)for(const l in A.d[ds])if(inS(l)){allOk+=A.d[ds][l][0];allT+=A.d[ds][l][1];}
+ const cats={};for(const l in A.c)if(inS(l))for(const k in A.c[l]){const o=cats[k]||(cats[k]=[0,0]);o[0]+=A.c[l][k][0];o[1]+=A.c[l][k][1];}
+ const worst=Object.entries(cats).filter(([,v])=>v[1]>=4&&v[0]<v[1]).map(([k,v])=>({k,ok:v[0],t:v[1],p:v[0]/v[1]})).sort((a,b)=>a.p-b.p||b.t-a.t).slice(0,6);
+ const Hm=ld('dl_hard_'+L,{}),dm=dmap(),hw=Object.values(Hm);
+ const hard=Object.entries(Hm).filter(([,w])=>w>=3).sort((a,b)=>b[1]-a[1]).slice(0,12).map(([w])=>{const e=dm.get(w)||DATA[L].phr.find(x=>x.f===w);return{w,t:e?e.t:''};});
+ const mastered=hw.filter(w=>w===0).length,toRev=hw.filter(w=>w>=3).length;
+ const s=ld('dl_streak',{n:0,last:''}),streak=(s.last===dayS(0)||s.last===dayS(1))?s.n:0,g=A.g[L]||[0,0,0],rec=Math.max(g[0],+LS.get('best_match_'+L)||0);
+ const scope=sc==='l'?'en '+esc(lname):'en todos los idiomas';
+ const legend='<div class="stleg"><span><i class="sw ok"></i>Aciertos</span><span><i class="sw ko"></i>Fallos</span></div>';
+ const lr=Object.keys(DATA).map(l=>{let t=0,ok=0,t7=0;for(const ds in A.d){const v=A.d[ds][l];if(v){t+=v[1];ok+=v[0];}}for(let k=0;k<7;k++){const v=(A.d[dayS(k)]||{})[l];if(v)t7+=v[1];}return{l,t,ok,t7};}).filter(x=>x.t);
+ m.innerHTML=`<div class="stw">
+ <div class="sthd"><h2>Progreso</h2><div class="qms" id="stsc" role="group" aria-label="Qué idiomas ver"><button type="button" data-v="l" class="${sc==='l'?'on':''}" aria-pressed="${sc==='l'}">${DATA[L].flag} ${esc(DATA[L].name)}</button><button type="button" data-v="a" class="${sc==='a'?'on':''}" aria-pressed="${sc==='a'}">Todos</button></div></div>
+ <div class="stcards">
+  <div class="stc"><span>Hoy</span><b>${nf(today.t)}</b><em>${today.t?pct(today.ok,today.t)+' de aciertos':'respuestas'}</em></div>
+  <div class="stc"><span>Últimos 7 días</span><b>${nf(w7.t)}</b><em>${w7.t?pct(w7.ok,w7.t)+' de aciertos':'respuestas'}</em></div>
+  <div class="stc"><span>Racha</span><b>${streak} ${streak===1?'día':'días'}</b><em>completando tests</em></div>
+  <div class="stc"><span>Dominadas</span><b>${nf(mastered)}</b><em>en ${esc(lname)} · ${nf(toRev)} por repasar</em></div>
+ </div>
+ <section class="stsec"><h3>Aciertos por día</h3><p class="stsub">Últimos 14 días ${scope}${allT?' · media '+pct(allOk,allT):''}</p>${t14?`<div class="stchart" id="stch"></div>`+legend+`<details class="sttv"><summary>Ver los datos en una tabla</summary><div class="sttab"><table><thead><tr><th>Día</th><th>Aciertos</th><th>Fallos</th><th>Aciertos (%)</th></tr></thead><tbody>${days.slice().reverse().map(d=>`<tr><td>${esc(dayLab(d.k))}</td><td>${nf(d.ok)}</td><td>${nf(d.t-d.ok)}</td><td>${d.t?pct(d.ok,d.t):'—'}</td></tr>`).join('')}</tbody></table></div></details>`:'<p class="stnone">Aún no hay respuestas en estos 14 días. Haz un test o juega a Emparejar: cada respuesta se apunta aquí.</p>'}</section>
+ <section class="stsec"><h3>Categorías que más fallas</h3>${worst.length?legend+`<div class="stlist">${worst.map(x=>`<div class="strow"><div class="stn"><div class="stnt"><b>${esc(catLabel(x.k))}</b><span>${nf(x.ok)} de ${nf(x.t)} · ${Math.round(x.p*100)} %</span></div><span class="stseg" role="img" aria-label="${x.ok} aciertos y ${x.t-x.ok} fallos">${x.ok?`<i class="ok" style="flex-grow:${x.ok}"></i>`:''}<i class="ko" style="flex-grow:${x.t-x.ok}"></i></span></div><button type="button" class="stgo" data-c="${esc(x.k)}">Practicar</button></div>`).join('')}</div>`:'<p class="stnone">Aparecerán cuando respondas al menos 4 preguntas de una categoría y falles alguna.</p>'}</section>
+ <section class="stsec"><h3>Palabras que más te cuestan <span class="stsub">· ${esc(lname)}</span></h3>${hard.length?`<div class="sthw">${hard.map(x=>`<span class="sth"><b>${esc(x.w)}</b>${x.t?'<i>'+esc(x.t)+'</i>':''}</span>`).join('')}</div>`:'<p class="stnone">Ninguna por ahora. Las que falles a menudo aparecerán aquí y en ★ Favs.</p>'}</section>
+ <section class="stsec stgame"><div><h3>Emparejar</h3><p class="stsub">Récord en ${esc(lname)}: <b>${nf(rec)}</b> ${rec===1?'pareja':'parejas'} · ${nf(g[1])} ${g[1]===1?'partida':'partidas'}</p></div><button type="button" class="stplay">Jugar</button></section>
+ ${lr.length?`<section class="stsec"><h3>Por idioma</h3><div class="sttab"><table><thead><tr><th>Idioma</th><th>Respuestas</th><th>Aciertos</th><th>7 días</th></tr></thead><tbody>${lr.map(x=>`<tr${x.l===L?' class="cur"':''}><td>${DATA[x.l].flag} ${esc(DATA[x.l].name)}</td><td>${nf(x.t)}</td><td>${pct(x.ok,x.t)}</td><td>${nf(x.t7)}</td></tr>`).join('')}</tbody></table></div></section>`:''}
+ </div>`;
+ const ch=$('stch');if(ch)ch.innerHTML=chartSVG(days,Math.max(280,Math.floor(ch.clientWidth)||560));stW=m.clientWidth;
+ if(M())m.animate([{opacity:0,transform:'translateY(8px)'},{opacity:1,transform:'none'}],{duration:300,easing:OUT});};
+addEventListener('resize',()=>{if(state.tab!=='stats')return;const m=$('main');if(m&&Math.abs(m.clientWidth-stW)>8){clearTimeout(stRT);stRT=setTimeout(()=>{if(state.tab==='stats')renderStats();},150);}});
+document.addEventListener('click',e=>{if(state.tab!=='stats')return;
+ const col=e.target.closest('.stcol');if(col){tipShow(col);return;}
+ if(!e.target.closest('.sttip')){const w=document.querySelector('#main .stchart');if(w)tipHide(w);}
+ const sc=e.target.closest('#stsc button');if(sc){state.stScope=sc.dataset.v;renderStats();return;}
+ const b=e.target.closest('.stgo');if(b){const c=b.dataset.c;state.favOnly=false;state.qgrp='';if(state.qmode==='m'){state.qmode='c';LS.set('dl_qmode','c');}
+  if(c==='frases'){state.level='a';state.numOnly=false;state.qcat='';}else if(c==='números'){state.numOnly=true;state.qcat='';}else{state.level='i';state.numOnly=false;state.qcat=c;}
+  setTab('quiz');scrollTo(0,0);return;}
+ if(e.target.closest('.stplay')){state.qmode='m';LS.set('dl_qmode','m');state.numOnly=false;setTab('quiz');scrollTo(0,0);}});
+
+/* ===== 5. Emparejar contra reloj ===== */
+const MG={st:'idle',deck:[],di:0,board:[],done:0,sel:{a:null,b:null},pairs:0,errs:0,end:0,raf:0,pause:0};
+const GAME_MS=60000,PEN=2000,BON=3000,PER=5;
+const bestKey=()=>'best_match_'+state.lang;
+function buildDeck(){const l=state.lang,Ld=DATA[l];
+ if(state.numOnly)return shuffle(Array.from({length:100},(_,i)=>i+1)).map(n=>{const w=numWord(l,n);return{id:'n'+n,a:w,b:String(n),k:null,c:'números',p:l==='ru'?ruP(w):''};});
+ /* se reutiliza la selección del test (nivel, tema, ★ Favs y las que más fallas), sin calcular opciones falsas */
+ const nq=state.nq,qm=state.qmode,dd=dlDis;let qs=[];state.nq=60;state.qmode='c';dlDis=()=>[];try{qs=genQuiz(60)}catch(e){qs=[]}finally{dlDis=dd;state.nq=nq;state.qmode=qm;}
+ const A=(state.level||'i')==='a',dm=dmap(),out=[],seen=new Set();
+ const same=[];
+ for(const q of qs){if(!q.k)continue;const e=A?Ld.phr.find(x=>x.f===q.k):dm.get(q.k);if(!e)continue;const a=A?e.f:e.w,b=e.t;if(seen.has(a)||seen.has(b))continue;seen.add(a);seen.add(b);
+  const it={id:q.k,a,b,k:q.k,c:A?'frases':e.c,p:l==='ru'?(e.p||ruP(a)):''};
+  /* las que se escriben igual en los dos idiomas (pesto = pesto) no tienen gracia: solo si faltan */
+  if(nz(a).replace(/[^a-z0-9а-я]/g,'')===nz(b).replace(/\s*\(.*?\)/g,'').replace(/[^a-z0-9а-я]/g,''))same.push(it);else out.push(it);}
+ return out.length>=PER?out:out.concat(same);}
+function nextBoard(){const out=[];let guard=0;
+ while(out.length<PER&&guard++<300){if(MG.di>=MG.deck.length){MG.deck=shuffle(buildDeck());MG.di=0;if(!MG.deck.length)break;}
+  const it=MG.deck[MG.di++];if(out.some(o=>o.id===it.id||o.a===it.a||!dlSynOK(o.b,it.b)))continue;out.push(it);}
+ return out;}
+function boardHTML(){const B=MG.board,ia=shuffle(B.map((_,i)=>i)),ib=shuffle(B.map((_,i)=>i));
+ return `<div class="mgcol" role="group" aria-label="Palabras">${ia.map(i=>`<button type="button" class="mgc" data-s="a" data-i="${i}">${esc(B[i].a)}${B[i].p?`<small>${esc(B[i].p)}</small>`:''}</button>`).join('')}</div><div class="mgcol" role="group" aria-label="Traducciones">${ib.map(i=>`<button type="button" class="mgc" data-s="b" data-i="${i}">${esc(B[i].b)}</button>`).join('')}</div>`;}
+function mountGame(){const m=$('main');if(!m)return;m.classList.add('mgm');
+ m.querySelectorAll(':scope > .prog,:scope > .score,:scope > .quiz-card,:scope > .rs,:scope > .empty,:scope > .mg').forEach(x=>x.remove());
+ if(MG.raf)cancelAnimationFrame(MG.raf);MG.raf=0;MG.st='ready';
+ const q=m.querySelector('.qos');if(q)q.textContent=q.textContent.replace(/· \d+ preguntas/,'· 60 s');
+ MG.deck=shuffle(buildDeck());MG.di=0;
+ if(MG.deck.length<2){m.insertAdjacentHTML('beforeend','<div class="empty">No hay suficientes palabras con estas opciones para emparejar. Cambia el nivel o la categoría, o marca más favoritas ☆.</div>');return;}
+ const best=+LS.get(bestKey())||0;
+ m.insertAdjacentHTML('beforeend',`<div class="mg" id="mg"><div class="mgh"><div class="mgt" id="mgt" role="timer" aria-label="Segundos que quedan">60</div><div class="mgst"><span><b id="mgp">0</b> parejas</span><span><b id="mge">0</b> fallos</span><span>Récord <b id="mgr">${best}</b></span></div></div><div class="mgbar" aria-hidden="true"><i id="mgbi"></i></div><div class="mgb" id="mgb"><div class="mgready"><h3>Emparejar</h3><p>Une cada palabra con su traducción antes de que se acabe el tiempo. Tienes 60 segundos: cada fallo resta 2 s y cada tablero completo suma 3 s.</p><button type="button" class="btn" id="mgstart">Empezar</button></div></div><div class="mgfx" id="mgfx" aria-live="polite"></div></div>`);}
+function mgStart(){MG.st='play';MG.pairs=0;MG.errs=0;MG.done=0;MG.sel={a:null,b:null};MG.pause=0;MG.end=performance.now()+GAME_MS;
+ if(!MG.deck.length)MG.deck=shuffle(buildDeck());MG.board=nextBoard();const b=$('mgb');if(b){b.innerHTML=boardHTML();b.classList.add('play');const f=b.querySelector('.mgc');if(f&&matchMedia('(pointer:fine)').matches)f.focus({preventScroll:true});}
+ ['mgp','mge'].forEach(id=>{const e=$(id);if(e)e.textContent='0';});const g=$('mg');if(g){const hd=document.querySelector('header'),hb=hd?Math.max(0,hd.getBoundingClientRect().bottom):0,r=g.getBoundingClientRect();if(r.top<hb||r.bottom>innerHeight)scrollBy({top:r.top-hb-10,behavior:M()?'smooth':'auto'});}
+ if(!MG.raf)MG.raf=requestAnimationFrame(mgLoop);}
+function mgLoop(){MG.raf=0;if(MG.st!=='play')return;if(!$('mg')){MG.st='idle';return;}
+ const left=Math.max(0,MG.end-performance.now()),t=$('mgt'),bi=$('mgbi');
+ if(t){const v=String(Math.ceil(left/1000));if(t.textContent!==v)t.textContent=v;t.classList.toggle('low',left<10000);}if(bi)bi.style.transform='scaleX('+Math.min(1,left/GAME_MS).toFixed(4)+')';
+ if(left<=0){mgOver();return;}MG.raf=requestAnimationFrame(mgLoop);}
+function fx(t,cls){const f=$('mgfx');if(!f)return;f.textContent=t;f.className='mgfx on '+cls;clearTimeout(f._h);f._h=setTimeout(()=>{f.className='mgfx';},700);}
+function wAdj(it,d){if(!it.k)return;const h=ld('dl_hard_'+state.lang,{});let w=h[it.k]||0;w=d<0?Math.max(0,w-1):Math.min(5,w+1);h[it.k]=w;sv('dl_hard_'+state.lang,h);}
+function mgPick(btn){if(MG.st!=='play'||btn.disabled)return;const s=btn.dataset.s,i=+btn.dataset.i,prev=MG.sel[s];
+ if(prev===i){MG.sel[s]=null;btn.classList.remove('sel');return;}
+ if(prev!=null){const pb=document.querySelector(`#mgb .mgc[data-s="${s}"][data-i="${prev}"]`);if(pb)pb.classList.remove('sel');}
+ MG.sel[s]=i;btn.classList.add('sel');if(MG.sel.a!=null&&MG.sel.b!=null)mgCheck();}
+function mgCheck(){const a=MG.sel.a,b=MG.sel.b;MG.sel={a:null,b:null};
+ const A=document.querySelector(`#mgb .mgc[data-s="a"][data-i="${a}"]`),B=document.querySelector(`#mgb .mgc[data-s="b"][data-i="${b}"]`),it=MG.board[a];if(!A||!B||!it)return;
+ if(a===b){MG.pairs++;[A,B].forEach(x=>{x.classList.remove('sel');x.classList.add('ok');x.disabled=true;});stRecord(state.lang,it.c,true);wAdj(it,-1);
+  if(++MG.done>=MG.board.length){MG.end+=BON;fx('+3 s','ok');setTimeout(()=>{if(MG.st!=='play')return;MG.board=nextBoard();MG.done=0;const g=$('mgb');if(!MG.board.length){mgOver();return;}if(g){g.innerHTML=boardHTML();if(M())g.animate([{opacity:.2},{opacity:1}],{duration:200});const f=g.querySelector('.mgc');if(f&&matchMedia('(pointer:fine)').matches)f.focus({preventScroll:true});}},240);}}
+ else{MG.errs++;MG.end-=PEN;fx('−2 s','bad');[A,B].forEach(x=>{x.classList.remove('sel');x.classList.add('bad');setTimeout(()=>x.classList.remove('bad'),420);if(M())x.animate([{transform:'translateX(0)'},{transform:'translateX(-6px)'},{transform:'translateX(5px)'},{transform:'none'}],{duration:300});});
+  stRecord(state.lang,it.c,false);wAdj(it,+1);}
+ const p=$('mgp'),e=$('mge');if(p)p.textContent=MG.pairs;if(e)e.textContent=MG.errs;}
+function mgOver(){if(MG.st!=='play')return;MG.st='over';if(MG.raf)cancelAnimationFrame(MG.raf);MG.raf=0;
+ const l=state.lang,prev=+LS.get(bestKey())||0,rec=MG.pairs>prev;if(rec)LS.set(bestKey(),String(MG.pairs));
+ stGame(l,MG.pairs);
+ if(MG.pairs>=5)completeTest();if(rec&&MG.pairs>=8)confetti();
+ const t=$('mgt'),bi=$('mgbi');if(t){t.textContent='0';t.classList.remove('low');}if(bi)bi.style.transform='scaleX(0)';const r=$('mgr');if(r)r.textContent=Math.max(prev,MG.pairs);
+ const b=$('mgb');if(!b)return;b.classList.remove('play');
+ b.innerHTML=`<div class="mgover"><div class="mgbig">${MG.pairs}</div><div class="mgsub">${MG.pairs===1?'pareja':'parejas'} en ${DATA[l].name.toLowerCase()}</div>${rec?'<p class="mgrec">Nuevo récord</p>':''}<div class="rs-g"><div><b>${MG.pairs}</b><span>Parejas</span></div><div><b>${MG.errs}</b><span>Fallos</span></div><div><b>${Math.max(prev,MG.pairs)}</b><span>Récord</span></div></div><button type="button" class="btn rs-p" id="mgagain">Jugar otra vez</button><button type="button" class="rs-2" id="mgback">Volver al test normal</button></div>`;
+ const ag=$('mgagain');if(ag&&matchMedia('(pointer:fine)').matches)ag.focus({preventScroll:true});
+ if(M())b.animate([{opacity:0,transform:'scale(.97)'},{opacity:1,transform:'none'}],{duration:320,easing:OUT});}
+document.addEventListener('click',e=>{const c=e.target.closest('#mgb .mgc');if(c){mgPick(c);return;}
+ if(e.target.closest('#mgstart')||e.target.closest('#mgagain')){mgStart();return;}
+ if(e.target.closest('#mgback'))setQMode('c');});
+document.addEventListener('visibilitychange',()=>{if(MG.st!=='play')return;if(document.hidden)MG.pause=performance.now();else if(MG.pause){MG.end+=performance.now()-MG.pause;MG.pause=0;if(!MG.raf)MG.raf=requestAnimationFrame(mgLoop);}});
+const _rq28=renderQuiz;renderQuiz=function(){_rq28();const m=$('main');if(state.tab==='quiz'&&state.qmode==='m')mountGame();else if(m)m.classList.remove('mgm');};
+
+/* ===== 6. Precarga del segundo idioma más usado ===== */
+const LU=(()=>{try{return JSON.parse(LS.get('dl_lu'))||{}}catch(e){return {}}})();
+function luBump(l){LU[l]=(LU[l]||0)+1;LS.set('dl_lu',JSON.stringify(LU));}
+function preCand(){return Object.keys(LU).filter(l=>l!==state.lang&&DATA[l]).sort((a,b)=>LU[b]-LU[a])[0]||'';}
+function preText(){const c=preCand();if(!c)return 'Cuando uses varios idiomas, el que más uses después del activo se cargará en segundo plano para que cambiar a él sea inmediato.';
+ return `Tu segundo idioma más usado es el <b>${esc(DATA[c].name.toLowerCase())}</b>: ${DATA[c].dic.length?'ya está cargado y el cambio es inmediato.':'se carga en segundo plano unos segundos después de abrir la app.'}`;}
+let preT=0;function schedulePre(){clearTimeout(preT);const cn=navigator.connection;if(cn&&cn.saveData)return;preT=setTimeout(()=>{const c=preCand();if(!c||DATA[c].dic.length||!window.loadLang)return;const go=()=>{if(!DATA[c].dic.length)window.loadLang(c).catch(()=>{});};if('requestIdleCallback' in window)requestIdleCallback(go,{timeout:5000});else go();},2500);}
+luBump(state.lang);schedulePre();
+
+/* ===== 7. Arreglos ===== */
+/* cambiar de idioma con «★ Favs» activo y sin favoritas en el otro idioma dejaba el test vacío */
+const _sl28=setLang;setLang=function(l){if(l!==state.lang&&state.favOnly&&ld('dl_fav_'+l,[]).length<1){state.favOnly=false;setTimeout(()=>toast('En '+DATA[l].name.toLowerCase()+' aún no tienes favoritas: el test vuelve a usar todo el diccionario.'),350);}return _sl28(l);};
+/* «Repetir falladas» ya no cuenta como récord */
+const _rm28=retryMissed;retryMissed=function(){state._retry=true;return _rm28();};
+const _nq28=newQuiz;newQuiz=function(){state._retry=false;return _nq28();};
+const _st28=setTab;setTab=function(t){if(t==='quiz')state._retry=false;if(MG.st==='play'&&t!=='quiz'){MG.st='idle';if(MG.raf)cancelAnimationFrame(MG.raf);MG.raf=0;}return _st28(t);};
+/* en ★ Favs, quitar la estrella saca la palabra de la lista al momento */
+const _tm28=toggleMark;toggleMark=function(t,k,x){_tm28(t,k,x);if(state.tab==='fav'&&t==='f')setTimeout(()=>{if(state.tab==='fav')render();},260);};
+/* el contador 🔥 abre Progreso */
+function flameA11y(){const f=$('flame');if(!f||f.dataset.a28)return;f.dataset.a28='1';f.setAttribute('role','button');f.tabIndex=0;f.setAttribute('aria-label','Racha: ver tu progreso');}
+flameA11y();
+document.addEventListener('click',e=>{if(e.target.closest&&e.target.closest('#flame'))setTab('stats');});
+document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target&&e.target.id==='flame'){e.preventDefault();setTab('stats');}});
+
+/* ===== 8. Envoltorio de render ===== */
+let lastLang=state.lang;
+const _r28=render;render=function(){if(state.lang!==lastLang){lastLang=state.lang;luBump(state.lang);schedulePre();VL.lq=undefined;const g=G();if(state.dthm&&g&&!g.groups(false).some(([n])=>n===state.dthm))state.dthm='';}
+ _r28();
+ if(state.tab==='dic'){if(state.dcui==='rows')drawChips(false);const L=$('diclist');if(L&&VL.el!==L){const i=document.querySelector('#main input[type=search]');VL.lq=undefined;filterDic(i?i.value:'');}}
+ const m=$('main');if(m&&!(state.tab==='quiz'&&state.qmode==='m'))m.classList.remove('mgm');flameA11y();};
+
+/* ===== 9. Guía ===== */
+const gbd=document.querySelector('#guide .gbody');
+if(gbd)gbd.insertAdjacentHTML('beforeend',[
+ ['Ajustes ⚙','<p>El engranaje de arriba, junto a la guía, abre <b>Ajustes</b>:</p><ul><li><b>Voz</b> del idioma activo, con los avisos sobre las voces de tu navegador.</li><li><b>Portugués</b> de Portugal o de Brasil.</li><li><b>Diccionario</b>: filas compactas o detalladas, y categorías en filas de temas o en panel.</li><li><b>Test</b>: paso entre preguntas rápido o sin animación.</li><li><b>Copia de seguridad y sincronización</b> (antes estaba en el botón 💾).</li></ul>'],
+ ['Progreso 📈','<p>La pestaña <b>Progreso</b> (también al tocar el contador 🔥) muestra tus respuestas de hoy y de los últimos 7 días, un gráfico con los aciertos y fallos de cada día, las <b>categorías que más fallas</b> con un botón <b>Practicar</b> que abre el test de esa categoría, las palabras que más te cuestan y tu récord en Emparejar.</p><p>Arriba eliges ver el idioma activo o todos. Las estadísticas empiezan a contarse con esta versión; con la sincronización activa se suman las de todos tus dispositivos.</p>'],
+ ['Emparejar ⏱','<p>En el test, <b>Opciones</b> → <b>Tipo de test</b> → <b>Emparejar</b> (o el botón <b>Jugar</b> de Progreso).</p><ul><li>Une cada palabra (izquierda) con su traducción (derecha). Puedes empezar por cualquiera de los dos lados.</li><li>Tienes <b>60 segundos</b>: cada fallo resta 2 s y cada tablero completo suma 3 s.</li><li>Usa las mismas opciones que el test: nivel, categoría o tema, ★ Favs y Números.</li><li>Las palabras que fallas salen más en los siguientes tests. Con 5 parejas o más, la partida cuenta para la racha 🔥.</li></ul>'],
+ ['Diccionario rápido','<p>El diccionario solo dibuja las palabras que están en pantalla (y unas cuantas más arriba y abajo), así va fluido aunque tenga más de 1.600 palabras por idioma. El buscador no distingue tildes ni mayúsculas: «cafe» encuentra «café».</p><p>Además, el idioma que más usas después del activo se carga en segundo plano para que el cambio sea inmediato.</p>']
+].map(([t,h])=>`<details><summary>${t}</summary><div class="gtxt">${h}</div></details>`).join(''));
+
+/* ===== 10. Estilos ===== */
+document.head.insertAdjacentHTML('beforeend','<style>'+
+':root{--stko:#e8553f}'+
+'#pgb,#ptv,.qtrr{display:none!important}#toast,#updbar{bottom:calc(20px + env(safe-area-inset-bottom,0px))}'+
+'#setb{flex-shrink:0;width:40px;height:40px;border-radius:12px;border:1px solid var(--border);background:color-mix(in srgb,var(--text) 5%,transparent);color:var(--text);display:grid;place-items:center;cursor:pointer;transition:transform .45s '+SOFT+',background .2s}#setb:hover{background:color-mix(in srgb,var(--accent) 12%,transparent);color:var(--accent)}#setb:active{transform:scale(.92)}#setb:focus-visible,#setx:focus-visible{outline:2px solid var(--accent);outline-offset:2px}'+
+'#settings{position:fixed;inset:0;z-index:90;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,.38);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}#settings[hidden]{display:none}'+
+'#setx{border:0;background:none;color:var(--accent);font:inherit;font-size:var(--fs-base,15px);font-weight:600;cursor:pointer;padding:6px 4px}'+
+'@media (max-width:600px){#settings{align-items:flex-end;padding:0}}:root.lite #settings{background:rgba(0,0,0,.55);-webkit-backdrop-filter:none;backdrop-filter:none}'+
+'.sbody{padding:2px 18px 24px}.sgrp{margin-top:18px}.sgrp h3{margin:0 0 8px 4px;font-size:var(--fs-xs,12px);font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text2)}.sgrp h3 span{text-transform:none;letter-spacing:0;font-weight:600}'+
+'.scard{border:1px solid var(--border);border-radius:16px;background:var(--bg);padding:4px 14px}.srow{display:flex;align-items:center;justify-content:space-between;gap:8px 12px;padding:10px 0;flex-wrap:wrap}.srow+.srow{border-top:1px solid var(--border)}.srow>span{font-size:var(--fs-base,15px);font-weight:500}'+
+'.sseg button{white-space:nowrap}.sseg button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}.snote{margin:7px 4px 0;font-size:var(--fs-xs,12px);color:var(--text2);line-height:1.45}.sp{margin:10px 0;font-size:var(--fs-sm,13px);line-height:1.5;color:var(--text)}'+
+'#svoice{padding:12px 14px}#svoice #vsel{display:block!important;margin:0!important;width:100%;max-width:none!important;padding:10px 12px!important;border-radius:12px!important;background:var(--surface)!important;font-size:var(--fs-base,15px)!important}#svoice #vhint,#svoice #vhint2,#svoice #vhint3{max-width:none!important;margin:10px 0 0!important;text-align:left!important;font-size:12px!important;line-height:1.45}'+
+'.sbk{padding:12px 14px}.sbk .bx{background:none!important;border:0!important;box-shadow:none!important;padding:0!important;width:auto!important;max-height:none!important;overflow:visible!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}.sbk .bx>b,.sbk #pgx{display:none!important}'+
+'.sbk textarea{width:100%;height:96px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:inherit;font:12px ui-monospace,monospace;padding:8px;box-sizing:border-box}.sbk button{margin:6px 6px 0 0;padding:8px 13px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:inherit;font:inherit;font-size:13px;cursor:pointer}.sbk button:hover{border-color:var(--accent)}.sbk p{font-size:12px;color:var(--text2);margin:6px 0;line-height:1.45}.sbk #pgsync{font-size:13px}.sbk #pgsync.ok{color:#30a14e}'+
+/* lista virtual y filas compactas */
+'#diclist.vlist{overflow-anchor:none}#diclist.vlist .row{content-visibility:visible;contain:none}#diclist.vlist .row.vlast{border-bottom:none}#diclist .vsp{height:0;overflow-anchor:none}'+
+'html.dcmp #diclist .row{padding:9px 10px 9px 16px;align-items:center;gap:6px;cursor:pointer}html.dcmp #diclist .row-main{display:flex;flex-wrap:wrap;align-items:baseline;column-gap:10px;row-gap:2px}html.dcmp #diclist .row-main>.tr{margin-top:0;font-size:var(--fs-sm,13px)}'+
+'html.dcmp #diclist .word{font-size:var(--fs-base,15px)}html.dcmp #diclist .pron{font-size:var(--fs-xs,12px)}html.dcmp #diclist .spk,html.dcmp #diclist .mk{width:32px;height:32px;font-size:13px;margin-left:2px}'+
+'html.dcmp #diclist .row:not(.open) .tag,html.dcmp #diclist .row:not(.open) .acts,html.dcmp #diclist .row:not(.open) .ex,html.dcmp #diclist .row:not(.open) .cj{display:none}'+
+'html.dcmp #diclist .row:not(.open) .lv{font-size:0;width:8px;height:8px;padding:0;margin-left:5px;vertical-align:1px;animation:none}'+
+'html.dcmp #diclist .row.open .row-main>.tr{font-size:var(--fs-base,15px);margin-top:1px}html.dcmp #diclist .row.open{background:color-mix(in srgb,var(--accent) 6%,transparent)}html.dcmp #diclist .row.open .row-main>.tr,html.dcmp #diclist .row-main>.acts,html.dcmp #diclist .row-main>.ex,html.dcmp #diclist .row-main>.cj{flex-basis:100%}'+
+'html.dcmp #diclist .row.open{align-items:flex-start}html.dcmp #diclist .row.open .spk,html.dcmp #diclist .row.open .mk{align-self:flex-start}html.dcmp #diclist .row .tag{align-self:flex-start;padding-top:3px}html.dcmp #diclist .row:active{transform:none!important}'+
+/* filas de temas y categorías */
+'#dcr{display:flex;flex-direction:column;gap:6px;margin:var(--sp-1,6px) 0 2px}.hsw{position:relative}.dch{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:2px 1px 4px;overscroll-behavior-x:contain;-webkit-user-select:none;user-select:none}.dch::-webkit-scrollbar{display:none}.dch.drag{cursor:grabbing}.dch.drag button{pointer-events:none}'+
+'.hsw.r .dch{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 48px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 48px),transparent)}.hsw.l .dch{-webkit-mask-image:linear-gradient(90deg,transparent,#000 48px);mask-image:linear-gradient(90deg,transparent,#000 48px)}.hsw.l.r .dch{-webkit-mask-image:linear-gradient(90deg,transparent,#000 48px,#000 calc(100% - 48px),transparent);mask-image:linear-gradient(90deg,transparent,#000 48px,#000 calc(100% - 48px),transparent)}'+
+'.hsa{position:absolute;top:calc(50% - 2px);transform:translateY(-50%) scale(.85);z-index:2;width:28px;height:28px;border-radius:50%;border:1px solid var(--border);background:var(--surface);color:var(--text);display:grid;place-items:center;cursor:pointer;opacity:0;pointer-events:none;box-shadow:0 4px 12px -4px rgba(0,0,0,.25);transition:opacity .2s,transform .35s '+SOFT+'}.hsa.l{left:-4px}.hsa.r{right:-4px}.hsw.l .hsa.l,.hsw.r .hsa.r{opacity:1;pointer-events:auto;transform:translateY(-50%) scale(1)}@media (hover:none){.hsa{display:none}}'+
+'.dch .dcc{flex-shrink:0;white-space:nowrap;border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:999px;padding:6px 12px;font:inherit;font-size:var(--fs-sm,13px);cursor:pointer;transition:background .2s,border-color .2s,color .2s}.dch .dcc span{margin-left:5px;color:var(--text2);font-size:11px}'+
+'.dch .dcc.on{background:var(--accent);border-color:var(--accent);color:#fff}.dch .dcc.on span{color:rgba(255,255,255,.82)}.dcs .dcc{background:var(--bg);font-size:var(--fs-xs,12px);padding:5px 11px}.dcs .dcc.on{background:color-mix(in srgb,var(--accent) 16%,var(--surface));color:var(--accent);border-color:var(--accent)}.dcs .dcc.on span{color:var(--accent)}'+
+'.dch .dcc:focus-visible{outline:2px solid var(--accent);outline-offset:1px}@media (hover:hover){.dch .dcc:not(.on):hover{border-color:var(--accent)}}'+
+/* progreso */
+'.stw{display:flex;flex-direction:column;gap:14px;padding-top:4px}.sthd{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.sthd h2{margin:0;font-size:var(--fs-lg,22px);font-weight:700;letter-spacing:-.02em}'+
+'.stcards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}@media (max-width:640px){.stcards{grid-template-columns:repeat(2,minmax(0,1fr))}}'+
+'.stc{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:12px 14px;display:flex;flex-direction:column;gap:2px;min-width:0}.stc span{font-size:var(--fs-xs,12px);color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.stc b{font-size:22px;font-weight:600;letter-spacing:-.01em}.stc em{font-style:normal;font-size:var(--fs-xs,12px);color:var(--text2)}'+
+'.stsec{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:14px 16px;min-width:0}.stsec h3{margin:0 0 4px;font-size:var(--fs-md,17px);font-weight:700}.stsub{margin:0 0 8px;font-size:var(--fs-sm,13px);color:var(--text2);font-weight:400}h3 .stsub{font-size:var(--fs-sm,13px)}.stnone{margin:6px 0 2px;font-size:var(--fs-sm,13px);color:var(--text2);line-height:1.5}'+
+'.stchart{position:relative;margin-top:6px;min-height:176px}.stsvg{display:block;max-width:100%;height:auto;overflow:visible}.stg{stroke:var(--border);stroke-width:1;shape-rendering:crispEdges}.stg0{stroke:color-mix(in srgb,var(--text2) 45%,transparent)}.stl{fill:var(--text2);font-size:11px;font-family:inherit;font-variant-numeric:tabular-nums}.stl0{fill:var(--text);font-weight:700}'+
+'.stok{fill:var(--accent)}.stko{fill:var(--stko)}.sthit{fill:transparent}.stcol{cursor:default;outline:none}.stcol.on .sthit,.stcol:focus-visible .sthit{fill:color-mix(in srgb,var(--text) 6%,transparent)}.stcol:focus-visible .sthit{stroke:var(--accent);stroke-width:1.5}.stcol.on .stok,.stcol.on .stko{filter:brightness(1.12)}'+
+'.sttip{position:absolute;z-index:5;transform:translateX(-50%);min-width:120px;padding:8px 11px;border-radius:12px;background:var(--surface);color:var(--text);border:1px solid var(--border);box-shadow:0 10px 28px -8px rgba(0,0,0,.35);pointer-events:none;font-size:12px;line-height:1.45;white-space:nowrap}.sttip[hidden]{display:none}'+
+'.stth{font-weight:600;margin-bottom:3px}.sttr{display:flex;align-items:center;gap:6px}.sttr b{font-size:14px;font-weight:700;font-variant-numeric:tabular-nums}.sttr span{color:var(--text2)}.stk{display:inline-block;width:12px;height:2px;border-radius:1px}.stk.ok{background:var(--accent)}.stk.ko{background:var(--stko)}.sttp{color:var(--text2);margin-top:2px}'+
+'.stleg{display:flex;gap:16px;font-size:var(--fs-xs,12px);color:var(--text2);margin:6px 0 2px}.stleg .sw{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}.sw.ok{background:var(--accent)}.sw.ko{background:var(--stko)}'+
+'.sttv{margin-top:8px}.sttv summary{cursor:pointer;font-size:var(--fs-sm,13px);color:var(--accent);font-weight:600;padding:4px 0;width:max-content}.sttv[open] summary{margin-bottom:6px}'+
+'.stlist{display:flex;flex-direction:column}.strow{display:flex;align-items:center;gap:12px;padding:10px 0}.strow+.strow{border-top:1px solid var(--border)}.stn{flex:1;min-width:0;display:flex;flex-direction:column;gap:7px}.stnt{display:flex;justify-content:space-between;gap:10px;align-items:baseline}.stnt b{font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.stnt span{font-size:var(--fs-xs,12px);color:var(--text2);font-variant-numeric:tabular-nums;white-space:nowrap}'+
+'.stseg{display:flex;gap:2px;height:8px}.stseg i{display:block;flex-basis:0;min-width:4px;border-radius:4px}.stseg .ok{background:var(--accent)}.stseg .ko{background:var(--stko)}'+
+'.stgo,.stplay{flex-shrink:0;border:1px solid var(--accent);background:transparent;color:var(--accent);border-radius:999px;padding:7px 14px;font:inherit;font-size:var(--fs-sm,13px);font-weight:600;cursor:pointer;transition:background .2s}.stgo:hover,.stplay:hover{background:color-mix(in srgb,var(--accent) 10%,transparent)}.stgo:focus-visible,.stplay:focus-visible,.sttv summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}.stgame{display:flex;align-items:center;justify-content:space-between;gap:12px}.stgame .stsub{margin:0}'+
+'.sthw{display:flex;flex-wrap:wrap;gap:6px}.sth{display:inline-flex;gap:6px;align-items:baseline;border:1px solid var(--border);border-radius:10px;padding:5px 10px;font-size:var(--fs-sm,13px);max-width:100%}.sth i{font-style:normal;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}'+
+'.sttab{overflow-x:auto}.sttab table{width:100%;border-collapse:collapse;font-size:var(--fs-sm,13px);font-variant-numeric:tabular-nums}.sttab th{text-align:left;font-weight:600;color:var(--text2);font-size:var(--fs-xs,12px);padding:6px 8px;border-bottom:1px solid var(--border);white-space:nowrap}.sttab td{padding:8px;border-bottom:1px solid var(--border);white-space:nowrap}.sttab tr:last-child td{border-bottom:0}.sttab th:not(:first-child),.sttab td:not(:first-child){text-align:right}.sttab tr.cur td{font-weight:600}'+
+/* emparejar */
+'#main.mgm .nqr{display:none}.mg{position:relative;max-width:560px;margin:4px auto 0}.mgh{display:flex;align-items:center;gap:14px;margin-bottom:8px}.mgt{font-size:40px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums;min-width:2.2ch;text-align:center;transition:color .3s}.mgt.low{color:#ff453a}'+
+'.mgst{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:var(--fs-sm,13px);color:var(--text2)}.mgst b{color:var(--text);font-variant-numeric:tabular-nums}'+
+'.mgbar{height:6px;border-radius:3px;background:var(--border);overflow:hidden;margin-bottom:12px}.mgbar i{display:block;height:100%;width:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:3px;transform-origin:0 50%;will-change:transform}'+
+'.mgb{min-height:300px}.mgb.play{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}.mgcol{display:flex;flex-direction:column;gap:8px;min-width:0}'+
+'.mgc{min-height:54px;border:1.5px solid var(--border);background:var(--surface);color:var(--text);border-radius:14px;padding:9px 10px;font:inherit;font-size:var(--fs-base,15px);cursor:pointer;line-height:1.25;overflow-wrap:anywhere;transition:background .18s,border-color .18s,opacity .25s,transform .18s}.mgc small{display:block;font-size:11px;color:var(--text2);margin-top:2px}'+
+'.mgc.sel{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,var(--surface))}.mgc.ok{border-color:#30d158;background:color-mix(in srgb,#30d158 18%,var(--surface));opacity:.38;cursor:default}.mgc.bad{border-color:#ff453a;background:color-mix(in srgb,#ff453a 16%,var(--surface))}.mgc:active:not(:disabled){transform:scale(.97)}.mgc:focus-visible{outline:2px solid var(--accent);outline-offset:2px}'+
+'.mgready,.mgover{text-align:center;background:var(--surface);border:1px solid var(--border);border-radius:22px;padding:26px 20px}.mgready h3{margin:0 0 8px;font-size:var(--fs-lg,21px)}.mgready p{color:var(--text2);max-width:44ch;margin:0 auto 6px;line-height:1.5}'+
+'.mgbig{font-size:64px;font-weight:700;letter-spacing:-.03em;line-height:1}.mgsub{color:var(--text2);margin:4px 0 12px}.mgrec{color:#ff9f0a;font-weight:700;margin:0 0 12px}'+
+'.mgfx{position:absolute;top:2px;right:0;font-weight:700;font-size:var(--fs-md,17px);opacity:0;pointer-events:none;transition:opacity .2s,transform .3s}.mgfx.on{opacity:1;transform:translateY(-4px)}.mgfx.ok{color:#30a14e}.mgfx.bad{color:#ff453a}'+
+'@media (max-width:420px){.qmr .qms button{padding:6px 10px}.mgc{font-size:var(--fs-sm,14px)}}'+
+'#flame{cursor:pointer}#flame:focus-visible{outline:2px solid var(--accent);outline-offset:2px}'+
+'@media (prefers-reduced-motion:reduce){.mgfx,.mgc,.hsa{transition:none!important}}'+
+'</style>');
+})();
 window.addEventListener("resize",renderLangs);
 renderLangs();renderTabs();render();
 </script>
 </body>
 </html>
+

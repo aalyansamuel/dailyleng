@@ -1,19 +1,13 @@
-DailyLeng · paquete PWA (v20)
+DailyLeng v28 · paquete para alojar en tu GitHub Pages (o cualquier web con HTTPS)
 
-Contenido: index.html, manifest.webmanifest, sw.js, icon-192.png, icon-512.png.
+Qué subir: TODO el contenido de esta carpeta, respetando la carpeta data/:
+  index.html, sw.js, manifest.webmanifest, icon-192.png, icon-512.png, data/ (los seis .js)
 
-1. Sube los cinco archivos a la misma carpeta de un sitio con HTTPS (GitHub Pages, Netlify, Vercel...).
-2. Abre la dirección en el móvil o el ordenador e instálala:
-   - iPhone (Safari): Compartir > Añadir a pantalla de inicio.
-   - Android (Chrome): menú > Instalar aplicación / Añadir a pantalla de inicio.
-   - Ordenador (Chrome o Edge): icono de instalar en la barra de direcciones.
-3. Funciona sin conexión después de la primera visita.
+Al actualizar desde la v27: sustituye todo. Cambian index.html, sw.js y los seis archivos de data/
+(el vocabulario nuevo está en data/). Los iconos y el manifest se pueden dejar como estaban.
 
-Actualizar a una versión nueva:
-- Sustituye index.html (y sw.js si cambia) en tu servidor.
-- Cambia la línea  const V='dailyleng-v20';  de sw.js por un nombre nuevo (p. ej. v21) cada vez que subas cambios.
-- Al abrir la app instalada aparecerá «Hay una versión nueva de DailyLeng» con el botón Actualizar.
+Tras subirlo, abre la app instalada: a los pocos segundos (o al volver a ella) aparecerá abajo
+«Hay una versión nueva de DailyLeng · Actualizar». Pulsa Actualizar.
 
-Notas:
-- El progreso se guarda en cada navegador. En esta copia no hay sincronización automática (solo funciona dentro de claude.ai): usa el botón 💾 para exportar e importar.
-- Los ejemplos generados con Claude y la sincronización solo funcionan abriendo la app desde su enlace de claude.ai.
+Tu progreso no se borra: está guardado en el navegador del dispositivo. Para copiarlo o pasarlo
+a otro dispositivo, abre Ajustes (el engranaje de arriba) → Copia de seguridad.
