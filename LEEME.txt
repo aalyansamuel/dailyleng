@@ -1,10 +1,11 @@
-DailyLeng v28 · paquete para alojar en tu GitHub Pages (o cualquier web con HTTPS)
+DailyLeng v28.1 · paquete para alojar en tu GitHub Pages (o cualquier web con HTTPS)
 
 Qué subir: TODO el contenido de esta carpeta, respetando la carpeta data/:
-  index.html, sw.js, manifest.webmanifest, icon-192.png, icon-512.png, data/ (los seis .js)
+  index.html, sw.js, manifest.webmanifest, los seis icon-*.png, data/ (los seis .js)
 
-Al actualizar desde la v27: sustituye todo. Cambian index.html, sw.js y los seis archivos de data/
-(el vocabulario nuevo está en data/). Los iconos y el manifest se pueden dejar como estaban.
+Al actualizar desde la v27 o la v28: sustituye todo (index.html, sw.js, manifest, iconos y data/).
+La v28.1 trae el icono nuevo. En iPhone, para ver el icono nuevo en la pantalla de inicio hay que
+borrar el acceso directo y volver a añadirlo (iOS guarda el icono al instalar).
 
 Tras subirlo, abre la app instalada: a los pocos segundos (o al volver a ella) aparecerá abajo
 «Hay una versión nueva de DailyLeng · Actualizar». Pulsa Actualizar.

@@ -1,6 +1,6 @@
 /* DailyLeng · Service Worker. Cambia V en cada versión para que salga el aviso «Hay una versión nueva». */
-const V = 'dailyleng-v28';
-const FILES = ['./', 'index.html', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png',
+const V = 'dailyleng-v28.1';
+const FILES = ['./', 'index.html', 'manifest.webmanifest', 'icon-32.png', 'icon-180.png', 'icon-192.png', 'icon-512.png', 'icon-maskable-192.png', 'icon-maskable-512.png',
   'data/fr.js', 'data/ru.js', 'data/en.js', 'data/de.js', 'data/it.js', 'data/pt.js'];
 
 self.addEventListener('install', e => {

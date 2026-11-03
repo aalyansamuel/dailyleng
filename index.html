@@ -4,9 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>DailyLeng</title>
+<link rel="icon" type="image/png" sizes="32x32" href="icon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" href="icon-192.png">
-<link rel="apple-touch-icon" href="icon-192.png">
 <style>
 :root{
   --bg:#f5f5f7;--surface:#ffffff;--text:#1d1d1f;--text2:#6e6e73;
@@ -475,7 +476,7 @@ $('pgi').onclick=()=>st(imp($('pgt').value));
 $('pgf').onclick=()=>$('pgfi').click();
 $('pgfi').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>st(imp(String(r.result)));r.onerror=()=>st('No se pudo leer el archivo.');r.readAsText(f)};
 /* PWA: manifest, iconos y Service Worker */
-try{const add=h=>document.head.insertAdjacentHTML('beforeend',h);if(!document.querySelector('meta[name=theme-color]'))add('<meta name="theme-color" content="#0a84ff">');add('<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="DailyLeng"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">');const cv=document.createElement('canvas');cv.width=cv.height=512;const c=cv.getContext('2d'),g=c.createLinearGradient(0,0,512,512);g.addColorStop(0,'#0a84ff');g.addColorStop(1,'#bf5af2');c.fillStyle=g;c.fillRect(0,0,512,512);c.fillStyle='#fff';c.font='700 300px -apple-system,Helvetica,Arial,sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText('D',256,276);const ic=cv.toDataURL('image/png');if(!document.querySelector('link[rel=apple-touch-icon]'))add('<link rel="apple-touch-icon" href="'+ic+'">');if(!document.querySelector('link[rel=icon]'))add('<link rel="icon" href="'+ic+'">');if(!document.querySelector('link[rel=manifest]')){const u=location.href.split('#')[0],m={name:'DailyLeng',short_name:'DailyLeng',description:'Aprende idiomas a diario',display:'standalone',background_color:'#0b0b10',theme_color:'#0a84ff',start_url:u,scope:u.replace(/[^\/]*$/,''),icons:[{src:ic,sizes:'512x512',type:'image/png',purpose:'any'}]};add('<link rel="manifest" href="data:application/manifest+json,'+encodeURIComponent(JSON.stringify(m))+'">')}const ml=document.querySelector('link[rel=manifest]');if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)&&ml&&ml.getAttribute('href')==='manifest.webmanifest')navigator.serviceWorker.register('sw.js').catch(()=>{});}catch(e){}
+try{const add=h=>document.head.insertAdjacentHTML('beforeend',h);if(!document.querySelector('meta[name=theme-color]'))add('<meta name="theme-color" content="#0a84ff">');add('<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="DailyLeng"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">');const ic=new URL('icon-512.png',location.href).href,icm=new URL('icon-maskable-512.png',location.href).href;if(!document.querySelector('link[rel=apple-touch-icon]'))add('<link rel="apple-touch-icon" href="'+ic+'">');if(!document.querySelector('link[rel=icon]'))add('<link rel="icon" href="'+ic+'">');if(!document.querySelector('link[rel=manifest]')){const u=location.href.split('#')[0],m={name:'DailyLeng',short_name:'DailyLeng',description:'Aprende idiomas a diario',display:'standalone',background_color:'#0b0b10',theme_color:'#0a84ff',start_url:u,scope:u.replace(/[^\/]*$/,''),icons:[{src:ic,sizes:'512x512',type:'image/png',purpose:'any'},{src:icm,sizes:'512x512',type:'image/png',purpose:'maskable'}]};add('<link rel="manifest" href="data:application/manifest+json,'+encodeURIComponent(JSON.stringify(m))+'">')}const ml=document.querySelector('link[rel=manifest]');if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)&&ml&&ml.getAttribute('href')==='manifest.webmanifest')navigator.serviceWorker.register('sw.js').catch(()=>{});}catch(e){}
 })();
 /* v16: resultados, nº de preguntas, test de números y vocabulario de cocina (atajos de teclado retirados en v17) */
 (function(){
